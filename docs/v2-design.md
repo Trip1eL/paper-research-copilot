@@ -509,15 +509,22 @@ API Resume 状态机与跨 Service 重建的 Result/SSE cursor 均通过自动�
 
 ### Phase 4：Academic Search 与 Dynamic Ingestion
 
+状态：已于 2026-08-20 完成独立 Foundation 和 CLI。Evidence Gate 自动触发、Federated Retrieval
+及 Dynamic BM25 generation 留在 Phase 5。
+
 模块：`integrations/scholarly`、`ingestion/dynamic`、`storage`、`retrieval`、`evaluation`。
 
 - 先实现 arXiv Metadata Search、Candidate Model、排序和去重，不立即下载。
 - 再加入 allowlist Downloader、PDF 校验、Paper Registry 和幂等本地资产存储。
 - 通过 Parser Quality Router 后执行 Chunk、Embedding 和 Dynamic Qdrant Upsert。
-- 成功写入后重建 Dynamic BM25 snapshot。
+- 成功写入独立 Dynamic Qdrant；Phase 5 构建 Dynamic Retriever 时实现 BM25 generation 失效。
 
 完成条件：同一 revision 重复摄取不重复下载、不重复 Embedding、不增加 Qdrant Point；失败资产进入
 quarantine；动态 Collection 与 Corpus v3 完全分离。
+
+验证结果：真实 arXiv Atom Search 冒烟成功；Downloader 的 redirect/host/Content-Type/PDF
+header/size Gate 通过；SQLite + 本地 Qdrant 集成测试证明重复 Run 不重复 Search、Download、
+Embedding 或增加 Point，SHA 重复资产进入 duplicate，Qdrant 提交后崩溃可跳过 Embedding 收敛。
 
 ### Phase 5：Federated Retrieval 与 Agent Acquisition Loop
 
@@ -558,4 +565,5 @@ quarantine；动态 Collection 与 Corpus v3 完全分离。
 | `frontend` | Acquisition/Resume 可观察性 | 保存 Agent 私有 State |
 
 执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0-3 已完成；
-下一步进入 Phase 4，先实现 arXiv Metadata Search 与 Candidate Model，再增加受控下载和动态摄取。
+下一步进入 Phase 5，实现 Curated/Dynamic Federated Retrieval、Dynamic BM25 generation 和一次性
+Agent Acquisition Loop，再用 Open-world Dataset 验证触发率与答案恢复率。

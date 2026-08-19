@@ -16,6 +16,7 @@ Retrieval、Answer/Citation、LLM Judge 和 Agent-vs-Fixed-RAG 三层评测。
 - [Evaluation 设计](docs/evaluation.md)
 - [v2.0 设计基线](docs/v2-design.md)
 - [MinerU Structured Parser Spike](docs/mineru-spike.md)
+- [动态论文扩库](docs/dynamic-acquisition.md)
 - [完整开发记录](开发过程.md)
 
 ## 当前能力
@@ -54,6 +55,12 @@ React Research Workspace
   -> live SSE Agent Timeline
   -> Report / Evidence / Plan views
   -> citation-to-evidence navigation
+
+Dynamic Ingestion（当前显式 CLI）
+  -> arXiv Metadata Search + Rank/Dedup
+  -> Bounded PDF Download + SHA-256 Registry
+  -> Parse Quality Gate + Chunk + Embedding
+  -> isolated Dynamic Qdrant Collection
 ```
 
 - 使用 `pypdf` 按页提取论文文本和 PDF metadata。
@@ -74,6 +81,17 @@ v2 Phase 3 已完成 Persistent Store Foundation：`data/app.db` 通过 SQLAlche
 Task、Event 和 Result，`data/checkpoints.db` 由 LangGraph SQLite Checkpointer 保存 Graph State。
 服务重启后 running Task 转为 interrupted，可通过显式 Resume 从最近已提交 node 继续；SSE
 `after=N` 和最终 Result 在重启后仍可查询。当前仍保持单机、单 Worker，不宣称水平扩容能力。
+
+v2 Phase 4 已完成 arXiv Metadata Search 与独立 Dynamic Ingestion：候选经过确定性排序及
+identity/DOI 去重，PDF 下载经过 allowlist、redirect、Content-Type、文件头、大小与 SHA-256 校验，
+再通过 Fast Parser Quality Gate、Chunk、Embedding 写入独立 Dynamic Qdrant。Paper Asset 与
+Acquisition Run 持久化到 SQLite；重复执行不会重复下载、Embedding 或增加 Point。当前通过 CLI
+显式调用，Agent 自动触发和 Curated/Dynamic Federated Retrieval 留到 Phase 5。
+
+```powershell
+paper-rag search-papers "agent memory retrieval" --limit 5
+paper-rag acquire-papers "agent memory retrieval" --task-id demo-001 --round 1
+```
 
 当前版本已将评测后的 Dense 与 Hybrid RRF 接入主链路，并实现可观测的 Cross-Encoder
 Reranker 实验层，是后续 Answer Evaluation 和 Agent Runtime 的基础。
@@ -558,8 +576,9 @@ Smoke Test 验证。
   固定 RAG 仍由实验脚本显式调用，Agent Runtime 则根据结构化 Plan 自动选择 Coverage。
 - Citation 契约负责引用存在性与定位；LLM Judge 已补充 Claim-Evidence entailment 评估，
   但单 Judge 仍可能有偏差，需要人工抽查。
-- 当前提供 CLI、LangGraph Agent Runtime、SQLite 持久 FastAPI/SSE Task Layer 和 React Research
-  Workspace；认证、长期用户 Memory、动态学术搜索与多实例 Worker 尚未实现。
+- 当前提供 CLI、LangGraph Agent Runtime、SQLite 持久 FastAPI/SSE Task Layer、React Research
+  Workspace 和显式 Dynamic Ingestion；认证、长期用户 Memory、Agent 自动扩库与多实例 Worker
+  尚未实现。
 
 设计文档见 [docs/architecture.md](docs/architecture.md)、
 [docs/retrieval.md](docs/retrieval.md)、[docs/evaluation.md](docs/evaluation.md) 和

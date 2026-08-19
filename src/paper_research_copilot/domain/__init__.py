@@ -1,5 +1,18 @@
 """Framework-independent models shared by the RAG pipeline."""
 
+from paper_research_copilot.domain.acquisition import (
+    AcademicProvider,
+    AcquisitionBudget,
+    AcquisitionResult,
+    AcquisitionRun,
+    AcquisitionStatus,
+    DownloadedPaper,
+    DynamicIngestionResult,
+    DynamicParseSummary,
+    PaperAsset,
+    PaperAssetStatus,
+    PaperCandidate,
+)
 from paper_research_copilot.domain.answer import Answer
 from paper_research_copilot.domain.corpus import (
     CorpusCatalog,
@@ -37,6 +50,11 @@ from paper_research_copilot.domain.structured_parse import (
 
 __all__ = [
     "Answer",
+    "AcademicProvider",
+    "AcquisitionBudget",
+    "AcquisitionResult",
+    "AcquisitionRun",
+    "AcquisitionStatus",
     "Citation",
     "ChunkContext",
     "CorpusCatalog",
@@ -46,12 +64,18 @@ __all__ = [
     "CorpusSpec",
     "IngestionSummary",
     "DocumentParseResult",
+    "DownloadedPaper",
+    "DynamicIngestionResult",
+    "DynamicParseSummary",
     "PageParseCandidate",
     "PageParseResult",
     "PageQualityFeatures",
     "PageQualityResult",
     "PageTextExtraction",
     "PaperChunk",
+    "PaperAsset",
+    "PaperAssetStatus",
+    "PaperCandidate",
     "PaperMetadata",
     "ParsedDocument",
     "ParsedPage",

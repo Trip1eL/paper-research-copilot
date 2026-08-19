@@ -15,6 +15,7 @@ from paper_research_copilot.config import PROJECT_ROOT, Settings, get_settings
 from paper_research_copilot.domain import (
     Answer,
     DocumentParseResult,
+    PaperCandidate,
     PaperChunk,
     ParsedDocument,
     RetrievedChunk,
@@ -58,8 +59,10 @@ from paper_research_copilot.integrations import (
     OpenAICompatibleChatProvider,
     SiliconFlowRerankerProvider,
 )
+from paper_research_copilot.integrations.scholarly import ArxivSearchProvider
 from paper_research_copilot.pipeline import (
     build_corpus_ingestion_pipeline,
+    build_dynamic_acquisition_service,
     build_pipeline,
     build_retrieval_runtime,
 )
@@ -84,6 +87,7 @@ from paper_research_copilot.retrieval import (
     RrfFusionRetriever,
     find_query_rewrite_alias_leaks,
 )
+from paper_research_copilot.storage import SqliteResearchRepository
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -259,12 +263,69 @@ def build_parser() -> argparse.ArgumentParser:
     prompt_parser.add_argument("question")
     prompt_parser.add_argument("--top-k", type=_positive_int, default=None)
     _add_retrieval_mode_argument(prompt_parser)
+
+    paper_search_parser = subparsers.add_parser(
+        "search-papers",
+        help="Search bounded arXiv metadata without downloading PDFs",
+    )
+    paper_search_parser.add_argument("query")
+    paper_search_parser.add_argument("--limit", type=_positive_int, default=5)
+
+    acquire_parser = subparsers.add_parser(
+        "acquire-papers",
+        help="Search and idempotently ingest papers into the dynamic collection",
+    )
+    acquire_parser.add_argument("query")
+    acquire_parser.add_argument("--task-id", default=None)
+    acquire_parser.add_argument("--round", type=_positive_int, default=1)
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     settings = get_settings()
+
+    if args.command == "search-papers":
+        provider = ArxivSearchProvider(api_url=settings.arxiv_api_url)
+        try:
+            candidates = provider.search(args.query, args.limit)
+            _print_paper_candidates(candidates)
+            return 0
+        finally:
+            provider.close()
+
+    if args.command == "acquire-papers":
+        repository = SqliteResearchRepository(settings.resolved_app_database_path())
+        acquisition = build_dynamic_acquisition_service(settings, repository)
+        try:
+            acquisition_result = acquisition.acquire(
+                args.query,
+                task_id=args.task_id,
+                round_number=args.round,
+            )
+            print(
+                f"Acquisition {acquisition_result.run.acquisition_id}: "
+                f"{acquisition_result.run.status} | "
+                f"candidates={acquisition_result.run.candidate_count} | "
+                f"selected={acquisition_result.run.selected_count} | "
+                f"downloaded={acquisition_result.run.downloaded_count} | "
+                f"indexed={acquisition_result.run.indexed_count}"
+            )
+            for ingestion in acquisition_result.ingestions:
+                print(
+                    f"  {ingestion.asset.candidate.identity}: {ingestion.outcome} "
+                    f"({ingestion.asset.status})"
+                )
+            if acquisition_result.run.error:
+                print(f"Error: {acquisition_result.run.error}")
+            return (
+                0
+                if acquisition_result.run.status in {"succeeded", "partial"}
+                else 1
+            )
+        finally:
+            acquisition.close()
+            repository.close()
 
     if args.command == "inspect-parse-quality":
         parse_result = FastParserRouter().parse(
@@ -715,10 +776,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             config=agent_config,
         )
         try:
-            result = agent_runtime.run(args.question)
-            _print_answer(result.answer)
+            agent_result = agent_runtime.run(args.question)
+            _print_answer(agent_result.answer)
             if args.show_trace:
-                _print_agent_trace(result)
+                _print_agent_trace(agent_result)
             return 0
         finally:
             agent_runtime.close()
@@ -1048,6 +1109,18 @@ def _print_agent_trace(result: AgentResult) -> None:
         print(
             f"  {event.sequence}. {event.node}: {event.outcome} "
             f"({event.latency_ms:.0f} ms){f' | {details}' if details else ''}"
+        )
+
+
+def _print_paper_candidates(candidates: Sequence[PaperCandidate]) -> None:
+    if not candidates:
+        print("No arXiv candidates found.")
+        return
+    for index, candidate in enumerate(candidates, start=1):
+        print(
+            f"{index}. {candidate.title}\n"
+            f"   {candidate.identity} | score={candidate.search_score:.4f}\n"
+            f"   {candidate.landing_url}"
         )
 
 

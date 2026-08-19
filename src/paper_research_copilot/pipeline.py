@@ -6,13 +6,17 @@ from pathlib import Path
 
 from paper_research_copilot.config import Settings
 from paper_research_copilot.domain import (
+    AcquisitionBudget,
     Answer,
     CorpusCatalog,
     IngestionSummary,
     RetrievedChunk,
 )
 from paper_research_copilot.ingestion import (
+    AcademicAcquisitionService,
     CorpusPreparer,
+    DynamicIngestionService,
+    FastParserRouter,
     PageAwareChunker,
     PdfParser,
     PreparedCorpus,
@@ -23,6 +27,10 @@ from paper_research_copilot.integrations import (
     OpenAICompatibleChatProvider,
     SiliconFlowEmbeddingProvider,
 )
+from paper_research_copilot.integrations.scholarly import (
+    ArxivSearchProvider,
+    BoundedPaperDownloader,
+)
 from paper_research_copilot.reporting import AnswerGenerator
 from paper_research_copilot.retrieval import (
     CandidateRetriever,
@@ -31,6 +39,7 @@ from paper_research_copilot.retrieval import (
     RetrievalMode,
     RetrieverFactory,
 )
+from paper_research_copilot.storage import AcquisitionRepository
 
 
 @dataclass(frozen=True)
@@ -248,4 +257,67 @@ def build_corpus_ingestion_pipeline(
         ),
         embeddings=runtime.embeddings,
         vector_store=runtime.vector_store,
+    )
+
+
+def build_dynamic_acquisition_service(
+    settings: Settings,
+    repository: AcquisitionRepository,
+) -> AcademicAcquisitionService:
+    """Build the bounded Phase 4 pipeline without changing the curated collection."""
+
+    embedding_url, embedding_key = settings.require_embedding_credentials()
+    embeddings = SiliconFlowEmbeddingProvider(
+        base_url=embedding_url,
+        api_key=embedding_key,
+        model=settings.siliconflow_embedding_model,
+        dimension=settings.embedding_dimension,
+    )
+    vector_store = QdrantVectorStore(
+        collection_name=settings.dynamic_qdrant_collection,
+        dimension=settings.embedding_dimension,
+        path=(
+            None
+            if settings.qdrant_url
+            else settings.resolved_dynamic_qdrant_path()
+        ),
+        url=settings.qdrant_url,
+        api_key=(
+            settings.qdrant_api_key.get_secret_value()
+            if settings.qdrant_api_key
+            else None
+        ),
+    )
+    search = ArxivSearchProvider(api_url=settings.arxiv_api_url)
+    downloader = BoundedPaperDownloader(
+        settings.resolved_dynamic_assets_path(),
+        max_pdf_bytes=settings.acquisition_max_pdf_bytes,
+    )
+    ingestion = DynamicIngestionService(
+        repository,
+        downloader,
+        FastParserRouter(),
+        PageAwareChunker(
+            chunk_size=settings.chunk_size_chars,
+            overlap=settings.chunk_overlap_chars,
+            chunking_version=settings.chunking_version,
+        ),
+        embeddings,
+        vector_store,
+        max_chunks=settings.acquisition_max_dynamic_chunks,
+        index_version=(
+            f"{settings.siliconflow_embedding_model}:{settings.chunking_version}"
+        ),
+    )
+    return AcademicAcquisitionService(
+        search,
+        ingestion,
+        repository,
+        budget=AcquisitionBudget(
+            candidates_per_query=settings.acquisition_candidates_per_query,
+            max_downloads=settings.acquisition_max_downloads,
+            max_pdf_bytes=settings.acquisition_max_pdf_bytes,
+            max_dynamic_chunks=settings.acquisition_max_dynamic_chunks,
+        ),
+        close_callbacks=(search.close, downloader.close, vector_store.close),
     )

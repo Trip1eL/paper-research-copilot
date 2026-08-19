@@ -1,5 +1,6 @@
 """Paper parsing and page-aware chunking."""
 
+from paper_research_copilot.ingestion.acquisition import AcademicAcquisitionService
 from paper_research_copilot.ingestion.chunker import CHUNKING_VERSION, PageAwareChunker
 from paper_research_copilot.ingestion.corpus import (
     CorpusCatalogLoader,
@@ -8,6 +9,7 @@ from paper_research_copilot.ingestion.corpus import (
     PreparedCorpus,
     PreparedPaper,
 )
+from paper_research_copilot.ingestion.dynamic import DynamicIngestionService
 from paper_research_copilot.ingestion.extractors import (
     PdfExtractionError,
     PdfTextExtractor,
@@ -33,10 +35,12 @@ from paper_research_copilot.ingestion.statistics import (
 
 __all__ = [
     "CHUNKING_VERSION",
+    "AcademicAcquisitionService",
     "CorpusCatalogLoader",
     "CorpusChunkStatistics",
     "CorpusPreparer",
     "CorpusValidationError",
+    "DynamicIngestionService",
     "FastParserRouter",
     "PageAwareChunker",
     "PageQualityScorer",

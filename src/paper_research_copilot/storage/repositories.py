@@ -6,6 +6,15 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal, Protocol
 
+from paper_research_copilot.domain import (
+    AcquisitionBudget,
+    AcquisitionRun,
+    AcquisitionStatus,
+    DownloadedPaper,
+    PaperAsset,
+    PaperCandidate,
+)
+
 ResearchTaskStatus = Literal["queued", "running", "interrupted", "succeeded", "failed"]
 ResearchEventType = Literal[
     "task_queued",
@@ -24,6 +33,14 @@ class TaskNotFoundError(KeyError):
 
 class TaskStateConflictError(RuntimeError):
     """Raised when a state transition does not match the persisted task state."""
+
+
+class PaperAssetNotFoundError(KeyError):
+    """Raised when a dynamic paper asset does not exist."""
+
+
+class AcquisitionNotFoundError(KeyError):
+    """Raised when an acquisition run does not exist."""
 
 
 @dataclass(frozen=True)
@@ -102,3 +119,96 @@ class ResearchRepository(Protocol):
     def task_counts(self) -> tuple[int, int, int]: ...
 
     def close(self) -> None: ...
+
+
+class AcquisitionRepository(Protocol):
+    """Paper Registry and Acquisition Run persistence boundary."""
+
+    def register_candidate(
+        self,
+        candidate: PaperCandidate,
+        *,
+        acquisition_query: str,
+        discovered_at: datetime,
+    ) -> PaperAsset: ...
+
+    def get_paper_asset(self, asset_id: str) -> PaperAsset: ...
+
+    def find_paper_asset(
+        self,
+        *,
+        provider: str,
+        external_id: str,
+        revision: int,
+    ) -> PaperAsset | None: ...
+
+    def find_paper_asset_by_sha256(self, sha256: str) -> PaperAsset | None: ...
+
+    def mark_asset_downloaded(
+        self,
+        asset_id: str,
+        downloaded: DownloadedPaper,
+    ) -> PaperAsset: ...
+
+    def mark_asset_parsed(
+        self,
+        asset_id: str,
+        *,
+        page_count: int,
+        parse_summary_json: str,
+        updated_at: datetime,
+    ) -> PaperAsset: ...
+
+    def mark_asset_indexed(
+        self,
+        asset_id: str,
+        *,
+        chunk_count: int,
+        collection_name: str,
+        index_version: str,
+        updated_at: datetime,
+    ) -> PaperAsset: ...
+
+    def activate_asset(self, asset_id: str, *, updated_at: datetime) -> PaperAsset: ...
+
+    def mark_asset_duplicate(
+        self,
+        asset_id: str,
+        *,
+        duplicate_of_asset_id: str,
+        updated_at: datetime,
+    ) -> PaperAsset: ...
+
+    def mark_asset_failed(
+        self,
+        asset_id: str,
+        *,
+        status: Literal["download_failed", "quarantined", "indexing_failed"],
+        error: str,
+        updated_at: datetime,
+    ) -> PaperAsset: ...
+
+    def start_acquisition(
+        self,
+        *,
+        acquisition_id: str,
+        task_id: str | None,
+        query: str,
+        budget: AcquisitionBudget,
+        started_at: datetime,
+    ) -> AcquisitionRun: ...
+
+    def complete_acquisition(
+        self,
+        acquisition_id: str,
+        *,
+        status: AcquisitionStatus,
+        candidate_count: int,
+        selected_count: int,
+        downloaded_count: int,
+        indexed_count: int,
+        completed_at: datetime,
+        error: str | None,
+    ) -> AcquisitionRun: ...
+
+    def get_acquisition(self, acquisition_id: str) -> AcquisitionRun: ...

@@ -39,6 +39,14 @@ class Settings(BaseSettings):
     qdrant_collection: str = "agent_seed_v3_bge_m3_chunking_v1"
     app_database_path: Path = Path("data/app.db")
     checkpoint_database_path: Path = Path("data/checkpoints.db")
+    arxiv_api_url: str = "https://export.arxiv.org/api/query"
+    dynamic_assets_path: Path = Path("data/dynamic/papers")
+    dynamic_qdrant_path: Path = Path("data/qdrant_dynamic")
+    dynamic_qdrant_collection: str = "paper_dynamic_bge_m3_chunking_v1"
+    acquisition_candidates_per_query: int = Field(default=5, ge=1, le=10)
+    acquisition_max_downloads: int = Field(default=2, ge=1, le=5)
+    acquisition_max_pdf_bytes: int = Field(default=50 * 1024 * 1024, ge=1024)
+    acquisition_max_dynamic_chunks: int = Field(default=500, ge=1, le=2000)
 
     chunking_version: str = "chunking_v1"
     chunk_size_chars: int = Field(default=3200, ge=200)
@@ -87,6 +95,12 @@ class Settings(BaseSettings):
 
     def resolved_checkpoint_database_path(self) -> Path:
         return self._resolve_project_path(self.checkpoint_database_path)
+
+    def resolved_dynamic_assets_path(self) -> Path:
+        return self._resolve_project_path(self.dynamic_assets_path)
+
+    def resolved_dynamic_qdrant_path(self) -> Path:
+        return self._resolve_project_path(self.dynamic_qdrant_path)
 
     @staticmethod
     def _resolve_project_path(path: Path) -> Path:

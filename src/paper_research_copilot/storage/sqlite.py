@@ -11,9 +11,25 @@ from typing import Literal, cast
 from sqlalchemy import URL, Engine, create_engine, event, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
+from paper_research_copilot.domain import (
+    AcquisitionBudget,
+    AcquisitionRun,
+    AcquisitionStatus,
+    DownloadedPaper,
+    PaperAsset,
+    PaperAssetStatus,
+    PaperCandidate,
+)
 from paper_research_copilot.storage.migrations import upgrade_database
-from paper_research_copilot.storage.models import ResearchEventRow, ResearchTaskRow
+from paper_research_copilot.storage.models import (
+    AcquisitionRunRow,
+    PaperAssetRow,
+    ResearchEventRow,
+    ResearchTaskRow,
+)
 from paper_research_copilot.storage.repositories import (
+    AcquisitionNotFoundError,
+    PaperAssetNotFoundError,
     ResearchEventRecord,
     ResearchEventType,
     ResearchTaskRecord,
@@ -202,6 +218,276 @@ class SqliteResearchRepository:
                 sum(status in {"interrupted", "succeeded", "failed"} for status in statuses),
             )
 
+    def register_candidate(
+        self,
+        candidate: PaperCandidate,
+        *,
+        acquisition_query: str,
+        discovered_at: datetime,
+    ) -> PaperAsset:
+        with self._write_lock, self._sessions.begin() as session:
+            self._ensure_open()
+            existing = session.scalar(
+                select(PaperAssetRow).where(
+                    PaperAssetRow.provider == candidate.provider,
+                    PaperAssetRow.external_id == candidate.external_id,
+                    PaperAssetRow.revision == candidate.revision,
+                )
+            )
+            if existing is None and candidate.doi is not None:
+                existing = session.scalar(
+                    select(PaperAssetRow).where(PaperAssetRow.doi == candidate.doi)
+                )
+            if existing is not None:
+                return _asset_record(existing)
+            timestamp = _serialize_datetime(discovered_at)
+            row = PaperAssetRow(
+                asset_id=candidate.asset_id,
+                provider=candidate.provider,
+                external_id=candidate.external_id,
+                revision=candidate.revision,
+                doi=candidate.doi,
+                candidate_json=candidate.model_dump_json(),
+                acquisition_query=acquisition_query,
+                status="discovered",
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+            session.add(row)
+            session.flush()
+            return _asset_record(row)
+
+    def get_paper_asset(self, asset_id: str) -> PaperAsset:
+        with self._sessions() as session:
+            self._ensure_open()
+            return _asset_record(self._require_asset(session, asset_id))
+
+    def find_paper_asset(
+        self,
+        *,
+        provider: str,
+        external_id: str,
+        revision: int,
+    ) -> PaperAsset | None:
+        with self._sessions() as session:
+            self._ensure_open()
+            row = session.scalar(
+                select(PaperAssetRow).where(
+                    PaperAssetRow.provider == provider,
+                    PaperAssetRow.external_id == external_id,
+                    PaperAssetRow.revision == revision,
+                )
+            )
+            return _asset_record(row) if row is not None else None
+
+    def find_paper_asset_by_sha256(self, sha256: str) -> PaperAsset | None:
+        with self._sessions() as session:
+            self._ensure_open()
+            row = session.scalar(
+                select(PaperAssetRow).where(PaperAssetRow.sha256 == sha256)
+            )
+            return _asset_record(row) if row is not None else None
+
+    def mark_asset_downloaded(
+        self,
+        asset_id: str,
+        downloaded: DownloadedPaper,
+    ) -> PaperAsset:
+        with self._write_lock, self._sessions.begin() as session:
+            row = self._require_asset_status(
+                session,
+                asset_id,
+                {"discovered", "download_failed"},
+            )
+            row.status = "downloaded"
+            row.sha256 = downloaded.sha256
+            row.local_path = downloaded.local_path
+            row.file_size_bytes = downloaded.file_size_bytes
+            row.error = None
+            row.updated_at = _serialize_datetime(downloaded.downloaded_at)
+            session.flush()
+            return _asset_record(row)
+
+    def mark_asset_parsed(
+        self,
+        asset_id: str,
+        *,
+        page_count: int,
+        parse_summary_json: str,
+        updated_at: datetime,
+    ) -> PaperAsset:
+        with self._write_lock, self._sessions.begin() as session:
+            row = self._require_asset_status(
+                session,
+                asset_id,
+                {"downloaded", "quarantined"},
+            )
+            row.status = "parsed"
+            row.page_count = page_count
+            row.parse_summary_json = parse_summary_json
+            row.error = None
+            row.updated_at = _serialize_datetime(updated_at)
+            session.flush()
+            return _asset_record(row)
+
+    def mark_asset_indexed(
+        self,
+        asset_id: str,
+        *,
+        chunk_count: int,
+        collection_name: str,
+        index_version: str,
+        updated_at: datetime,
+    ) -> PaperAsset:
+        with self._write_lock, self._sessions.begin() as session:
+            row = self._require_asset_status(
+                session,
+                asset_id,
+                {"parsed", "indexing_failed"},
+            )
+            row.status = "indexed"
+            row.chunk_count = chunk_count
+            row.collection_name = collection_name
+            row.index_version = index_version
+            row.error = None
+            row.updated_at = _serialize_datetime(updated_at)
+            session.flush()
+            return _asset_record(row)
+
+    def activate_asset(self, asset_id: str, *, updated_at: datetime) -> PaperAsset:
+        with self._write_lock, self._sessions.begin() as session:
+            row = self._require_asset_status(session, asset_id, {"indexed", "active"})
+            row.status = "active"
+            row.updated_at = _serialize_datetime(updated_at)
+            session.flush()
+            return _asset_record(row)
+
+    def mark_asset_duplicate(
+        self,
+        asset_id: str,
+        *,
+        duplicate_of_asset_id: str,
+        updated_at: datetime,
+    ) -> PaperAsset:
+        if asset_id == duplicate_of_asset_id:
+            raise ValueError("A paper asset cannot duplicate itself")
+        with self._write_lock, self._sessions.begin() as session:
+            self._require_asset(session, duplicate_of_asset_id)
+            row = self._require_asset_status(
+                session,
+                asset_id,
+                {"discovered", "download_failed"},
+            )
+            row.status = "duplicate"
+            row.duplicate_of_asset_id = duplicate_of_asset_id
+            row.error = None
+            row.updated_at = _serialize_datetime(updated_at)
+            session.flush()
+            return _asset_record(row)
+
+    def mark_asset_failed(
+        self,
+        asset_id: str,
+        *,
+        status: Literal["download_failed", "quarantined", "indexing_failed"],
+        error: str,
+        updated_at: datetime,
+    ) -> PaperAsset:
+        allowed: dict[str, set[str]] = {
+            "download_failed": {
+                "discovered",
+                "downloaded",
+                "download_failed",
+                "quarantined",
+                "parsed",
+                "indexing_failed",
+            },
+            "quarantined": {"downloaded", "quarantined"},
+            "indexing_failed": {"parsed", "indexing_failed"},
+        }
+        with self._write_lock, self._sessions.begin() as session:
+            row = self._require_asset_status(session, asset_id, allowed[status])
+            row.status = status
+            row.error = error
+            if status == "download_failed":
+                row.sha256 = None
+                row.local_path = None
+                row.file_size_bytes = None
+                row.page_count = None
+                row.chunk_count = None
+                row.parse_summary_json = None
+                row.collection_name = None
+                row.index_version = None
+            row.updated_at = _serialize_datetime(updated_at)
+            session.flush()
+            return _asset_record(row)
+
+    def start_acquisition(
+        self,
+        *,
+        acquisition_id: str,
+        task_id: str | None,
+        query: str,
+        budget: AcquisitionBudget,
+        started_at: datetime,
+    ) -> AcquisitionRun:
+        with self._write_lock, self._sessions.begin() as session:
+            self._ensure_open()
+            if session.get(AcquisitionRunRow, acquisition_id) is not None:
+                raise TaskStateConflictError(
+                    f"Acquisition run already exists: {acquisition_id}"
+                )
+            row = AcquisitionRunRow(
+                acquisition_id=acquisition_id,
+                task_id=task_id,
+                query=query,
+                status="running",
+                budget_json=budget.model_dump_json(),
+                started_at=_serialize_datetime(started_at),
+            )
+            session.add(row)
+            session.flush()
+            return _acquisition_record(row)
+
+    def complete_acquisition(
+        self,
+        acquisition_id: str,
+        *,
+        status: AcquisitionStatus,
+        candidate_count: int,
+        selected_count: int,
+        downloaded_count: int,
+        indexed_count: int,
+        completed_at: datetime,
+        error: str | None,
+    ) -> AcquisitionRun:
+        if status == "running":
+            raise ValueError("Completed acquisition cannot remain running")
+        if status == "failed" and not error:
+            raise ValueError("Failed acquisition requires an error")
+        with self._write_lock, self._sessions.begin() as session:
+            row = self._require_acquisition(session, acquisition_id)
+            if row.status != "running":
+                raise TaskStateConflictError(
+                    f"Acquisition {acquisition_id} is already {row.status}"
+                )
+            row.status = status
+            row.candidate_count = candidate_count
+            row.selected_count = selected_count
+            row.downloaded_count = downloaded_count
+            row.indexed_count = indexed_count
+            row.completed_at = _serialize_datetime(completed_at)
+            row.error = error
+            session.flush()
+            return _acquisition_record(row)
+
+    def get_acquisition(self, acquisition_id: str) -> AcquisitionRun:
+        with self._sessions() as session:
+            self._ensure_open()
+            return _acquisition_record(
+                self._require_acquisition(session, acquisition_id)
+            )
+
     def close(self) -> None:
         with self._write_lock:
             if self._closed:
@@ -241,6 +527,40 @@ class SqliteResearchRepository:
         row = session.get(ResearchTaskRow, task_id)
         if row is None:
             raise TaskNotFoundError(f"Unknown research task: {task_id}")
+        return row
+
+    def _require_asset(self, session: Session, asset_id: str) -> PaperAssetRow:
+        self._ensure_open()
+        row = session.get(PaperAssetRow, asset_id)
+        if row is None:
+            raise PaperAssetNotFoundError(f"Unknown paper asset: {asset_id}")
+        return row
+
+    def _require_asset_status(
+        self,
+        session: Session,
+        asset_id: str,
+        allowed: set[str],
+    ) -> PaperAssetRow:
+        row = self._require_asset(session, asset_id)
+        if row.status not in allowed:
+            expected = ", ".join(sorted(allowed))
+            raise TaskStateConflictError(
+                f"Paper asset {asset_id} is {row.status}; expected one of {expected}"
+            )
+        return row
+
+    def _require_acquisition(
+        self,
+        session: Session,
+        acquisition_id: str,
+    ) -> AcquisitionRunRow:
+        self._ensure_open()
+        row = session.get(AcquisitionRunRow, acquisition_id)
+        if row is None:
+            raise AcquisitionNotFoundError(
+                f"Unknown acquisition run: {acquisition_id}"
+            )
         return row
 
     def _require_in_status(
@@ -307,6 +627,44 @@ def _event_record(row: ResearchEventRow) -> ResearchEventRecord:
         created_at=_deserialize_datetime(row.created_at),
         agent_event_json=row.agent_event_json,
         message=row.message,
+    )
+
+
+def _asset_record(row: PaperAssetRow) -> PaperAsset:
+    return PaperAsset(
+        asset_id=row.asset_id,
+        candidate=PaperCandidate.model_validate_json(row.candidate_json),
+        acquisition_query=row.acquisition_query,
+        status=cast(PaperAssetStatus, row.status),
+        created_at=_deserialize_datetime(row.created_at),
+        updated_at=_deserialize_datetime(row.updated_at),
+        sha256=row.sha256,
+        local_path=row.local_path,
+        file_size_bytes=row.file_size_bytes,
+        page_count=row.page_count,
+        chunk_count=row.chunk_count,
+        collection_name=row.collection_name,
+        index_version=row.index_version,
+        parse_summary_json=row.parse_summary_json,
+        duplicate_of_asset_id=row.duplicate_of_asset_id,
+        error=row.error,
+    )
+
+
+def _acquisition_record(row: AcquisitionRunRow) -> AcquisitionRun:
+    return AcquisitionRun(
+        acquisition_id=row.acquisition_id,
+        task_id=row.task_id,
+        query=row.query,
+        status=cast(AcquisitionStatus, row.status),
+        budget=AcquisitionBudget.model_validate_json(row.budget_json),
+        candidate_count=row.candidate_count,
+        selected_count=row.selected_count,
+        downloaded_count=row.downloaded_count,
+        indexed_count=row.indexed_count,
+        started_at=_deserialize_datetime(row.started_at),
+        completed_at=_optional_datetime(row.completed_at),
+        error=row.error,
     )
 
 

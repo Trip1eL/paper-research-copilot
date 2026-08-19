@@ -144,8 +144,24 @@ model、Prompt version 和精确输出建立 JSONL 缓存；缓存命中不会�
 `docs/adr/002-retrieval-storage.md`。
 
 v2.0 的 Parser Quality Router Shadow、MinerU Spike 与 Durable Runtime Foundation 已实现；
-Dynamic Corpus 仍处于下一阶段。实施顺序和验收标准见 `docs/v2-design.md`，Corpus v3 Baseline
-保持冻结。
+Dynamic Ingestion Foundation 也已提供独立 CLI。Agent 自动触发和 Federated Retrieval 仍处于
+下一阶段。实施顺序和验收标准见 `docs/v2-design.md`，Corpus v3 Baseline 保持冻结。
+
+## Dynamic Ingestion Foundation
+
+```text
+search-papers / acquire-papers
+  -> arXiv Search + Candidate Rank/Dedup
+  -> allowlist Downloader
+  -> SQLite Paper Registry / Acquisition Run
+  -> Fast Parser Quality Gate
+  -> Chunk + Embedding
+  -> paper_dynamic_bge_m3_chunking_v1
+```
+
+Dynamic Pipeline 不依赖 LangGraph，也不修改 Curated Collection。它通过 Repository 和 Vector Store
+接口执行副作用，因此 Phase 5 只需要把该服务接入 Agent 的 bounded node，不需要在 Graph 节点内
+重新实现 HTTP、SQL 或 Qdrant 写入。
 
 ## 当前约束
 
@@ -155,5 +171,5 @@ Dynamic Corpus 仍处于下一阶段。实施顺序和验收标准见 `docs/v2-d
 - Evidence Gate 是可解释启发式，不等价于语义 Claim-Evidence Verification。
 - 当前启用 LangGraph SQLite Checkpointer，但它只提供 node-boundary Resume，不是长期用户 Memory。
 - API 使用单机 SQLite 和单 Worker；不支持多 Uvicorn Worker 或水平扩容。
-- 动态学术搜索与扩库尚未接入，Corpus 外问题仍会结构化拒答。
+- 动态学术搜索与扩库可显式运行，但尚未接入 Agent；当前在线问答遇到 Corpus 外问题仍会结构化拒答。
 - API 仅绑定本机且没有认证，不应直接暴露到公网。

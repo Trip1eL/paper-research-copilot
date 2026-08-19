@@ -1,6 +1,6 @@
 # ADR 004: Bounded Dynamic Corpus Expansion
 
-- Status: Accepted for v2.0
+- Status: Phase 4 foundation implemented; Agent integration pending Phase 5
 - Date: 2026-08-19
 
 ## Context
@@ -34,3 +34,16 @@ Corpus v3 能提供可复现的 Agent 论文研究 Baseline，但不能覆盖用
 系统从固定知识库问答升级为受控的 open-world RAG，但模型权重没有变化，因此该能力称为动态扩库而
 不是自学习。Evaluation 必须分别报告 In-corpus、Recoverable 和 Unrecoverable Cases，并记录每次
 扩库成本与副作用。
+
+## Phase 4 implementation
+
+- `PaperCandidate` 保存 versioned arXiv identity、DOI、作者、摘要、时间、分类和来源 URL。
+- `paper_assets` 与 `acquisition_runs` 由 Alembic 0002 加入 `data/app.db`。
+- Downloader 对每一次 redirect 重做 HTTPS、host 和 arXiv identity 校验，流式限制 50 MiB，并在
+  `%PDF-`、Content-Type 和 SHA-256 验证后原子提交文件。
+- Dynamic Ingestion 强制经过 Fast Parser Quality Gate，任意 quarantined 页面都会阻止 Embedding。
+- 幂等按 arXiv identity/revision、DOI、SHA-256、稳定 Chunk ID 和 Qdrant metadata 五层执行。
+- 本地 embedded Qdrant 使用独立 `data/qdrant_dynamic`，避免两个 Client 锁定同一路径；远程
+  Qdrant 仍使用独立 Collection `paper_dynamic_bge_m3_chunking_v1`。
+- Phase 4 通过 CLI 显式运行。Evidence Gate 自动触发、Federated RRF 和 Dynamic BM25 generation
+  属于 Phase 5，不在本阶段伪装为已完成。

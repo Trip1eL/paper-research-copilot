@@ -72,6 +72,11 @@ def _evidence() -> tuple[RetrievedChunk, ...]:
             "search",
         ),
         (["show-prompt", "tool use", "--top-k", "3"], "show-prompt"),
+        (["search-papers", "agent memory", "--limit", "3"], "search-papers"),
+        (
+            ["acquire-papers", "agent memory", "--task-id", "task-1", "--round", "2"],
+            "acquire-papers",
+        ),
         (
             ["ask", "tool use", "--retrieval-mode", "discovery"],
             "ask",

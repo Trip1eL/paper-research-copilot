@@ -7,9 +7,15 @@ from paper_research_copilot.config import PROJECT_ROOT, Settings
 
 
 def test_relative_qdrant_path_is_resolved_from_project_root(tmp_path: Path) -> None:
-    settings = Settings(qdrant_path=Path("runtime/qdrant"))
+    settings = Settings(
+        qdrant_path=Path("runtime/qdrant"),
+        dynamic_qdrant_path=Path("runtime/qdrant_dynamic"),
+        dynamic_assets_path=Path("runtime/papers"),
+    )
 
     assert settings.resolved_qdrant_path() == PROJECT_ROOT / "runtime/qdrant"
+    assert settings.resolved_dynamic_qdrant_path() == PROJECT_ROOT / "runtime/qdrant_dynamic"
+    assert settings.resolved_dynamic_assets_path() == PROJECT_ROOT / "runtime/papers"
 
 
 def test_cli_falls_back_to_project_root_for_relative_pdf(
