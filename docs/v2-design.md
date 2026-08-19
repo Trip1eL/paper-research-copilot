@@ -89,14 +89,19 @@ PDF
   -> Page Quality Scorer
   -> 质量合格：接受
   -> 质量较低：PyMuPDF 二次提取并择优
-  -> 两者仍不合格或页面为空：OCR fallback
+  -> 两者仍不合格、扫描页或复杂表格：Structured Parser fallback
   -> 再次评分
   -> accepted / warning / quarantined
 ```
 
-第一阶段保留 `pypdf` 作为 Primary Parser，增加 `PyMuPDF` 作为 Secondary Parser。OCR 通过
-`OcrEngine` 接口隔离，优先验证 `RapidOCR`，避免要求用户额外安装系统级 Tesseract。OCR 只对低质量
-页面触发，不对整篇论文无条件执行。
+第一阶段保留 `pypdf` 作为 Primary Parser，增加 `PyMuPDF` 作为 Secondary Parser。两者构成低延迟
+Fast Path。扫描页、复杂布局和表格密集论文进入独立的 MinerU Technical Spike；MinerU 通过
+`StructuredDocumentParser` 接口隔离，以文档级 Markdown/JSON Block 作为候选结果，不直接耦合现有
+Chunker。只有 Benchmark 达到 Go 标准后，MinerU 才成为生产 Structured Fallback。
+
+`RapidOCR` 不与 MinerU 同时首批引入。若 MinerU 的质量、部署或延迟未通过 Spike，再将 RapidOCR
+作为更轻量的纯 OCR 备选。Structured Fallback 只对 Gate 判定的异常文档触发，不无条件解析全部
+Corpus。
 
 ### 5.2 质量特征
 
@@ -151,6 +156,25 @@ DocumentParseResult
 - Parser Router 先对 v3 执行 shadow parse，只生成对照报告，不写入原 Collection。
 - 如果新 Parser 确有收益，后续创建 Corpus v4 或新的 Parse/Chunking 版本与 Collection。
 - Dynamic Corpus 从第一天使用 Parser Router，低质量页面不能进入动态 Collection。
+
+### 5.5 MinerU Technical Spike
+
+Spike 使用独立 Adapter 和输出目录，不修改生产 Parser。样本至少覆盖普通文本、双栏、公式密集、
+原生表格、扫描表格和混合扫描 PDF。除正文完整度外，必须通过 Table QA 验证表头、行列和数值对应
+关系，不能把“识别出了字符”当作表格解析成功。
+
+Go 标准：
+
+- 已知扫描/复杂布局问题页的可用文本恢复率高于 Fast Path；
+- Table QA Accuracy 相比 Fast Path 有实质提升；
+- page number 与 block bounding box provenance 完整；
+- 普通文本 PDF 不因路由到 MinerU 产生主链路回退；
+- 单篇耗时、模型大小和运行环境能在 Demo 机器上接受；
+- 当前 MinerU 代码与模型 License 经核对适合公开作品仓库和演示方式。
+
+若通过，后续领域模型增加 `ContentBlock`：`title/paragraph/table/formula/figure/caption`，表格保留
+Markdown/HTML、caption、page number 和 bbox；Chunking 对小表格整体保留，对大表格切分时重复表头。
+若不通过，Fast Path 保持生产默认，并验证 RapidOCR 作为扫描页轻量 fallback。
 
 ## 6. Epic B：Dynamic Corpus Expansion
 
@@ -332,8 +356,10 @@ domain/
 ingestion/
   extractors.py         pypdf / PyMuPDF adapters
   quality.py            deterministic quality scorer
-  ocr.py                OCR protocol and RapidOCR adapter
   router.py             page-level selection and quarantine
+  structured/
+    base.py             StructuredDocumentParser protocol
+    mineru.py           isolated MinerU spike adapter
   dynamic.py            parse -> chunk -> embed -> Qdrant orchestration
 
 integrations/scholarly/
@@ -403,20 +429,102 @@ api/
 - Repository contract tests 同时覆盖内存 Fake 与 SQLite 实现；
 - 现有 v1 Python/Frontend 测试保持通过。
 
-## 10. 实施顺序
+## 10. 实施阶段
 
-1. **Slice 1：Parser Router Shadow Mode**
-   建立模型、双 Parser、Quality Scorer、调试命令和 Parse Benchmark，不接 Agent。
-2. **Slice 2：Persistent Store Foundation**
-   建立 Schema、Repository、Migration，先替换 Task/Event 内存存储。
-3. **Slice 3：arXiv Search Metadata Only**
-   只搜索、排序并展示候选，不下载，不修改 Corpus。
-4. **Slice 4：Dynamic Ingestion**
-   加入受控下载、去重、Parser Gate、Embedding 和 Dynamic Collection。
-5. **Slice 5：Agent Acquisition Loop**
-   Evidence insufficient 时触发一次 Acquisition，再做 Federated Retrieval。
-6. **Slice 6：Checkpoint Resume 与 Open-world Evaluation**
-   接入 LangGraph Checkpointer、Resume API，并完成三类对照实验。
+### Phase 0：冻结 Baseline 与建立问题样本
 
-每个 Slice 单独测试和记录 Baseline。第一个实现任务是 Slice 1，不先安装 OCR 重型依赖；先用
-`pypdf + PyMuPDF` 和真实问题页面建立 Parser 对照，确认剩余失败类型后再接 `RapidOCR`。
+模块：`evaluation`、`scripts`、`tests/fixtures`。
+
+- 从现有 Corpus 和用户遇到的 PDF 中建立 Parse Benchmark Manifest。
+- 标注正常页、乱码页、空文本页、双栏页、公式页、原生表格和扫描表格。
+- 保存 v1 `pypdf` 输出、耗时和问题分类，形成不可变 Baseline。
+
+完成条件：Dataset 可重复加载，PDF SHA-256 与目标页固定，Baseline Report 可由一个命令生成。
+
+### Phase 1：Fast Parser Quality Router
+
+模块：`domain`、`ingestion`、`cli`、`tests/unit`、`evaluation`。
+
+- 定义 Page Parse provenance 和 Quality Result。
+- 抽离 `PypdfExtractor`，增加 `PyMuPdfExtractor`。
+- 实现确定性 `PageQualityScorer` 和逐页择优 Router。
+- 增加 `inspect-parse-quality` 与 shadow parse report。
+- 对 Corpus v3 只执行 shadow mode，不写 Qdrant。
+
+完成条件：现有 Parser/Chunker 测试不回退；问题页检出率达到门槛；quarantined 页面无法进入
+Chunking；每页选择原因可观察。
+
+### Phase 2：MinerU Structured Parser Spike
+
+模块：`ingestion/structured`、`evaluation`、`scripts`，必要时增加独立运行环境或容器配置。
+
+- 实现隔离的 `MineruAdapter`，保留 Markdown/JSON Block、page number 和 bbox。
+- 运行普通文本、扫描页、复杂布局和表格 QA 对照。
+- 报告解析质量、Table QA、P50/P95、CPU/GPU 与模型体积。
+- 根据 Go/No-Go 决定接入 Structured Fallback，或改为 RapidOCR 轻量 fallback。
+
+完成条件：形成明确决策和 ADR 更新。未通过前不得修改生产 Parser 默认路径。
+
+### Phase 3：Persistent Store Foundation
+
+模块：`storage`、`api`、`agent`、`tests/integration`。
+
+- 建立 SQLAlchemy Model、Alembic Migration 和 Repository Protocol。
+- 持久化 Task、Event、Result、Paper Asset 和 Acquisition Run。
+- 替换进程内 Task/Event Store，保持现有 HTTP/SSE 契约兼容。
+- 接入独立 LangGraph SQLite Checkpointer，增加 interrupted 与 Resume 语义。
+
+完成条件：重启后 Task/Event/Result 可查询；SSE sequence 可续读；node-boundary Resume 不重复事件。
+
+### Phase 4：Academic Search 与 Dynamic Ingestion
+
+模块：`integrations/scholarly`、`ingestion/dynamic`、`storage`、`retrieval`、`evaluation`。
+
+- 先实现 arXiv Metadata Search、Candidate Model、排序和去重，不立即下载。
+- 再加入 allowlist Downloader、PDF 校验、Paper Registry 和幂等本地资产存储。
+- 通过 Parser Quality Router 后执行 Chunk、Embedding 和 Dynamic Qdrant Upsert。
+- 成功写入后重建 Dynamic BM25 snapshot。
+
+完成条件：同一 revision 重复摄取不重复下载、不重复 Embedding、不增加 Qdrant Point；失败资产进入
+quarantine；动态 Collection 与 Corpus v3 完全分离。
+
+### Phase 5：Federated Retrieval 与 Agent Acquisition Loop
+
+模块：`retrieval/federated`、`agent`、`api`、`frontend`。
+
+- Curated 与 Dynamic 各自检索并通过 RRF 融合。
+- Evidence insufficient 时按预算触发一次 Search/Acquire/Retry。
+- Trace 和 UI 显示候选、下载、Parse、Index 与重新检索状态。
+- 任务恢复使用相同 Acquisition idempotency key。
+
+完成条件：Agent 有明确停止条件；In-corpus 问题不会普遍触发下载；扩库后的 Citation 能追溯到动态
+论文、页码和 Parser provenance。
+
+### Phase 6：Open-world Evaluation 与 v2 验收
+
+模块：`evaluation`、`evals`、`docs`，必要时补充 `frontend` 可观测性。
+
+- 固定 In-corpus、Recoverable、Unrecoverable/Ambiguous 三组 Dataset。
+- 报告 Acquisition Trigger、Paper Recall、Recovery Rate、拒答率、幂等、Citation、延迟和成本。
+- 运行重启恢复与失败注入测试。
+- 只有达到第 9 节指标后才把 v2 链路设为默认 Demo。
+
+完成条件：生成可复现实验报告，并明确保留失败边界。Claim-level Verification 在此后作为后置增强
+进入下一阶段，不阻塞前三个核心 Epic 的 v2 验收。
+
+## 11. 模块责任矩阵
+
+| Module | v2.0 新责任 | 不承担的责任 |
+| --- | --- | --- |
+| `domain` | Parse provenance、Candidate、Asset、Budget 模型 | Parser SDK、SQL、HTTP |
+| `ingestion` | Fast/Structured Parser、Quality Gate、动态摄取编排 | Agent 路由、API |
+| `integrations/scholarly` | arXiv Search 与受控下载适配 | 候选决策、Embedding |
+| `storage` | Task/Event/Asset/Acquisition Repository | LangGraph 节点逻辑 |
+| `retrieval` | Curated/Dynamic Federated Retrieval、BM25 generation | 下载与持久化 |
+| `agent` | Evidence 缺口路由、受控 Acquisition Loop、停止规则 | Parser 与 SQL 实现 |
+| `api` | 持久任务、Resume、SSE 与公开状态 | Retrieval/Acquisition 算法 |
+| `evaluation` | Parse、Open-world、Persistence 指标和 Harness | 修改生产行为 |
+| `frontend` | Acquisition/Resume 可观察性 | 保存 Agent 私有 State |
+
+执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。当前第一个编码任务是
+Phase 0：建立 Parse Benchmark Manifest 和 v1 Baseline Runner；完成后再进入 Phase 1 的双 Parser。
