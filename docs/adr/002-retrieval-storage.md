@@ -1,6 +1,6 @@
 # ADR 002: Corpus and Retrieval Storage
 
-- Status: Accepted for MVP
+- Status: Accepted for v1; partially superseded by ADR 004 and ADR 005 for v2
 - Date: 2026-08-14
 
 ## Context

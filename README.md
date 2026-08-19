@@ -14,6 +14,7 @@ Retrieval、Answer/Citation、LLM Judge 和 Agent-vs-Fixed-RAG 三层评测。
 - [面试讲解与简历表述](docs/interview.md)
 - [Retrieval 设计](docs/retrieval.md)
 - [Evaluation 设计](docs/evaluation.md)
+- [v2.0 设计基线](docs/v2-design.md)
 - [完整开发记录](开发过程.md)
 
 ## 当前能力

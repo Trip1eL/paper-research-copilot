@@ -134,6 +134,10 @@ model、Prompt version 和精确输出建立 JSONL 缓存；缓存命中不会�
 模型路由见 `docs/adr/001-model-routing.md`，Corpus 与存储决策见
 `docs/adr/002-retrieval-storage.md`。
 
+v2.0 的 Parser Quality Router、Dynamic Corpus 与 Durable Runtime 仍处于设计阶段，目标架构、
+数据模型、实施顺序和验收标准见 `docs/v2-design.md`。该设计不会静默改变本页记录的 v1.0.0
+生产行为或 Corpus v3 Baseline。
+
 ## 当前约束
 
 - Planning 使用 Relay `gpt-5.5`，真实首次调用约 10.7 秒；缓存只用于复现，不能掩盖冷启动
