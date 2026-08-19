@@ -32,4 +32,3 @@ v1 使用 `pypdf.page.extract_text()` 处理全部页面。该路径无法可靠
 
 解析延迟会增加，但只在可疑页面支付 Secondary/OCR 成本。领域模型和 Chunk metadata 会扩展；原有
 Chunker 保持对 `page.text` 的依赖，不承担 Parser 选择逻辑。公式精确还原仍不是 v2.0 承诺。
-

@@ -34,4 +34,3 @@ SSE 事件和结果全部丢失，LangGraph 也没有 Checkpointer。动态下�
 
 v2.0 能证明重启恢复和副作用幂等，但不宣称支持水平扩容或多 Uvicorn Worker。Repository 边界允许
 未来把 Application Store 切换到 PostgreSQL，而不修改 API/Agent 契约。
-

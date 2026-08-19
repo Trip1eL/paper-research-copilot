@@ -34,4 +34,3 @@ Corpus v3 能提供可复现的 Agent 论文研究 Baseline，但不能覆盖用
 系统从固定知识库问答升级为受控的 open-world RAG，但模型权重没有变化，因此该能力称为动态扩库而
 不是自学习。Evaluation 必须分别报告 In-corpus、Recoverable 和 Unrecoverable Cases，并记录每次
 扩库成本与副作用。
-
