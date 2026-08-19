@@ -1,0 +1,50 @@
+{
+  "config": {
+    "baseline_id": "mineru_structured_v1_recovery_probe",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/structured_parse_benchmark_v1.jsonl",
+    "dataset_sha256": "f3c33e7411b6c6416d65ed2bc5f21a1c22ecb1649e1237f9c232dcdbeab620c8",
+    "parser": "mineru",
+    "parser_version": "3.4.5",
+    "backend": "pipeline",
+    "device": "cpu",
+    "worker_mode": "isolated subprocess + in-process PDF render compatibility",
+    "formula_policy": "formula_dense only; table model only when required"
+  },
+  "case_count": 1,
+  "case_success_rate": 1.0,
+  "text_anchor_recall": 1.0,
+  "required_block_type_pass_rate": 1.0,
+  "bbox_provenance_completeness": 1.0,
+  "page_provenance_completeness": 1.0,
+  "table_qa_accuracy": null,
+  "ocr_recovery_rate": 1.0,
+  "cold_start_latency_ms": 26906.5,
+  "p50_latency_ms": 26906.5,
+  "p95_latency_ms": 26906.5,
+  "results": [
+    {
+      "case_id": "SPB-003",
+      "source_id": "arxiv:2210.03629",
+      "page_number": 2,
+      "category": "garbled_text",
+      "method": "ocr",
+      "status": "pass",
+      "error": null,
+      "latency_ms": 26906.5,
+      "block_count": 5,
+      "matched_anchors": [
+        "Figure 1: (1) Comparison of 4 prompting methods",
+        "we present ReAct, a general paradigm"
+      ],
+      "missing_anchors": [],
+      "anchor_recall": 1.0,
+      "required_block_types_pass": true,
+      "missing_required_block_types": [],
+      "bbox_provenance_completeness": 1.0,
+      "page_provenance_completeness": 1.0,
+      "table_questions_pass": null,
+      "table_question_results": []
+    }
+  ]
+}

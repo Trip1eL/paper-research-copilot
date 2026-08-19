@@ -1,0 +1,4 @@
+# Isolated Phase 2 technical-spike environment. Do not install into the main project env.
+mineru[pipeline]==3.4.5
+# MinerU 3.4.5 pipeline imports six but omits it from package metadata.
+six==1.17.0

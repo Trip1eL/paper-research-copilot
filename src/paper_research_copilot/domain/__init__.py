@@ -28,6 +28,12 @@ from paper_research_copilot.domain.parse import (
     ParserName,
     ParseRouteAction,
 )
+from paper_research_copilot.domain.structured_parse import (
+    StructuredBlockType,
+    StructuredContentBlock,
+    StructuredPageResult,
+    StructuredParseMethod,
+)
 
 __all__ = [
     "Answer",
@@ -53,4 +59,8 @@ __all__ = [
     "ParseRouteAction",
     "ParserName",
     "RetrievedChunk",
+    "StructuredBlockType",
+    "StructuredContentBlock",
+    "StructuredPageResult",
+    "StructuredParseMethod",
 ]

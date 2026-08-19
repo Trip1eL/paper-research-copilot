@@ -468,6 +468,9 @@ PyMuPDF 没有修复已知 Caesar/font mapping 乱码，因此 Fast Router 的�
 
 ### Phase 2：MinerU Structured Parser Spike
 
+状态：已于 2026-08-19 完成 Technical Spike。结论为“表格解析能力 Conditional Go，当前 Windows
+Demo 生产接入 No-Go”；生产 `PdfParser`、Corpus v3、Chunk、Embedding 和 Qdrant 均未修改。
+
 模块：`ingestion/structured`、`evaluation`、`scripts`，必要时增加独立运行环境或容器配置。
 
 - 实现隔离的 `MineruAdapter`，保留 Markdown/JSON Block、page number 和 bbox。
@@ -476,6 +479,16 @@ PyMuPDF 没有修复已知 Caesar/font mapping 乱码，因此 Fast Router 的�
 - 根据 Go/No-Go 决定接入 Structured Fallback，或改为 RapidOCR 轻量 fallback。
 
 完成条件：形成明确决策和 ADR 更新。未通过前不得修改生产 Parser 默认路径。
+
+正式结果：11 Case 连续基线的 Case pass 为 `63.64%`，Table QA 与有效 block 的 bbox/page
+provenance 均为 `100%`，OCR recovery 为 `40%`，P50/P95 为 `24.10/120.15 s`。三类原生表格和
+synthetic 扫描表格的 6 条行列关系全部正确；ReAct 乱码页独立运行可恢复，但连续运行不稳定；
+Formula 模型触发 Windows `os error 1455`，无文本截图页只恢复局部内容。
+
+因此 MinerU Adapter、领域模型和 Evaluation Harness 保留为隔离实验能力，不接入当前生产
+Structured Fallback。下一步在 Phase 3 持久化主线之外，单独验证 RapidOCR 作为更轻量的纯 OCR
+fallback。完整证据见 `docs/mineru-spike.md`、ADR 006 和
+`evals/baselines/mineru_structured_v1.md`。
 
 ### Phase 3：Persistent Store Foundation
 

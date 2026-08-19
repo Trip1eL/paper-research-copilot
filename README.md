@@ -15,6 +15,7 @@ Retrieval、Answer/Citation、LLM Judge 和 Agent-vs-Fixed-RAG 三层评测。
 - [Retrieval 设计](docs/retrieval.md)
 - [Evaluation 设计](docs/evaluation.md)
 - [v2.0 设计基线](docs/v2-design.md)
+- [MinerU Structured Parser Spike](docs/mineru-spike.md)
 - [完整开发记录](开发过程.md)
 
 ## 当前能力
@@ -62,6 +63,11 @@ React Research Workspace
 - 通过显式 `retrieval_mode` 选择 Dense 或 Hybrid RRF，并为结果分配 `[C1]`、`[C2]` 等
   Citation ID。
 - LLM 只能基于检索证据回答；未知引用或无引用回答会被拒绝。
+
+v2 Phase 2 已完成 MinerU 3.4.5 Structured Parser Technical Spike。原生与扫描表格的 Table QA
+达到 `100%`，但当前 Windows CPU Demo 环境的 OCR recovery、连续运行稳定性和 Formula 内存均未
+通过生产 Gate，因此 MinerU 只保留为隔离实验能力，尚未替换生产 `PdfParser`。完整结论见
+`docs/mineru-spike.md`。
 
 当前版本已将评测后的 Dense 与 Hybrid RRF 接入主链路，并实现可观测的 Cross-Encoder
 Reranker 实验层，是后续 Answer Evaluation 和 Agent Runtime 的基础。
@@ -536,7 +542,8 @@ Smoke Test 验证。
 
 ## 当前限制
 
-- 只支持包含可提取文本的 PDF，扫描件暂不执行 OCR。
+- 生产索引链路仍只接受通过 Fast Parser Quality Gate 的可提取文本 PDF；扫描件不会自动 OCR 或进入
+  Embedding。MinerU 已完成隔离 Spike，但尚未通过当前 Demo 机器的生产部署 Gate。
 - Chunk 长度目前按字符而非模型 tokenizer 计算；Section title 使用确定性启发式识别。
 - ReAct 等少数页存在 `pypdf` 字体到 Unicode 映射乱码，已在 Parse 报告中标记。
 - 当前支持 Dense、BM25、RRF、MMR、Query Rewrite 与 Reranker 实验；生产 Factory 仍只暴露
@@ -551,3 +558,9 @@ Smoke Test 验证。
 设计文档见 [docs/architecture.md](docs/architecture.md)、
 [docs/retrieval.md](docs/retrieval.md)、[docs/evaluation.md](docs/evaluation.md) 和
 [docs/api.md](docs/api.md)、[docs/frontend.md](docs/frontend.md)。
+
+## 第三方解析组件
+
+Phase 2 Technical Spike 使用 [OpenDataLab MinerU](https://github.com/opendatalab/MinerU)
+3.4.5。MinerU 使用包含附加条款的 `MinerU Open Source License`；本项目当前只将其用于隔离评测，
+未接入默认在线解析链路。License 与部署边界见 `docs/mineru-spike.md`。

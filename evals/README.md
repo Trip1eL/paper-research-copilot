@@ -49,8 +49,30 @@ PyMuPDF 候选，最终 `0` 页恢复为 accepted、7 页 warning、15 页 quara
 PyMuPDF 能减少部分控制字符，但 ReAct、Tree of Thoughts 等页面仍存在 Caesar-like 或异常 Latin
 字体映射，不能把可打印字符增加解释为语义恢复。Fast Router 当前通过确定性字符分布特征检出并
 隔离这些页面；`quarantined` 页面由 Quality Gate 阻止进入 Chunking。Shadow 模式没有修改 Corpus
-v3 Manifest、Chunk、Embedding 或 Qdrant Collection。下一步使用同一 Benchmark 验证 MinerU
-Structured Parser，Fast Path recovery 当前应如实记为 `N/A/0`，不能虚构提升。
+v3 Manifest、Chunk、Embedding 或 Qdrant Collection。Fast Path recovery 应如实记为 `N/A/0`，
+不能虚构提升。
+
+## MinerU Structured Parse Benchmark v1
+
+`datasets/structured_parse_benchmark_v1.jsonl` 在原 10 个页面基础上增加确定性的无文本层扫描表格，
+并将验收从字符串 Anchor 扩展为 `ContentBlock + bbox + Table QA`。运行隔离的 MinerU 3.4.5 CPU
+pipeline：
+
+```powershell
+python scripts/run_structured_parse_benchmark.py --timeout-seconds 120
+```
+
+Runner 通过 `tmp/mineru/env` 的独立 Python 调用 MinerU，不向主环境安装 PyTorch/MinerU，不修改
+Corpus、Chunk、Embedding 或 Qdrant。正式连续基线位于
+`baselines/mineru_structured_v1.json|md`：11 Case pass `63.64%`、Text Anchor Recall `61.54%`、
+Table QA `100%`、bbox/page provenance `100%`、OCR recovery `40%`，P50/P95 为
+`24.10/120.15 s`。
+
+Table QA 会展开 `rowspan/colspan`，按行标签和多级列头定位交叉单元格；答案数字位于错误列时不得分。
+三类原生表格和 synthetic 扫描表格共 6 条 QA 全部通过。ReAct 乱码页独立 Probe 在 `26.91 s`
+内恢复，但连续运行超时；Formula Probe 触发 Windows `os error 1455`；无文本截图页只恢复局部内容。
+因此 MinerU 解析能力为 Conditional Go，当前 Windows Demo 生产接入为 No-Go。详见
+`../docs/mineru-spike.md` 与 ADR 006。
 
 校验数据结构及论文 ID：
 

@@ -1,0 +1,53 @@
+{
+  "config": {
+    "baseline_id": "mineru_structured_v1_formula",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/structured_parse_benchmark_v1.jsonl",
+    "dataset_sha256": "f3c33e7411b6c6416d65ed2bc5f21a1c22ecb1649e1237f9c232dcdbeab620c8",
+    "parser": "mineru",
+    "parser_version": "3.4.5",
+    "backend": "pipeline",
+    "device": "cpu",
+    "worker_mode": "isolated subprocess + in-process PDF render compatibility",
+    "formula_policy": "formula_dense only; table model only when required"
+  },
+  "case_count": 1,
+  "case_success_rate": 0.0,
+  "text_anchor_recall": 0.0,
+  "required_block_type_pass_rate": 0.0,
+  "bbox_provenance_completeness": 0.0,
+  "page_provenance_completeness": 0.0,
+  "table_qa_accuracy": null,
+  "ocr_recovery_rate": null,
+  "cold_start_latency_ms": 17266.42,
+  "p50_latency_ms": 17266.42,
+  "p95_latency_ms": 17266.42,
+  "results": [
+    {
+      "case_id": "SPB-005",
+      "source_id": "arxiv:2401.13178",
+      "page_number": 5,
+      "category": "formula_dense",
+      "method": "auto",
+      "status": "error",
+      "error": "StructuredParserError: MinerU failed for 2401.13178_agentboard.pdf:p5: OSError: 页面文件太小，无法完成操作。 (os error 1455)",
+      "latency_ms": 17266.42,
+      "block_count": 0,
+      "matched_anchors": [],
+      "missing_anchors": [
+        "The progress rate is formulated as below",
+        "We employ progress rate along with the commonly used success rate metric"
+      ],
+      "anchor_recall": 0.0,
+      "required_block_types_pass": false,
+      "missing_required_block_types": [
+        "paragraph",
+        "formula"
+      ],
+      "bbox_provenance_completeness": 0.0,
+      "page_provenance_completeness": 0.0,
+      "table_questions_pass": null,
+      "table_question_results": []
+    }
+  ]
+}
