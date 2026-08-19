@@ -1,0 +1,1786 @@
+{
+  "reranker_model": "BAAI/bge-reranker-v2-m3",
+  "candidate_pool": 50,
+  "cases": [
+    {
+      "case_id": "DS-001",
+      "targets": [
+        {
+          "paper_id": "arxiv:2210.03629",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9569880366325378
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9573274850845337
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-002",
+      "targets": [
+        {
+          "paper_id": "arxiv:2210.03629",
+          "relevant_pages": [
+            1,
+            4,
+            7
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 7,
+            "best_reranker_score": 0.26546207070350647
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 8,
+            "best_reranker_score": 0.5422149300575256
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-003",
+      "targets": [
+        {
+          "paper_id": "arxiv:2302.04761",
+          "relevant_pages": [
+            1,
+            2
+          ],
+          "fast": {
+            "original_paper_rank": 5,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 10,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9841713309288025
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 7,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.984263002872467
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-004",
+      "targets": [
+        {
+          "paper_id": "arxiv:2302.04761",
+          "relevant_pages": [
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9645273089408875
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9644508957862854
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-005",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.11366",
+          "relevant_pages": [
+            1,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.9428607821464539
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.9422954320907593
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-006",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.11366",
+          "relevant_pages": [
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9015880823135376
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9031476378440857
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-007",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.04406",
+          "relevant_pages": [
+            2,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.990011990070343
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.990011990070343
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-008",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.04406",
+          "relevant_pages": [
+            1,
+            7
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9755917191505432
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 10,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9759254455566406
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-009",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.08560",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8917163014411926
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8920468688011169
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-010",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.08560",
+          "relevant_pages": [
+            1,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.5853962898254395
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.5900149345397949
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-011",
+      "targets": [
+        {
+          "paper_id": "arxiv:2304.03442",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.887398362159729
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.8877590298652649
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-012",
+      "targets": [
+        {
+          "paper_id": "arxiv:2304.03442",
+          "relevant_pages": [
+            14,
+            15,
+            17
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.6380903124809265
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.6299433708190918
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-013",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.16291",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9944994449615479
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9945573806762695
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-014",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.16291",
+          "relevant_pages": [
+            2,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 4,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.9965386390686035
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 5,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.9966400861740112
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-015",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17760",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.9815177321434021
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.9817543625831604
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-016",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17760",
+          "relevant_pages": [
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 7,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.822333037853241
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8183296322822571
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-017",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.08155",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9748919606208801
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9748772382736206
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-018",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.08155",
+          "relevant_pages": [
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.8576440811157227
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.8555307388305664
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-019",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.03688",
+          "relevant_pages": [
+            1,
+            2
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9760034084320068
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.975771963596344
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-020",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.03688",
+          "relevant_pages": [
+            1,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9703577756881714
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9715045094490051
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-021",
+      "targets": [
+        {
+          "paper_id": "arxiv:2210.03629",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 17,
+            "reranked_paper_rank": 21,
+            "original_exact_page_rank": 33,
+            "reranked_exact_page_rank": 21,
+            "best_reranker_score": 0.20199298858642578
+          },
+          "deep": {
+            "original_paper_rank": 4,
+            "reranked_paper_rank": 16,
+            "original_exact_page_rank": 4,
+            "reranked_exact_page_rank": 32,
+            "best_reranker_score": 0.30313748121261597
+          }
+        },
+        {
+          "paper_id": "arxiv:2302.04761",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8228914141654968
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8231551647186279
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-022",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.11366",
+          "relevant_pages": [
+            1,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 3,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 27,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.7397047281265259
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 10,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.7445532083511353
+          }
+        },
+        {
+          "paper_id": "arxiv:2310.04406",
+          "relevant_pages": [
+            1,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 2,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.7372191548347473
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 2,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.7352584600448608
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-023",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.08560",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.6267552375793457
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.6267552375793457
+          }
+        },
+        {
+          "paper_id": "arxiv:2304.03442",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 3,
+            "original_exact_page_rank": 6,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.5315036773681641
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 3,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.5344054102897644
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-024",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17760",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8769051432609558
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8788513541221619
+          }
+        },
+        {
+          "paper_id": "arxiv:2308.08155",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 6,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 6,
+            "reranked_exact_page_rank": 9,
+            "best_reranker_score": 0.8132709860801697
+          },
+          "deep": {
+            "original_paper_rank": 3,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 9,
+            "best_reranker_score": 0.8145551085472107
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-025",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.04406",
+          "relevant_pages": [
+            1,
+            2,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 4,
+            "reranked_paper_rank": 3,
+            "original_exact_page_rank": 4,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.7781285643577576
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 3,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 3,
+            "best_reranker_score": 0.7755499482154846
+          }
+        },
+        {
+          "paper_id": "arxiv:2305.16291",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8666198253631592
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8637835383415222
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-026",
+      "targets": [
+        {
+          "paper_id": "arxiv:2205.00445",
+          "relevant_pages": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9619609117507935
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9628512859344482
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-027",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17651",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9877097606658936
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9878026843070984
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-028",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.10601",
+          "relevant_pages": [
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9241703152656555
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9241703152656555
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-029",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.10250",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.994120180606842
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9941470623016357
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-030",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17580",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9777396321296692
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9777396321296692
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-031",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.15334",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9859068393707275
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9860712885856628
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-032",
+      "targets": [
+        {
+          "paper_id": "arxiv:2307.16789",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5,
+            6,
+            10
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9986997842788696
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.998672366142273
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-033",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.10848",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9946172833442688
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9945791959762573
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-034",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.00352",
+          "relevant_pages": [
+            1,
+            2,
+            4,
+            5,
+            6
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8944034576416016
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8948452472686768
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-035",
+      "targets": [
+        {
+          "paper_id": "arxiv:2307.13854",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9274920225143433
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9263944029808044
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-036",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17651",
+          "relevant_pages": [
+            1,
+            2,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.8862108588218689
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.8854922652244568
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-037",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.10601",
+          "relevant_pages": [
+            1,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.9796059727668762
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.9797564148902893
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-038",
+      "targets": [
+        {
+          "paper_id": "arxiv:2307.16789",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9806894659996033
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9812334775924683
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-039",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.10848",
+          "relevant_pages": [
+            7,
+            8,
+            9
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8257145285606384
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.827895998954773
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-040",
+      "targets": [
+        {
+          "paper_id": "arxiv:2307.13854",
+          "relevant_pages": [
+            5,
+            7,
+            8
+          ],
+          "fast": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 6,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.997387707233429
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.9974006414413452
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-041",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.11366",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.7584792375564575
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.7584792375564575
+          }
+        },
+        {
+          "paper_id": "arxiv:2303.17651",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            15
+          ],
+          "fast": {
+            "original_paper_rank": 15,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 20,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.11740805208683014
+          },
+          "deep": {
+            "original_paper_rank": 24,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 24,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.12230248749256134
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-042",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.04406",
+          "relevant_pages": [
+            2,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9618552327156067
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9608259201049805
+          }
+        },
+        {
+          "paper_id": "arxiv:2305.10601",
+          "relevant_pages": [
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 6,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.778184175491333
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 6,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.7790636420249939
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-043",
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.08560",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8210326433181763
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8192571401596069
+          }
+        },
+        {
+          "paper_id": "arxiv:2305.10250",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 6,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 6,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.4511318504810333
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.45382821559906006
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-044",
+      "targets": [
+        {
+          "paper_id": "arxiv:2210.03629",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 4,
+            "reranked_paper_rank": 2,
+            "original_exact_page_rank": 12,
+            "reranked_exact_page_rank": 4,
+            "best_reranker_score": 0.0980304479598999
+          },
+          "deep": {
+            "original_paper_rank": 7,
+            "reranked_paper_rank": 3,
+            "original_exact_page_rank": 19,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.10108840465545654
+          }
+        },
+        {
+          "paper_id": "arxiv:2205.00445",
+          "relevant_pages": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.05943923071026802
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 9,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 9,
+            "best_reranker_score": 0.05943923071026802
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-045",
+      "targets": [
+        {
+          "paper_id": "arxiv:2302.04761",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.5735355615615845
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.5713632106781006
+          }
+        },
+        {
+          "paper_id": "arxiv:2305.15334",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 7,
+            "best_reranker_score": 0.32533901929855347
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 8,
+            "reranked_exact_page_rank": 9,
+            "best_reranker_score": 0.32937347888946533
+          }
+        },
+        {
+          "paper_id": "arxiv:2307.16789",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            6,
+            10
+          ],
+          "fast": {
+            "original_paper_rank": 14,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 14,
+            "reranked_exact_page_rank": 10,
+            "best_reranker_score": 0.2965208888053894
+          },
+          "deep": {
+            "original_paper_rank": 3,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.29353067278862
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-046",
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.17760",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.6489335298538208
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 3,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.6364724040031433
+          }
+        },
+        {
+          "paper_id": "arxiv:2308.08155",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "fast": {
+            "original_paper_rank": 4,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 7,
+            "reranked_exact_page_rank": 16,
+            "best_reranker_score": 0.5167251229286194
+          },
+          "deep": {
+            "original_paper_rank": 10,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 10,
+            "reranked_exact_page_rank": 16,
+            "best_reranker_score": 0.5167251229286194
+          }
+        },
+        {
+          "paper_id": "arxiv:2308.10848",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 27,
+            "reranked_paper_rank": 15,
+            "original_exact_page_rank": 27,
+            "reranked_exact_page_rank": 20,
+            "best_reranker_score": 0.28143250942230225
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 14,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 20,
+            "best_reranker_score": 0.2760021686553955
+          }
+        },
+        {
+          "paper_id": "arxiv:2308.00352",
+          "relevant_pages": [
+            1,
+            2,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 6,
+            "reranked_paper_rank": 10,
+            "original_exact_page_rank": 6,
+            "reranked_exact_page_rank": 10,
+            "best_reranker_score": 0.33799535036087036
+          },
+          "deep": {
+            "original_paper_rank": 4,
+            "reranked_paper_rank": 9,
+            "original_exact_page_rank": 4,
+            "reranked_exact_page_rank": 9,
+            "best_reranker_score": 0.33799535036087036
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-047",
+      "targets": [
+        {
+          "paper_id": "arxiv:2308.03688",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 7,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 22,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.23950204253196716
+          },
+          "deep": {
+            "original_paper_rank": 7,
+            "reranked_paper_rank": 5,
+            "original_exact_page_rank": 23,
+            "reranked_exact_page_rank": 5,
+            "best_reranker_score": 0.23029793798923492
+          }
+        },
+        {
+          "paper_id": "arxiv:2307.13854",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5,
+            8
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.7908840179443359
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.7861419916152954
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-048",
+      "targets": [
+        {
+          "paper_id": "arxiv:2304.03442",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.802044689655304
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8006336092948914
+          }
+        },
+        {
+          "paper_id": "arxiv:2305.10250",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 3,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 4,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.43992435932159424
+          },
+          "deep": {
+            "original_paper_rank": 3,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 4,
+            "reranked_exact_page_rank": 6,
+            "best_reranker_score": 0.4488610029220581
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-049",
+      "targets": [
+        {
+          "paper_id": "arxiv:2305.16291",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 37,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 37,
+            "reranked_exact_page_rank": 4,
+            "best_reranker_score": 0.7123480439186096
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9328212738037109
+          }
+        },
+        {
+          "paper_id": "arxiv:2303.17580",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fast": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 6,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.9705740213394165
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 4,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 4,
+            "best_reranker_score": 0.7952529191970825
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DS-050",
+      "targets": [
+        {
+          "paper_id": "arxiv:2205.00445",
+          "relevant_pages": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fast": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 1,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8836005926132202
+          },
+          "deep": {
+            "original_paper_rank": 2,
+            "reranked_paper_rank": 1,
+            "original_exact_page_rank": 2,
+            "reranked_exact_page_rank": 1,
+            "best_reranker_score": 0.8853942155838013
+          }
+        },
+        {
+          "paper_id": "arxiv:2305.15334",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "fast": {
+            "original_paper_rank": 3,
+            "reranked_paper_rank": 2,
+            "original_exact_page_rank": 12,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.7998077869415283
+          },
+          "deep": {
+            "original_paper_rank": 1,
+            "reranked_paper_rank": 2,
+            "original_exact_page_rank": 8,
+            "reranked_exact_page_rank": 2,
+            "best_reranker_score": 0.8014844059944153
+          }
+        }
+      ]
+    }
+  ]
+}

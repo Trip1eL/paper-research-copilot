@@ -1,0 +1,110 @@
+{
+  "corpus_id": "agent-seed-v1",
+  "version": 1,
+  "created_on": "2026-08-15",
+  "description": "A small representative corpus for Agent research and retrieval evaluation.",
+  "visual_check": {
+    "checked_on": "2026-08-15",
+    "tool": "Poppler pdftoppm",
+    "status": "passed",
+    "first_pages_checked": 10,
+    "suspicious_pages_checked": 6,
+    "notes": [
+      "10 篇论文的首页均与预期论文一致，且没有缺失内容。",
+      "6 个异常页均可正常渲染；警告来自文本抽取时的字符映射。",
+      "CAMEL 的 arXiv 标题含有 'Large Scale'，v2 PDF 首页标题省略了 'Scale'；已人工确认 PDF 身份正确。"
+    ]
+  },
+  "papers": [
+    {
+      "paper_id": "arxiv:2210.03629",
+      "arxiv_id": "2210.03629",
+      "arxiv_version": "2210.03629v3",
+      "slug": "react",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "topics": ["reasoning", "acting", "tool-use"],
+      "source_url": "https://arxiv.org/pdf/2210.03629v3"
+    },
+    {
+      "paper_id": "arxiv:2302.04761",
+      "arxiv_id": "2302.04761",
+      "arxiv_version": "2302.04761v1",
+      "slug": "toolformer",
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "topics": ["tool-use", "self-supervision"],
+      "source_url": "https://arxiv.org/pdf/2302.04761v1"
+    },
+    {
+      "paper_id": "arxiv:2303.11366",
+      "arxiv_id": "2303.11366",
+      "arxiv_version": "2303.11366v4",
+      "slug": "reflexion",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "topics": ["reflection", "verbal-feedback", "learning"],
+      "source_url": "https://arxiv.org/pdf/2303.11366v4"
+    },
+    {
+      "paper_id": "arxiv:2310.04406",
+      "arxiv_id": "2310.04406",
+      "arxiv_version": "2310.04406v3",
+      "slug": "lats",
+      "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+      "topics": ["planning", "search", "reasoning"],
+      "source_url": "https://arxiv.org/pdf/2310.04406v3"
+    },
+    {
+      "paper_id": "arxiv:2310.08560",
+      "arxiv_id": "2310.08560",
+      "arxiv_version": "2310.08560v2",
+      "slug": "memgpt",
+      "title": "MemGPT: Towards LLMs as Operating Systems",
+      "topics": ["memory", "context-management", "runtime"],
+      "source_url": "https://arxiv.org/pdf/2310.08560v2"
+    },
+    {
+      "paper_id": "arxiv:2304.03442",
+      "arxiv_id": "2304.03442",
+      "arxiv_version": "2304.03442v2",
+      "slug": "generative-agents",
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "topics": ["memory", "reflection", "simulation"],
+      "source_url": "https://arxiv.org/pdf/2304.03442v2"
+    },
+    {
+      "paper_id": "arxiv:2305.16291",
+      "arxiv_id": "2305.16291",
+      "arxiv_version": "2305.16291v2",
+      "slug": "voyager",
+      "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "topics": ["embodied-agent", "skill-library", "planning"],
+      "source_url": "https://arxiv.org/pdf/2305.16291v2"
+    },
+    {
+      "paper_id": "arxiv:2303.17760",
+      "arxiv_id": "2303.17760",
+      "arxiv_version": "2303.17760v2",
+      "slug": "camel",
+      "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society",
+      "topics": ["multi-agent", "communication", "role-playing"],
+      "source_url": "https://arxiv.org/pdf/2303.17760v2"
+    },
+    {
+      "paper_id": "arxiv:2308.08155",
+      "arxiv_id": "2308.08155",
+      "arxiv_version": "2308.08155v2",
+      "slug": "autogen",
+      "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "topics": ["multi-agent", "framework", "conversation"],
+      "source_url": "https://arxiv.org/pdf/2308.08155v2"
+    },
+    {
+      "paper_id": "arxiv:2308.03688",
+      "arxiv_id": "2308.03688",
+      "arxiv_version": "2308.03688v3",
+      "slug": "agentbench",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "topics": ["evaluation", "benchmark", "agent"],
+      "source_url": "https://arxiv.org/pdf/2308.03688v3"
+    }
+  ]
+}

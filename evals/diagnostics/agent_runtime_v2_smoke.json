@@ -1,0 +1,545 @@
+[
+  {
+    "variant_id": "fixed_hybrid_rrf",
+    "case_id": "AE-001",
+    "source": "frozen_baseline",
+    "answer": {
+      "case_id": "AE-001",
+      "source_case_id": "DS-001",
+      "question": "哪种方法通过交错生成 Thought、Action 和 Observation，让语言模型同时推理并操作环境？",
+      "question_type": "method",
+      "difficulty": "medium",
+      "answerable": true,
+      "retrieval_latency_ms": 377.49,
+      "generation_latency_ms": 3433.08,
+      "total_latency_ms": 3810.56,
+      "answer_status": "answered",
+      "answer_text": "该方法被称为 **ReAct（Reasoning + Acting）**。ReAct通过交错生成 Thought 和 Action，使任务求解轨迹由多个 thought-action-observation 步骤组成，从而让语言模型在推理的同时操作环境[C1]。它将语言推理痕迹加入动作空间，并利用环境返回的 Observation 同时改进推理与行动[C5][C7]。",
+      "error": null,
+      "generation_trace": {
+        "attempts": [
+          {
+            "attempt": 1,
+            "finish_reason": "stop",
+            "outcome": "accepted",
+            "content_length": 185,
+            "latency_ms": 3432.93,
+            "response_model": "deepseek-v4-flash",
+            "usage": {
+              "input_tokens": 6443,
+              "output_tokens": 392,
+              "total_tokens": 6835
+            },
+            "error": null
+          }
+        ],
+        "retry_triggered": false,
+        "retry_recovered": false,
+        "final_outcome": "accepted"
+      },
+      "matched_key_points": [
+        "KP-01",
+        "KP-02",
+        "KP-03"
+      ],
+      "evidence": [
+        {
+          "rank": 1,
+          "citation_id": "C1",
+          "chunk_id": "311f7fcb-7ff0-5007-bcd6-09637df8786d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 3,
+          "score": 0.03149801587301587,
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "text": "wherect = (o1,a 1,··· ,o t−1,a t−1,o t) is the context to the agent.\nLearning a policy is challenging when the mappingct↦→at is highly implicit and requires extensive\ncomputation. For example, the agent shown in Figure 1(1c) is unable to generate the correct ﬁnal\naction (Act 4) to ﬁnish the QA task as it requires complex reasoning over the trajectory context\n(Question, Act 1-3, Obs 1-3). Similarly, the agent shown in Figure 1(2a) fails to comprehend from the\ncontext that sinkbasin 1 does not contain peppershaker 1, thus keep producing hallucinating actions.\nThe idea of ReAct is simple: we augment the agent’s action space to ˆA =A∪L , whereL is the\nspace of language. An action ˆat∈L in the language space, which we will refer to as a thought or a\nreasoning trace, does not affect the external environment, thus leading to no observation feedback.\nInstead, a thought ˆat aims to compose useful information by reasoning over the current contextct,\nand update the contextct+1 = (ct, ˆat) to support future reasoning or acting. As shown in Figure 1,\nthere could be various types of useful thoughts, e.g. decomposing task goals and create action plans\n(2b, Act 1; 1d, Thought 1), injecting commonsense knowledge relevant to task solving (2b, Act 1),\nextracting important parts from observations (1d, Thought2, 4), track progress and transit action plans\n(2b, Act 8), handle exceptions and adjust action plans (1d, Thought 3), and so on.\nHowever, as the language spaceL is unlimited, learning in this augmented action space is difﬁcult\nand requires strong language priors. In this paper, we mainly focus on the setup where a frozen\nlarge language model, PaLM-540B (Chowdhery et al., 2022)1, is prompted with few-shot in-context\nexamples to generate both domain-speciﬁc actions and free-form language thoughts for task solving\n(Figure 1 (1d), (2b)). Each in-context example is a human trajectory of actions, thoughts, and\nenvironment observations to solve a task instance (see Appendix C). For the tasks where reasoning is\nof primary importance (Figure 1(1)), we alternate the generation of thoughts and actions so that the\ntask-solving trajectory consists of multiple thought-action-observation steps. In contrast, for decision\nmaking tasks that potentially involve a large number of actions (Figure 1(2)), thoughts only need to\n1We show some GPT-3 (Brown et al., 2020) results in Appendix A.1, which outperforms PaLM-540B.\n3"
+        },
+        {
+          "rank": 2,
+          "citation_id": "C2",
+          "chunk_id": "82ea016b-17fd-5534-a19b-afbd7b8976c8",
+          "paper_id": "arxiv:2401.13919",
+          "page_number": 3,
+          "score": 0.024501173708920188,
+          "title": "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+          "text": "the Action Space as A.\nAt time step t, the model receives the con-\ntext ct as inputs, which consist of historical ac-\ntions ai and observations oi, defined as: ct =\n(o1, a1, ..., ot−1, at−1, ot, I) The the model pro-\nduces the action at at time t, at = M(ct), which\nis then executed in the environment. After execu-\ntion, the environment sends back the observation at\ntime t + 1, ot+1 = E(ot, at). Then the context will\nbe updated and this interaction process continues\nuntil the model generates a terminating action or\nthe maximum step is reached.\nInspired by the paradigm of ReAct Prompting\n(Yao et al., 2022b), we also prompt our agent to\ngenerate a thought process first before generating\nthe action code. Hence at can be further composed\ninto (st, ˆat) where st and ˆat represent the natural\nlanguage thought and action code respectively. Fig-\nure 7 in Appendix A presents the System Prompt\nwe designed for the action prediction step. Also,\nit’s worth noting that excessive observations of web\npages from longer episodes may confuse the agent.\nTherefore, we perform context clipping to remove\noutdated web page information and only keep the\nthree most recent observations in the inputs, and\nwe keep the entire history of thoughts and actions\nto better guide the agent.\n3.3 Observation Space\nSimilar to how humans browse the web, our agent\nalso takes the visual information from the web\n(screenshots) as the primary source of input. Using"
+        },
+        {
+          "rank": 3,
+          "citation_id": "C3",
+          "chunk_id": "325b4e14-5a62-512c-b28c-f34184f514e7",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 19,
+          "score": 0.024098124098124098,
+          "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+          "text": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models\nSpear, and others.[1][2] In May 1846 it was merged into\nGodey’s Lady’s Book.[3]\nThis trajectory is correct as it is reasonable to search for\nthe first magazine provided in the question. It is also better\nto have simple searches corresponding to a single entity,\nmaking this the best action.\nThus the correctness score is 10\n(other examples)\n(failed trajectories)\n(context)\nE.4. Reflection Prompt\nAnalyze the trajectories of a solution to a question-\nanswering task. The trajectories are labeled by environ-\nmental Observations about the situation, Thoughts that can\nreason about the current situation, and Actions that can be\nthree types:\n(1) Search[entity], which searches the exact entity on\nWikipedia and returns the first paragraph if it exists. If\nnot, it will return some similar entities to search.\n(2) Lookup[keyword], which returns the next sentence con-\ntaining keyword in the current passage.\n(3) Finish[answer], which returns the answer and finishes\nthe task.\nGiven a question and a trajectory, evaluate its correctness\nand provide your reasoning and analysis in detail. Focus\non the latest thought, action, and observation. Incomplete\ntrajectories can be correct if the thoughts and actions so\nfar are correct, even if the answer is not found yet. Do not\ngenerate additional thoughts or actions. Then at the last line\nconclude “Thus the correctness score is s”, where s is an\ninteger from 1 to 10.\nQuestion: Which magazine was started first Arthur’s Maga-\nzine or First for Women?\nThought 1: I need to search Arthur’s Magazine and First for\nWomen, and find which was started first.\nAction 1: Search[Arthur’s Magazine]\nObservation 1: Arthur’s Magazine was an American literary\nperiodical published in Philadelphia in the 19th century.\nEdited by Timothy Shay Arthur, it featured work by Edgar\nA. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G.\nSpear, and others.[1][2] In May 1846 it was merged into\nGodey’s Lady’s Book.[3]\nThis trajectory is correct as it is reasonable to search for\nthe first magazine provided in the question. It is also better\nto have simple searches corresponding to a single entity,\nmaking this the best action.\nThus the correctness score is 10\n(other examples)\n(failed trajectories)\n(context)\nF. Programming Prompts\nF.1. HumanEval function implementation example\nSample function signature:\nd e f minSubArraySum ( nums ) :\nGiven an a r r a y o f i n t e g e r s nums ,\nf i n d t h e minimum sum o f any\nnon −empty sub − a r r a y o f nums .\nExample\nminSubArraySum ( [ − 1 , −2 , −3]) == −6\nSample function body implementation:\nmin sum = f l o a t ( ’ i n f ’ )\nf o r i i n r a n g e ( l e n ( nums ) ) :\nc u r r e n ts u m = 0\nf o r j i n r a n g e ( i , l e n ( nums ) ) :\nc u r r e n ts u m += nums [ j ]\ni f c u r r e n t s u m < min sum :\nmin sum = c u r r e n t s u m\nr e t u r n min sum\nF.2. Base Acting/Reasoning Prompt\nYou are an AI Python assistant. You will be given your\nprevious implementation of a function, a series of unit tests\nresults, and your self-reflection on your previous implemen-\ntation."
+        },
+        {
+          "rank": 4,
+          "citation_id": "C4",
+          "chunk_id": "a441a1dd-de42-5028-8c34-3412f4bb50d1",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 18,
+          "score": 0.022115384615384617,
+          "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+          "text": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models\n(2) Lookup[keyword], which returns the next sentence con-\ntaining keyword in the current passage.\n(3) Finish[answer], which returns the answer and finishes\nthe task.\nAfter each observation, provide the next Thought and next\nAction.\nHere are some examples:\nQuestion: Which magazine was started first Arthur’s Maga-\nzine or First for Women?\nThought 1: I need to search Arthur’s Magazine and First for\nWomen, and find which was started first.\nAction 1: Search[Arthur’s Magazine]\nObservation 1: Arthur’s Magazine was an American literary\nperiodical published in Philadelphia in the 19th century.\nEdited by Timothy Shay Arthur, it featured work by Edgar\nA. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G.\nSpear, and others.[1][2] In May 1846 it was merged into\nGodey’s Lady’s Book.[3]\nThought 2: Arthur’s Magazine was started in 1844. I need\nto search First for Women next.\nAction 2: Search[First for Women]\nObservation 2: First for Women is a woman’s magazine\npublished by Bauer Media Group in the USA.[1] The mag-\nazine was started in 1989. It is based in Englewood Cliffs,\nNew Jersey.[2] In 2011 the circulation of the magazine was\n1,310,696 copies.[3]\nThought 3: First for Women was started in 1989. 1844\n(Arthur’s Magazine)< 1989 (First for Women), so Arthur’s\nMagazine was started first.\nAction 3: Finish[Arthur’s Magazine]\n(examples)\nYou have attempted to answer the following question before\nand failed. The following reflection(s) give a plan to avoid\nfailing to answer the question in the same way you did\npreviously. Use them to improve your strategy of correctly\nanswering the given question.\n(trajectories)\n(input)\nE.2. Base Reasoning Prompt\nSolve a question answering task by having a Thought, then\nFinish with your answer. Thought can reason about the\ncurrent situation. Finish[answer] returns the answer and\nfinishes the task. You will be given context that you should\nuse to help you answer the question. Start your response\nwith either Action or an indexed Thought\nHere are some examples:\nQuestion: What is the elevation range for the area that the\neastern sector of the Colorado orogeny extends into?\nLet’s think step by step.\nThought 1: The eastern sector of Colorado orogeny extends\ninto the High Plains.\nThought 2: High Plains rise in elevation from around 1,800\nto 7,000 ft\nThought 3: The answer is 1,800 to 7,000 ft.\nAction: Finish[1,800 to 7,000 ft]\n(examples)\nPrevious trial: (trajectories)\n(input)\nE.3. Value Function Prompt\nAnalyze the trajectories of a solution to a question answering\ntask. The trajectories are labeled by environmental Obser-\nvations about the situation, Thoughts that can reason about\nthe current situation, and Actions that can be three types:\n(1) Search[entity], which searches the exact entity on\nWikipedia and returns the first paragraph if it exists."
+        },
+        {
+          "rank": 5,
+          "citation_id": "C5",
+          "chunk_id": "08cffe15-bace-56e5-952e-91a434a705ab",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 3,
+          "score": 0.020539287971350326,
+          "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+          "text": "x[1], . . . , x[lx])\nand y = ( y[1], . . . , y[ly]) where lx and ly are the length.\nThe LM decodes text autoregressively, i.e., without other\ninputs, the probability for an LM to generate a sequence y\nis given by pθ(x) = Qlx\ni=1 pθ(x[i]|x[1 . . . i − 1]). Usually,\nto improve reasoning, prompts are provided along with the\ninput x, which are specific instructions or few-shot input-\noutput examples. We denote the generic process where an\ninput promptIO(x) is transformed into an output y by LM:\ny ∼ pθ(promptIO(x)).\nChain-of-thought (CoT) prompting (Wei et al., 2022)\ncaters to scenarios where the direct mapping from x to y is\nintricate, e.g., when x is from a mathematical query or chal-\nlenging question. It hinges on creating thoughts z1, . . . , zl\nthat act as stepping stones between x and y; each thought zi\nis a language sequence. To employ CoT prompting, thoughts\nare extracted sequentially as zi ∼ pCoT\nθ (x, z1···i−1), with\nthe final output being y ∼ pCoT\nθ (x, z1···l).\nTree-of-thought (ToT) prompting(Yao et al., 2023a) ex-\ntends CoT prompting by exploring multiple reasoning paths\nover thoughts. It frames problems as a search over a tree,\nwhere each node s = [ x, z1·i] represents a partial solution\nstate comprising the original input x and the thought se-\nquence z1···i. Thoughts zi are generated by proposal or\nsampling with CoT zi ∼ pCoT\nθ (x, z1···i−1). Search algo-\nrithms like depth-first (DFS) or breadth-first (BFS) search\nare used to systematically explore the tree, guided by heuris-\ntics based on LM evaluations V (s) of each state.\nReAct (Yao et al., 2023b) extends language models to\ntasks where the mapping from x to y is enhanced by or\nrequires interactions with an external environment, such\nas a game or API. This technique constructs an action\nspace ˆA = A ∪ Z that adds permissible actions a ∈ A\nto the reasoning traces z ∈ Z from CoT. Observations o\nfrom the environment are used to improve both reasoning\nand acting. To solve problems with ReAct, after each ob-\nservation, actions are generated from pθ sequentially as\nai ∼ pReAct\nθ (x, o1···i−1, a1···i−1), with the final output be-\n3"
+        },
+        {
+          "rank": 6,
+          "citation_id": "C6",
+          "chunk_id": "332fda4e-d588-5268-bf65-a8c659cdcb0b",
+          "paper_id": "arxiv:2308.03688",
+          "page_number": 48,
+          "score": 0.019360269360269362,
+          "title": "AgentBench: Evaluating LLMs as Agents",
+          "text": "Published as a conference paper at ICLR 2024\nMany models possess the ability to analyze and formulate initial plans upon encountering a problem.\nHowever, even some of the most advanced models can easily deviate from or forget their original\nplans. The disparity in the ability of different models to consistently follow thought sequences when\nexecuting plans is relatively vast. This capability profoundly influences the efficacy and operational\npotency of Language Models (LLMs) acting as agents. Here we exemplify this phenomenon with the\nHouse Holding environment.\nThe House Holding environment encompasses a simulated domestic setting in which models are\nrequired to select appropriate actions from a given action space, based on observations of the\nsurrounding environment provided by the task and given objectives to complete. With a multitude\nof entities and a plethora of available actions, the House Holding environment offers a high degree\nof freedom, which intensely challenges a model’s ability to maintain clear and coherent thought\nprocesses.\nA success example bygpt-4is shown below.\nuser:\nHere is your task. You are in the middle of a room. Looking quickly\naround you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet\n1, a countertop 1, a garbagecan 1, a handtowelholder 2, a\nhandtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a\ntoiletpaperhanger 1, and a towelholder 1.\nYour task is to: put a clean soapbar in countertop.\nagent:\nTHOUGHT: To complete the task, I need to find a soapbar, clean it, and\nthen put it on the countertop. I’ll start by checking my inventory to\nsee if I already have a soapbar.\nACTION: inventory\nuser:\nYou are not carrying anything.\nagent:\nTHOUGHT: I don’t have a soapbar in my inventory. I’ll check the cabinets,\nas they are likely places to find a soapbar.\nACTION: go to cabinet 1\nuser:\nThe cabinet 1 is closed.\nagent:\nACTION: open cabinet 1\nuser:\nYou open the cabinet 1. The cabinet 1 is open. In it, you see a cloth 1.\nagent:\nTHOUGHT: There’s no soapbar in cabinet 1. I’ll check the other cabinets.\nACTION: go to cabinet 2\nuser:\nThe cabinet 2 is closed.\nagent:\nACTION: open cabinet 2\nuser:\nYou open the cabinet 2. The cabinet 2 is open. In it, you see a\ntoiletpaper 2.\n48"
+        },
+        {
+          "rank": 7,
+          "citation_id": "C7",
+          "chunk_id": "1424fb82-a44e-542a-adfc-bce4c3e2483d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 26,
+          "score": 0.01639344262295082,
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "text": "Published as a conference paper at ICLR 2023\nExample 2491 (gt: REFUTES)\nReAct\nClaim: Bermuda Triangle is a loosely-defined region in the Pacific Ocean.\nThought 1: I need to search Bermuda Triangle and find if it is in the Pacific Ocean.\nAction 1: Search[Bermuda Triangle]\nObservation 1: Reportedly haunted locations...\nThought 2: The observation says that it is in the western part of the North Atlantic\nOcean, so it is not in the Pacific Ocean.\nAction 2: Finish[REFUTES]\nObservation 2: Episode finished\nAct\nClaim: Bermuda Triangle is a loosely-defined region in the Pacific Ocean.\nAction 1 : Search[Bermuda Triangle]\nObservation 1 : Reportedly haunted locations:...\nAction 2: Finish[REFUTES]\nObservation 2: Episode finished\nCoT\nClaim: Bermuda Triangle is a loosely-defined region in the Pacific Ocean.\nThought: Let’s think step by step. The Bermuda Triangle is a loosely-defined region\nin the Atlantic Ocean. The Pacific Ocean is not the Atlantic Ocean.\nAnswer: REFUTES\nExample 5908 (gt: SUPPORTS)\nReAct\nClaim: Princess Mononoke is a film.\nThought 1: I need to search Princess Mononoke and find if it is a film.\nAction 1: Search[Princess Mononoke]\nObservation 1: Princess Mononoke ...\nThought 2: From the observation, it says that Princess Mononoke is a film.\nAction 2: Finish[SUPPORTS]\nObservation 2: Episode finished\nAct\nClaim: Princess Mononoke is a film.\nAction 1: Search[Princess Mononoke]\nObservation 1: Princess Mononoke ...\nAction 2: Finish[SUPPORTS]\nObservation 2: Episode finished\nCoT\nClaim: Princess Mononoke is a film.\nThought: Let’s think step by step. Princess Mononoke is a movie, and movies are\nfilms.\nAnswer: SUPPORTS\nExample 1951 (gt: REFUTES)\nReAct\nClaim: Soyuz was part of the American space program.\nThought 1: I need to search Soyuz and find if it was part of the American space\nprogram.\nAction 1: Search[Soyuz]\nObservation 1: Soyuz is a transliteration...\nThought 2: It does not mention the American space program, so I need to search\n\"American space program\" to find if it was part of it.\nAction 2: Search[American space program]\nObservation 2: The space policy...\nThought 3: It does not mention Soyuz, so I am not sure if this claim is true or not.\nAction 3: Finish[NOT ENOUGH INFO]\nObservation 3: Episode finished\nAct\nClaim: Soyuz was part of the American space program.\nAction 1: Search[Soyuz]\nObservation 1: Soyuz is a transliteration...\nAction 2: Finish[NOT ENOUGH INFO]\nObservation 2: Episode finished\nCoT\nClaim: Soyuz was part of the American space program.\nThought: Let’s think step by step. Soyuz is a Russian spacecraft. The American\nspace program is NASA. NASA and Russia have worked together on the\nInternational Space Station.\nAnswer: SUPPORTS\n26"
+        },
+        {
+          "rank": 8,
+          "citation_id": "C8",
+          "chunk_id": "62d66671-6cdf-5af9-b877-e44a16b01cd9",
+          "paper_id": "arxiv:2304.03442",
+          "page_number": 13,
+          "score": 0.01639344262295082,
+          "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+          "text": "and a human-authored condition for the same\nagent. The experiment displayed one randomly chosen question\nfrom each of the five question categories, along with the agent’s\nresponses generated from all conditions. The evaluators ranked the\nbelievability of the conditions from most to least believable.\n6.2 Conditions\nAll conditions were used to independently answer each of the inter-\nview questions. We compared the generative agent architecture to\nablations that disabled the agents’ access to some or all of its three\ntypes of memory in its memory stream—observation, reflection,\nand planning—and to a human crowdworker-authored condition.\nThere are three ablated architectures: a no observation, no reflec-\ntion, no planning architecture without access to anything in the\nmemory stream such as observations, plans, and reflections; a no\nreflection, no planning architecture with access to observations in\nthe memory stream but no access to plans or reflections; and a no\nreflections architecture with access to observations and plans but\nwithout access to reflections. The no observation, no reflection, no\nplanning condition effectively represents the previous state of the\nart for agents created through large language models [12, 46, 80].\nArchitectures were given equivalent access to all memories accrued\nby the agent up until the moment of the interview, so the differ-\nences observed here likely represent a conservative estimate of\nthe true differences: in reality, the ablated architectures would not\nhave followed the same path as the full architecture through the\ntwo-day simulation. We chose to design the experiment this way\nas re-simulating for each architecture would cause the simulations\nto diverge into different states, making comparison challenging.\nIn addition to the ablation conditions, we added a condition with\nhuman crowdworker-authored behavior intended to provide a hu-\nman baseline. We do not intend this baseline to capture maximal\nhuman expert performance; instead, we aim to use this condition to"
+        },
+        {
+          "rank": 9,
+          "citation_id": "C9",
+          "chunk_id": "d786b262-cf02-5e33-bc28-06d3e9b70817",
+          "paper_id": "arxiv:2305.10601",
+          "page_number": 1,
+          "score": 0.016129032258064516,
+          "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+          "text": "Tree of Thoughts: Deliberate Problem Solving\nwith Large Language Models\nShunyu Yao\nPrinceton University\nDian Yu\nGoogle DeepMind\nJeffrey Zhao\nGoogle DeepMind\nIzhak Shafran\nGoogle DeepMind\nThomas L. Griffiths\nPrinceton University\nYuan Cao\nGoogle DeepMind\nKarthik Narasimhan\nPrinceton University\nAbstract\nLanguage models are increasingly being deployed for general problem solving\nacross a wide range of tasks, but are still confined to token-level, left-to-right\ndecision-making processes during inference. This means they can fall short in\ntasks that require exploration, strategic lookahead, or where initial decisions play\na pivotal role. To surmount these challenges, we introduce a new framework for\nlanguage model inference, “Tree of Thoughts” (ToT), which generalizes over the\npopular “Chain of Thought” approach to prompting language models, and enables\nexploration over coherent units of text (“thoughts”) that serve as intermediate steps\ntoward problem solving. ToT allows LMs to perform deliberate decision making\nby considering multiple different reasoning paths and self-evaluating choices to\ndecide the next course of action, as well as looking ahead or backtracking when\nnecessary to make global choices. Our experiments show that ToT significantly\nenhances language models’ problem-solving abilities on three novel tasks requiring\nnon-trivial planning or search: Game of 24, Creative Writing, and Mini Crosswords.\nFor instance, in Game of 24, while GPT-4 with chain-of-thought prompting only\nsolved 4% of tasks, our method achieved a success rate of 74%. Code repo with all\nprompts: https://github.com/princeton-nlp/tree-of-thought-llm .\n1 Introduction\nOriginally designed to generate text, scaled-up versions of language models (LMs) such as GPT [25,\n26, 1, 23] and PaLM [5] have been shown to be increasingly capable of performing an ever wider\nrange of tasks requiring mathematical, symbolic, commonsense, and knowledge reasoning. It is\nperhaps surprising that underlying all this progress is still the original autoregressive mechanism for\ngenerating text, which makes token-level decisions one by one and in a left-to-right fashion. Is such\na simple mechanism sufficient for a LM to be built toward a general problem solver? If not, what\nproblems would challenge the current paradigm, and what should be alternative mechanisms?\nThe literature on human cognition provides some clues to answer these questions. Research on “dual\nprocess” models suggests that people have two modes in which they engage with decisions – a fast,\nautomatic, unconscious mode (“System 1”) and a slow, deliberate, conscious mode (“System 2”)\n[30, 31, 16, 15]. These two modes have previously been connected to a variety of mathematical\nmodels used in machine learning. For example, research on reinforcement learning in humans and\nother animals has explored the circumstances under which they engage in associative “model free”\nlearning or more deliberative “model based” planning [7]."
+        },
+        {
+          "rank": 10,
+          "citation_id": "C10",
+          "chunk_id": "ee796ecb-a263-5169-a21e-8f07f384d5cc",
+          "paper_id": "arxiv:2308.03688",
+          "page_number": 29,
+          "score": 0.016129032258064516,
+          "title": "AgentBench: Evaluating LLMs as Agents",
+          "text": "Published as a conference paper at ICLR 2024\nObservation: variable #0, which are instances of spaceflight.\nbipropellant_rocket_engine\nThought: I also need to find engines with kerosene. To acheive this, I\nwill query the KB to find relations connected to the entity ‘Kerosene\n’.\nAction: get_relations(Kerosene)\nObservation: [spaceflight.satellite_manufacturer.spacecraft_manufactured,\nautomotive.fuel.engines, spaceflight.rocket_engine_cycle.\nrocket_engines]\nThought: From the above relations, I might use spaceflight.\nrocket_engine_cycle.rocket_engines to find engines with kerosene\ncycle.\nAction: get_neighbors(Kerosene, spaceflight.rocket_engine_cycle.\nrocket_engines)\nObservation: variable #1, which are instances of spaceflight.\nbipropellant_rocket_engine\nThought: The engines with both gas-generator cycle and kerosene cycle\nshoule be the intersection of variable #0 and variable #1.\nAction: intersection(#0, #1)\nObservation: variable #2, which are instances of spaceflight.\nbipropellant_rocket_engine\nThought: Now I need to find who designed such engines, which will be the\nfinal answer. To acheive this, I will query the KB to find relations\nconnected to the variable #2.\nAction: get_relations(#2)\nObservation: [spaceflight.rocket_engine.manufactured_by, spaceflight.\nrocket_engine.designed_by, spaceflight.rocket_engine.design_period,\nspaceflight.rocket_engine.status]\nThought: From the above relations, I might use spaceflight.rocket_engine.\ndesigned_by to find the designer of the engines.\nAction: get_neighbors(#2, spaceflight.rocket_engine.designed_by)\nObservation: variable #3, which are instances of pspaceflight.\nrocket_engine_designer\nThought: #3 is the final answer to the question, which represents the\ntarget rocket engine designer.\nFinal Answer: #3\nE DIGITALCARDGAME\nE.1 DATASETDETAILS\nConstruction Details.We use Aquawar framework as the basis for our interactive system. The first\ntype of interaction is theactionphase, where the model needs to select the fish it wants to act with\nand then choose the target for skill. To ensure the validity of model operations, we perform checks\nfor valid actions. The second type of interaction is theguessphase, where we provide the model with\n29"
+        }
+      ],
+      "citations": [
+        {
+          "citation_id": "C1",
+          "chunk_id": "311f7fcb-7ff0-5007-bcd6-09637df8786d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 3
+        },
+        {
+          "citation_id": "C5",
+          "chunk_id": "08cffe15-bace-56e5-952e-91a434a705ab",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 3
+        },
+        {
+          "citation_id": "C7",
+          "chunk_id": "1424fb82-a44e-542a-adfc-bce4c3e2483d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 26
+        }
+      ],
+      "metrics": {
+        "generation_succeeded": true,
+        "answerability_correct": true,
+        "key_point_recall": 1.0,
+        "citation_paper_precision": 0.5,
+        "citation_paper_recall": 1.0,
+        "strict_page_precision": 0.3333333333333333,
+        "strict_page_recall": 1.0,
+        "sentence_citation_coverage": 0.6666666666666666
+      }
+    },
+    "judge": {
+      "case_id": "AE-001",
+      "answer_status": "answered",
+      "source": "llm",
+      "input_sha256": "a333ad00e8a66717eefdbefb89c0a5396c3b7c88d35d64936833ad3e2313d7c7",
+      "model_latency_ms": 20318.11,
+      "attempts": 1,
+      "usage": {
+        "input_tokens": 2907,
+        "output_tokens": 781,
+        "total_tokens": 3688
+      },
+      "decision": {
+        "correctness": {
+          "score": 4,
+          "rationale": "答案正确指出方法是 ReAct，并覆盖了交错推理与行动以及 Thought-Action-Observation 轨迹等关键点。"
+        },
+        "faithfulness": {
+          "score": 4,
+          "rationale": "候选答案的主要事实均由所引证据支持，包括 ReAct 名称、交错生成 thoughts/actions、thought-action-observation 步骤以及 observation 用于改进推理和行动。"
+        },
+        "citation_completeness": {
+          "score": 4,
+          "rationale": "每个外部可验证的核心主张均提供了充分且相关的引用。"
+        },
+        "claim_assessments": [
+          {
+            "claim": "该方法被称为 ReAct（Reasoning + Acting）。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 来自 ReAct 论文，并描述了 ReAct 的核心思想；标题也表明其结合 reasoning 和 acting。"
+          },
+          {
+            "claim": "ReAct 通过交错生成 Thought 和 Action。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 明确说明在以推理为主的任务中交替生成 thoughts 和 actions。"
+          },
+          {
+            "claim": "ReAct 的任务求解轨迹由多个 thought-action-observation 步骤组成。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 明确写道 task-solving trajectory consists of multiple thought-action-observation steps。"
+          },
+          {
+            "claim": "ReAct 让语言模型在推理的同时操作环境。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 描述模型生成 reasoning traces 和 domain-specific actions，并通过 actions 与环境交互。"
+          },
+          {
+            "claim": "ReAct 将语言推理痕迹加入动作空间。",
+            "citation_ids": [
+              "C5"
+            ],
+            "verdict": "entailed",
+            "rationale": "C5 明确说明 ReAct 构造动作空间 A ∪ Z，将 reasoning traces 加入 permissible actions。"
+          },
+          {
+            "claim": "ReAct 利用环境返回的 Observation 同时改进推理与行动。",
+            "citation_ids": [
+              "C5",
+              "C7"
+            ],
+            "verdict": "entailed",
+            "rationale": "C5 直接说明 observations from the environment are used to improve both reasoning and acting；C7 示例展示 observation 后继续 thought/action。"
+          }
+        ],
+        "needs_human_review": false,
+        "review_reason": ""
+      },
+      "error": null
+    },
+    "retrieval": {
+      "paper_recall_at_10": 1.0,
+      "exact_page_recall_at_10": 1.0,
+      "complete_papers_at_10": true
+    },
+    "execution": null,
+    "strict_pass": true,
+    "workflow_latency_ms": 3810.56,
+    "answer_input_tokens": 6443,
+    "answer_output_tokens": 392,
+    "judge_input_tokens": 2907,
+    "judge_output_tokens": 781,
+    "model_call_count": 2
+  },
+  {
+    "variant_id": "langgraph_agent",
+    "case_id": "AE-001",
+    "source": "live_agent",
+    "answer": {
+      "case_id": "AE-001",
+      "source_case_id": "DS-001",
+      "question": "哪种方法通过交错生成 Thought、Action 和 Observation，让语言模型同时推理并操作环境？",
+      "question_type": "method",
+      "difficulty": "medium",
+      "answerable": true,
+      "retrieval_latency_ms": 396.73,
+      "generation_latency_ms": 4162.3,
+      "total_latency_ms": 13707.54,
+      "answer_status": "answered",
+      "answer_text": "ReAct（Reasoning and Acting）方法。它通过将语言推理轨迹（Thought）加入动作空间，使模型交替生成 Thought、Action，并从环境获取 Observation，从而同时进行推理和操作环境 [C1]。该方法在每次观察后依次生成思考和动作，形成 thought-action-observation 的多步轨迹 [C1][C7]。",
+      "error": null,
+      "generation_trace": null,
+      "matched_key_points": [
+        "KP-01",
+        "KP-03"
+      ],
+      "evidence": [
+        {
+          "rank": 1,
+          "citation_id": "C1",
+          "chunk_id": "311f7fcb-7ff0-5007-bcd6-09637df8786d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 3,
+          "score": 0.03200204813108039,
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "text": "wherect = (o1,a 1,··· ,o t−1,a t−1,o t) is the context to the agent.\nLearning a policy is challenging when the mappingct↦→at is highly implicit and requires extensive\ncomputation. For example, the agent shown in Figure 1(1c) is unable to generate the correct ﬁnal\naction (Act 4) to ﬁnish the QA task as it requires complex reasoning over the trajectory context\n(Question, Act 1-3, Obs 1-3). Similarly, the agent shown in Figure 1(2a) fails to comprehend from the\ncontext that sinkbasin 1 does not contain peppershaker 1, thus keep producing hallucinating actions.\nThe idea of ReAct is simple: we augment the agent’s action space to ˆA =A∪L , whereL is the\nspace of language. An action ˆat∈L in the language space, which we will refer to as a thought or a\nreasoning trace, does not affect the external environment, thus leading to no observation feedback.\nInstead, a thought ˆat aims to compose useful information by reasoning over the current contextct,\nand update the contextct+1 = (ct, ˆat) to support future reasoning or acting. As shown in Figure 1,\nthere could be various types of useful thoughts, e.g. decomposing task goals and create action plans\n(2b, Act 1; 1d, Thought 1), injecting commonsense knowledge relevant to task solving (2b, Act 1),\nextracting important parts from observations (1d, Thought2, 4), track progress and transit action plans\n(2b, Act 8), handle exceptions and adjust action plans (1d, Thought 3), and so on.\nHowever, as the language spaceL is unlimited, learning in this augmented action space is difﬁcult\nand requires strong language priors. In this paper, we mainly focus on the setup where a frozen\nlarge language model, PaLM-540B (Chowdhery et al., 2022)1, is prompted with few-shot in-context\nexamples to generate both domain-speciﬁc actions and free-form language thoughts for task solving\n(Figure 1 (1d), (2b)). Each in-context example is a human trajectory of actions, thoughts, and\nenvironment observations to solve a task instance (see Appendix C). For the tasks where reasoning is\nof primary importance (Figure 1(1)), we alternate the generation of thoughts and actions so that the\ntask-solving trajectory consists of multiple thought-action-observation steps. In contrast, for decision\nmaking tasks that potentially involve a large number of actions (Figure 1(2)), thoughts only need to\n1We show some GPT-3 (Brown et al., 2020) results in Appendix A.1, which outperforms PaLM-540B.\n3"
+        },
+        {
+          "rank": 2,
+          "citation_id": "C2",
+          "chunk_id": "82ea016b-17fd-5534-a19b-afbd7b8976c8",
+          "paper_id": "arxiv:2401.13919",
+          "page_number": 3,
+          "score": 0.02946912242686891,
+          "title": "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+          "text": "the Action Space as A.\nAt time step t, the model receives the con-\ntext ct as inputs, which consist of historical ac-\ntions ai and observations oi, defined as: ct =\n(o1, a1, ..., ot−1, at−1, ot, I) The the model pro-\nduces the action at at time t, at = M(ct), which\nis then executed in the environment. After execu-\ntion, the environment sends back the observation at\ntime t + 1, ot+1 = E(ot, at). Then the context will\nbe updated and this interaction process continues\nuntil the model generates a terminating action or\nthe maximum step is reached.\nInspired by the paradigm of ReAct Prompting\n(Yao et al., 2022b), we also prompt our agent to\ngenerate a thought process first before generating\nthe action code. Hence at can be further composed\ninto (st, ˆat) where st and ˆat represent the natural\nlanguage thought and action code respectively. Fig-\nure 7 in Appendix A presents the System Prompt\nwe designed for the action prediction step. Also,\nit’s worth noting that excessive observations of web\npages from longer episodes may confuse the agent.\nTherefore, we perform context clipping to remove\noutdated web page information and only keep the\nthree most recent observations in the inputs, and\nwe keep the entire history of thoughts and actions\nto better guide the agent.\n3.3 Observation Space\nSimilar to how humans browse the web, our agent\nalso takes the visual information from the web\n(screenshots) as the primary source of input. Using"
+        },
+        {
+          "rank": 3,
+          "citation_id": "C3",
+          "chunk_id": "87ad4f6d-fc57-52e3-971a-7efa4623dba9",
+          "paper_id": "arxiv:2310.12823",
+          "page_number": 20,
+          "score": 0.027149321266968326,
+          "title": "AgentTuning: Enabling Generalized Agent Abilities for LLMs",
+          "text": "Preprint\nD P ROMPT FOR EVALUATION\nD.1 A LFWORLD\n(Initial Prompt)\nInteract with a household to solve a task. Imagine you are an\nintelligent agent in a household environment and your target is to\nperform actions to complete the task goal. At the beginning of your\ninteractions, you will be given the detailed description of the current\nenvironment and your goal to accomplish. You should choose from two\nactions: \"THOUGHT\" or \"ACTION\". If you choose \"THOUGHT\", you should\nfirst think about the current condition and plan for your future actions\n, and then output your action in this turn. Your output must strictly\nfollow this format: \"THOUGHT: your thoughts. ACTION: your next action\";\nIf you choose \"ACTION\", you should directly output the action in this\nturn. Your output must strictly follow this format: \"ACTION: your next\naction\". After your each turn, the environment will give you immediate\nfeedback based on which you plan your next few steps. if the envrionment\noutput \"Nothing happened\", that means the previous action is invalid\nand you should try more options.\nReminder:\n1. the action must be chosen from the given available actions. Any\nactions except provided available actions will be regarded as illegal.\n2. Think when necessary, try to act directly more in the process.\n(Task Description)\nHere is your task. {{current_observation}}\nYour task is to: {{task_description}}\nD.2 W EBSHOP\n(Initial Prompt)\nYou are web shopping.\nI will give you instructions about what to do.\nYou have to follow the instructions.\nEvery round I will give you an observation, you have to respond an\naction based on the state and instruction.\nYou can use search action if search is available.\nYou can click one of the buttons in clickables.\nAn action should be of the following structure:\nsearch[keywords]\nclick[value]\nIf the action is not valid, perform nothing.\nKeywords in search are up to you, but the value in click must be a value\nin the list of available actions.\nRemember that your keywords in search should be carefully designed.\nYour response should use the following format:\nThought:\nI think ...\nAction:\nclick[something]\n(Observation)\n{% for observation in observations %}\n{{observation}} [SEP]\n{% endfor %}\n20"
+        },
+        {
+          "rank": 4,
+          "citation_id": "C4",
+          "chunk_id": "a441a1dd-de42-5028-8c34-3412f4bb50d1",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 18,
+          "score": 0.02484567901234568,
+          "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+          "text": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models\n(2) Lookup[keyword], which returns the next sentence con-\ntaining keyword in the current passage.\n(3) Finish[answer], which returns the answer and finishes\nthe task.\nAfter each observation, provide the next Thought and next\nAction.\nHere are some examples:\nQuestion: Which magazine was started first Arthur’s Maga-\nzine or First for Women?\nThought 1: I need to search Arthur’s Magazine and First for\nWomen, and find which was started first.\nAction 1: Search[Arthur’s Magazine]\nObservation 1: Arthur’s Magazine was an American literary\nperiodical published in Philadelphia in the 19th century.\nEdited by Timothy Shay Arthur, it featured work by Edgar\nA. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G.\nSpear, and others.[1][2] In May 1846 it was merged into\nGodey’s Lady’s Book.[3]\nThought 2: Arthur’s Magazine was started in 1844. I need\nto search First for Women next.\nAction 2: Search[First for Women]\nObservation 2: First for Women is a woman’s magazine\npublished by Bauer Media Group in the USA.[1] The mag-\nazine was started in 1989. It is based in Englewood Cliffs,\nNew Jersey.[2] In 2011 the circulation of the magazine was\n1,310,696 copies.[3]\nThought 3: First for Women was started in 1989. 1844\n(Arthur’s Magazine)< 1989 (First for Women), so Arthur’s\nMagazine was started first.\nAction 3: Finish[Arthur’s Magazine]\n(examples)\nYou have attempted to answer the following question before\nand failed. The following reflection(s) give a plan to avoid\nfailing to answer the question in the same way you did\npreviously. Use them to improve your strategy of correctly\nanswering the given question.\n(trajectories)\n(input)\nE.2. Base Reasoning Prompt\nSolve a question answering task by having a Thought, then\nFinish with your answer. Thought can reason about the\ncurrent situation. Finish[answer] returns the answer and\nfinishes the task. You will be given context that you should\nuse to help you answer the question. Start your response\nwith either Action or an indexed Thought\nHere are some examples:\nQuestion: What is the elevation range for the area that the\neastern sector of the Colorado orogeny extends into?\nLet’s think step by step.\nThought 1: The eastern sector of Colorado orogeny extends\ninto the High Plains.\nThought 2: High Plains rise in elevation from around 1,800\nto 7,000 ft\nThought 3: The answer is 1,800 to 7,000 ft.\nAction: Finish[1,800 to 7,000 ft]\n(examples)\nPrevious trial: (trajectories)\n(input)\nE.3. Value Function Prompt\nAnalyze the trajectories of a solution to a question answering\ntask. The trajectories are labeled by environmental Obser-\nvations about the situation, Thoughts that can reason about\nthe current situation, and Actions that can be three types:\n(1) Search[entity], which searches the exact entity on\nWikipedia and returns the first paragraph if it exists."
+        },
+        {
+          "rank": 5,
+          "citation_id": "C5",
+          "chunk_id": "325b4e14-5a62-512c-b28c-f34184f514e7",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 19,
+          "score": 0.021637426900584796,
+          "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+          "text": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models\nSpear, and others.[1][2] In May 1846 it was merged into\nGodey’s Lady’s Book.[3]\nThis trajectory is correct as it is reasonable to search for\nthe first magazine provided in the question. It is also better\nto have simple searches corresponding to a single entity,\nmaking this the best action.\nThus the correctness score is 10\n(other examples)\n(failed trajectories)\n(context)\nE.4. Reflection Prompt\nAnalyze the trajectories of a solution to a question-\nanswering task. The trajectories are labeled by environ-\nmental Observations about the situation, Thoughts that can\nreason about the current situation, and Actions that can be\nthree types:\n(1) Search[entity], which searches the exact entity on\nWikipedia and returns the first paragraph if it exists. If\nnot, it will return some similar entities to search.\n(2) Lookup[keyword], which returns the next sentence con-\ntaining keyword in the current passage.\n(3) Finish[answer], which returns the answer and finishes\nthe task.\nGiven a question and a trajectory, evaluate its correctness\nand provide your reasoning and analysis in detail. Focus\non the latest thought, action, and observation. Incomplete\ntrajectories can be correct if the thoughts and actions so\nfar are correct, even if the answer is not found yet. Do not\ngenerate additional thoughts or actions. Then at the last line\nconclude “Thus the correctness score is s”, where s is an\ninteger from 1 to 10.\nQuestion: Which magazine was started first Arthur’s Maga-\nzine or First for Women?\nThought 1: I need to search Arthur’s Magazine and First for\nWomen, and find which was started first.\nAction 1: Search[Arthur’s Magazine]\nObservation 1: Arthur’s Magazine was an American literary\nperiodical published in Philadelphia in the 19th century.\nEdited by Timothy Shay Arthur, it featured work by Edgar\nA. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G.\nSpear, and others.[1][2] In May 1846 it was merged into\nGodey’s Lady’s Book.[3]\nThis trajectory is correct as it is reasonable to search for\nthe first magazine provided in the question. It is also better\nto have simple searches corresponding to a single entity,\nmaking this the best action.\nThus the correctness score is 10\n(other examples)\n(failed trajectories)\n(context)\nF. Programming Prompts\nF.1. HumanEval function implementation example\nSample function signature:\nd e f minSubArraySum ( nums ) :\nGiven an a r r a y o f i n t e g e r s nums ,\nf i n d t h e minimum sum o f any\nnon −empty sub − a r r a y o f nums .\nExample\nminSubArraySum ( [ − 1 , −2 , −3]) == −6\nSample function body implementation:\nmin sum = f l o a t ( ’ i n f ’ )\nf o r i i n r a n g e ( l e n ( nums ) ) :\nc u r r e n ts u m = 0\nf o r j i n r a n g e ( i , l e n ( nums ) ) :\nc u r r e n ts u m += nums [ j ]\ni f c u r r e n t s u m < min sum :\nmin sum = c u r r e n t s u m\nr e t u r n min sum\nF.2. Base Acting/Reasoning Prompt\nYou are an AI Python assistant. You will be given your\nprevious implementation of a function, a series of unit tests\nresults, and your self-reflection on your previous implemen-\ntation."
+        },
+        {
+          "rank": 6,
+          "citation_id": "C6",
+          "chunk_id": "332fda4e-d588-5268-bf65-a8c659cdcb0b",
+          "paper_id": "arxiv:2308.03688",
+          "page_number": 48,
+          "score": 0.020410288451525566,
+          "title": "AgentBench: Evaluating LLMs as Agents",
+          "text": "Published as a conference paper at ICLR 2024\nMany models possess the ability to analyze and formulate initial plans upon encountering a problem.\nHowever, even some of the most advanced models can easily deviate from or forget their original\nplans. The disparity in the ability of different models to consistently follow thought sequences when\nexecuting plans is relatively vast. This capability profoundly influences the efficacy and operational\npotency of Language Models (LLMs) acting as agents. Here we exemplify this phenomenon with the\nHouse Holding environment.\nThe House Holding environment encompasses a simulated domestic setting in which models are\nrequired to select appropriate actions from a given action space, based on observations of the\nsurrounding environment provided by the task and given objectives to complete. With a multitude\nof entities and a plethora of available actions, the House Holding environment offers a high degree\nof freedom, which intensely challenges a model’s ability to maintain clear and coherent thought\nprocesses.\nA success example bygpt-4is shown below.\nuser:\nHere is your task. You are in the middle of a room. Looking quickly\naround you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet\n1, a countertop 1, a garbagecan 1, a handtowelholder 2, a\nhandtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a\ntoiletpaperhanger 1, and a towelholder 1.\nYour task is to: put a clean soapbar in countertop.\nagent:\nTHOUGHT: To complete the task, I need to find a soapbar, clean it, and\nthen put it on the countertop. I’ll start by checking my inventory to\nsee if I already have a soapbar.\nACTION: inventory\nuser:\nYou are not carrying anything.\nagent:\nTHOUGHT: I don’t have a soapbar in my inventory. I’ll check the cabinets,\nas they are likely places to find a soapbar.\nACTION: go to cabinet 1\nuser:\nThe cabinet 1 is closed.\nagent:\nACTION: open cabinet 1\nuser:\nYou open the cabinet 1. The cabinet 1 is open. In it, you see a cloth 1.\nagent:\nTHOUGHT: There’s no soapbar in cabinet 1. I’ll check the other cabinets.\nACTION: go to cabinet 2\nuser:\nThe cabinet 2 is closed.\nagent:\nACTION: open cabinet 2\nuser:\nYou open the cabinet 2. The cabinet 2 is open. In it, you see a\ntoiletpaper 2.\n48"
+        },
+        {
+          "rank": 7,
+          "citation_id": "C7",
+          "chunk_id": "08cffe15-bace-56e5-952e-91a434a705ab",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 3,
+          "score": 0.01951637471439452,
+          "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+          "text": "x[1], . . . , x[lx])\nand y = ( y[1], . . . , y[ly]) where lx and ly are the length.\nThe LM decodes text autoregressively, i.e., without other\ninputs, the probability for an LM to generate a sequence y\nis given by pθ(x) = Qlx\ni=1 pθ(x[i]|x[1 . . . i − 1]). Usually,\nto improve reasoning, prompts are provided along with the\ninput x, which are specific instructions or few-shot input-\noutput examples. We denote the generic process where an\ninput promptIO(x) is transformed into an output y by LM:\ny ∼ pθ(promptIO(x)).\nChain-of-thought (CoT) prompting (Wei et al., 2022)\ncaters to scenarios where the direct mapping from x to y is\nintricate, e.g., when x is from a mathematical query or chal-\nlenging question. It hinges on creating thoughts z1, . . . , zl\nthat act as stepping stones between x and y; each thought zi\nis a language sequence. To employ CoT prompting, thoughts\nare extracted sequentially as zi ∼ pCoT\nθ (x, z1···i−1), with\nthe final output being y ∼ pCoT\nθ (x, z1···l).\nTree-of-thought (ToT) prompting(Yao et al., 2023a) ex-\ntends CoT prompting by exploring multiple reasoning paths\nover thoughts. It frames problems as a search over a tree,\nwhere each node s = [ x, z1·i] represents a partial solution\nstate comprising the original input x and the thought se-\nquence z1···i. Thoughts zi are generated by proposal or\nsampling with CoT zi ∼ pCoT\nθ (x, z1···i−1). Search algo-\nrithms like depth-first (DFS) or breadth-first (BFS) search\nare used to systematically explore the tree, guided by heuris-\ntics based on LM evaluations V (s) of each state.\nReAct (Yao et al., 2023b) extends language models to\ntasks where the mapping from x to y is enhanced by or\nrequires interactions with an external environment, such\nas a game or API. This technique constructs an action\nspace ˆA = A ∪ Z that adds permissible actions a ∈ A\nto the reasoning traces z ∈ Z from CoT. Observations o\nfrom the environment are used to improve both reasoning\nand acting. To solve problems with ReAct, after each ob-\nservation, actions are generated from pθ sequentially as\nai ∼ pReAct\nθ (x, o1···i−1, a1···i−1), with the final output be-\n3"
+        },
+        {
+          "rank": 8,
+          "citation_id": "C8",
+          "chunk_id": "1424fb82-a44e-542a-adfc-bce4c3e2483d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 26,
+          "score": 0.01639344262295082,
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "text": "Published as a conference paper at ICLR 2023\nExample 2491 (gt: REFUTES)\nReAct\nClaim: Bermuda Triangle is a loosely-defined region in the Pacific Ocean.\nThought 1: I need to search Bermuda Triangle and find if it is in the Pacific Ocean.\nAction 1: Search[Bermuda Triangle]\nObservation 1: Reportedly haunted locations...\nThought 2: The observation says that it is in the western part of the North Atlantic\nOcean, so it is not in the Pacific Ocean.\nAction 2: Finish[REFUTES]\nObservation 2: Episode finished\nAct\nClaim: Bermuda Triangle is a loosely-defined region in the Pacific Ocean.\nAction 1 : Search[Bermuda Triangle]\nObservation 1 : Reportedly haunted locations:...\nAction 2: Finish[REFUTES]\nObservation 2: Episode finished\nCoT\nClaim: Bermuda Triangle is a loosely-defined region in the Pacific Ocean.\nThought: Let’s think step by step. The Bermuda Triangle is a loosely-defined region\nin the Atlantic Ocean. The Pacific Ocean is not the Atlantic Ocean.\nAnswer: REFUTES\nExample 5908 (gt: SUPPORTS)\nReAct\nClaim: Princess Mononoke is a film.\nThought 1: I need to search Princess Mononoke and find if it is a film.\nAction 1: Search[Princess Mononoke]\nObservation 1: Princess Mononoke ...\nThought 2: From the observation, it says that Princess Mononoke is a film.\nAction 2: Finish[SUPPORTS]\nObservation 2: Episode finished\nAct\nClaim: Princess Mononoke is a film.\nAction 1: Search[Princess Mononoke]\nObservation 1: Princess Mononoke ...\nAction 2: Finish[SUPPORTS]\nObservation 2: Episode finished\nCoT\nClaim: Princess Mononoke is a film.\nThought: Let’s think step by step. Princess Mononoke is a movie, and movies are\nfilms.\nAnswer: SUPPORTS\nExample 1951 (gt: REFUTES)\nReAct\nClaim: Soyuz was part of the American space program.\nThought 1: I need to search Soyuz and find if it was part of the American space\nprogram.\nAction 1: Search[Soyuz]\nObservation 1: Soyuz is a transliteration...\nThought 2: It does not mention the American space program, so I need to search\n\"American space program\" to find if it was part of it.\nAction 2: Search[American space program]\nObservation 2: The space policy...\nThought 3: It does not mention Soyuz, so I am not sure if this claim is true or not.\nAction 3: Finish[NOT ENOUGH INFO]\nObservation 3: Episode finished\nAct\nClaim: Soyuz was part of the American space program.\nAction 1: Search[Soyuz]\nObservation 1: Soyuz is a transliteration...\nAction 2: Finish[NOT ENOUGH INFO]\nObservation 2: Episode finished\nCoT\nClaim: Soyuz was part of the American space program.\nThought: Let’s think step by step. Soyuz is a Russian spacecraft. The American\nspace program is NASA. NASA and Russia have worked together on the\nInternational Space Station.\nAnswer: SUPPORTS\n26"
+        },
+        {
+          "rank": 9,
+          "citation_id": "C9",
+          "chunk_id": "62d66671-6cdf-5af9-b877-e44a16b01cd9",
+          "paper_id": "arxiv:2304.03442",
+          "page_number": 13,
+          "score": 0.01639344262295082,
+          "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+          "text": "and a human-authored condition for the same\nagent. The experiment displayed one randomly chosen question\nfrom each of the five question categories, along with the agent’s\nresponses generated from all conditions. The evaluators ranked the\nbelievability of the conditions from most to least believable.\n6.2 Conditions\nAll conditions were used to independently answer each of the inter-\nview questions. We compared the generative agent architecture to\nablations that disabled the agents’ access to some or all of its three\ntypes of memory in its memory stream—observation, reflection,\nand planning—and to a human crowdworker-authored condition.\nThere are three ablated architectures: a no observation, no reflec-\ntion, no planning architecture without access to anything in the\nmemory stream such as observations, plans, and reflections; a no\nreflection, no planning architecture with access to observations in\nthe memory stream but no access to plans or reflections; and a no\nreflections architecture with access to observations and plans but\nwithout access to reflections. The no observation, no reflection, no\nplanning condition effectively represents the previous state of the\nart for agents created through large language models [12, 46, 80].\nArchitectures were given equivalent access to all memories accrued\nby the agent up until the moment of the interview, so the differ-\nences observed here likely represent a conservative estimate of\nthe true differences: in reality, the ablated architectures would not\nhave followed the same path as the full architecture through the\ntwo-day simulation. We chose to design the experiment this way\nas re-simulating for each architecture would cause the simulations\nto diverge into different states, making comparison challenging.\nIn addition to the ablation conditions, we added a condition with\nhuman crowdworker-authored behavior intended to provide a hu-\nman baseline. We do not intend this baseline to capture maximal\nhuman expert performance; instead, we aim to use this condition to"
+        },
+        {
+          "rank": 10,
+          "citation_id": "C10",
+          "chunk_id": "ee796ecb-a263-5169-a21e-8f07f384d5cc",
+          "paper_id": "arxiv:2308.03688",
+          "page_number": 29,
+          "score": 0.016129032258064516,
+          "title": "AgentBench: Evaluating LLMs as Agents",
+          "text": "Published as a conference paper at ICLR 2024\nObservation: variable #0, which are instances of spaceflight.\nbipropellant_rocket_engine\nThought: I also need to find engines with kerosene. To acheive this, I\nwill query the KB to find relations connected to the entity ‘Kerosene\n’.\nAction: get_relations(Kerosene)\nObservation: [spaceflight.satellite_manufacturer.spacecraft_manufactured,\nautomotive.fuel.engines, spaceflight.rocket_engine_cycle.\nrocket_engines]\nThought: From the above relations, I might use spaceflight.\nrocket_engine_cycle.rocket_engines to find engines with kerosene\ncycle.\nAction: get_neighbors(Kerosene, spaceflight.rocket_engine_cycle.\nrocket_engines)\nObservation: variable #1, which are instances of spaceflight.\nbipropellant_rocket_engine\nThought: The engines with both gas-generator cycle and kerosene cycle\nshoule be the intersection of variable #0 and variable #1.\nAction: intersection(#0, #1)\nObservation: variable #2, which are instances of spaceflight.\nbipropellant_rocket_engine\nThought: Now I need to find who designed such engines, which will be the\nfinal answer. To acheive this, I will query the KB to find relations\nconnected to the variable #2.\nAction: get_relations(#2)\nObservation: [spaceflight.rocket_engine.manufactured_by, spaceflight.\nrocket_engine.designed_by, spaceflight.rocket_engine.design_period,\nspaceflight.rocket_engine.status]\nThought: From the above relations, I might use spaceflight.rocket_engine.\ndesigned_by to find the designer of the engines.\nAction: get_neighbors(#2, spaceflight.rocket_engine.designed_by)\nObservation: variable #3, which are instances of pspaceflight.\nrocket_engine_designer\nThought: #3 is the final answer to the question, which represents the\ntarget rocket engine designer.\nFinal Answer: #3\nE DIGITALCARDGAME\nE.1 DATASETDETAILS\nConstruction Details.We use Aquawar framework as the basis for our interactive system. The first\ntype of interaction is theactionphase, where the model needs to select the fish it wants to act with\nand then choose the target for skill. To ensure the validity of model operations, we perform checks\nfor valid actions. The second type of interaction is theguessphase, where we provide the model with\n29"
+        }
+      ],
+      "citations": [
+        {
+          "citation_id": "C1",
+          "chunk_id": "311f7fcb-7ff0-5007-bcd6-09637df8786d",
+          "paper_id": "arxiv:2210.03629",
+          "page_number": 3
+        },
+        {
+          "citation_id": "C7",
+          "chunk_id": "08cffe15-bace-56e5-952e-91a434a705ab",
+          "paper_id": "arxiv:2310.04406",
+          "page_number": 3
+        }
+      ],
+      "metrics": {
+        "generation_succeeded": true,
+        "answerability_correct": true,
+        "key_point_recall": 0.6666666666666666,
+        "citation_paper_precision": 0.5,
+        "citation_paper_recall": 1.0,
+        "strict_page_precision": 0.5,
+        "strict_page_recall": 1.0,
+        "sentence_citation_coverage": 0.6666666666666666
+      }
+    },
+    "judge": {
+      "case_id": "AE-001",
+      "answer_status": "answered",
+      "source": "llm",
+      "input_sha256": "508fc45bc90494c852b5b6debd9c8325f667b0f486d7dc3e69a90bd80048df2c",
+      "model_latency_ms": 24126.21,
+      "attempts": 1,
+      "usage": {
+        "input_tokens": 2106,
+        "output_tokens": 1031,
+        "total_tokens": 3137
+      },
+      "decision": {
+        "correctness": {
+          "score": 4,
+          "rationale": "答案正确指出方法是 ReAct，并涵盖了交错生成 Thought、Action、Observation 以结合推理和环境交互的核心内容。"
+        },
+        "faithfulness": {
+          "score": 4,
+          "rationale": "候选答案的主要事实均由引用证据支持：C1 明确说明 ReAct 扩展动作空间、生成 thoughts/actions，并形成 thought-action-observation 多步轨迹；C7 也支持 ReAct 结合推理轨迹、动作和环境观察。"
+        },
+        "citation_completeness": {
+          "score": 4,
+          "rationale": "所有关键外部事实，包括方法名称、动作空间扩展、交替生成 Thought/Action、获取 Observation 和形成多步轨迹，均有可用引用支持。"
+        },
+        "claim_assessments": [
+          {
+            "claim": "该方法是 ReAct（Reasoning and Acting）。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 的论文标题和内容明确讨论 ReAct，并将 reasoning 与 acting 结合。"
+          },
+          {
+            "claim": "ReAct 将语言推理轨迹（Thought）加入动作空间。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 明确说 ReAct 将动作空间扩展为 A∪L，其中 L 是语言空间，语言动作被称为 thought 或 reasoning trace。"
+          },
+          {
+            "claim": "模型交替生成 Thought 和 Action。",
+            "citation_ids": [
+              "C1"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 说明在以推理为主的任务中，ReAct alternates the generation of thoughts and actions。"
+          },
+          {
+            "claim": "模型从环境获取 Observation。",
+            "citation_ids": [
+              "C1",
+              "C7"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 提到环境 observations 是任务轨迹的一部分；C7 明确说 observations from the environment are used to improve reasoning and acting。"
+          },
+          {
+            "claim": "ReAct 使模型同时进行推理和操作环境。",
+            "citation_ids": [
+              "C1",
+              "C7"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 和 C7 均描述 ReAct 结合语言 thoughts/reasoning traces 与环境动作/actions。"
+          },
+          {
+            "claim": "ReAct 形成 thought-action-observation 的多步轨迹。",
+            "citation_ids": [
+              "C1",
+              "C7"
+            ],
+            "verdict": "entailed",
+            "rationale": "C1 明确说任务解决轨迹由 multiple thought-action-observation steps 组成；C7 也描述环境观察用于改进 reasoning and acting。"
+          }
+        ],
+        "needs_human_review": false,
+        "review_reason": ""
+      },
+      "error": null
+    },
+    "retrieval": {
+      "paper_recall_at_10": 1.0,
+      "exact_page_recall_at_10": 1.0,
+      "complete_papers_at_10": true
+    },
+    "execution": {
+      "actual_question_type": "single_paper",
+      "router_correct": true,
+      "task_count": 1,
+      "task_count_correct": true,
+      "covered_facets": [
+        "F1"
+      ],
+      "task_coverage": 1.0,
+      "retrieval_strategy": "hybrid_rrf",
+      "retrieval_strategy_correct": true,
+      "title_leaks": [],
+      "retry_count": 0,
+      "revision_expected": false,
+      "revision_correct": true,
+      "citation_validation_passed": true,
+      "planning_latency_ms": 9148.51,
+      "retrieval_latency_ms": 396.73,
+      "revision_latency_ms": 0.0,
+      "answer_latency_ms": 4162.3,
+      "workflow_latency_ms": 13707.54,
+      "planner_input_tokens": 234,
+      "planner_output_tokens": 250,
+      "answer_input_tokens": 6297,
+      "answer_output_tokens": 258,
+      "model_call_count": 2
+    },
+    "strict_pass": true,
+    "workflow_latency_ms": 13707.54,
+    "answer_input_tokens": 6297,
+    "answer_output_tokens": 258,
+    "judge_input_tokens": 2106,
+    "judge_output_tokens": 1031,
+    "model_call_count": 3
+  }
+]

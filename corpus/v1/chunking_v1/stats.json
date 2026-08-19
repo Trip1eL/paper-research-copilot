@@ -1,0 +1,125 @@
+{
+  "corpus_id": "agent-seed-v1",
+  "corpus_version": 1,
+  "generated_on": "2026-08-15",
+  "chunking_version": "chunking_v1",
+  "chunk_size_chars": 3200,
+  "overlap_chars": 400,
+  "document_count": 10,
+  "page_count": 347,
+  "chunk_count": 571,
+  "total_chars": 1283698,
+  "mean_chars": 2248.16,
+  "min_chars": 113,
+  "p50_chars": 2465,
+  "p95_chars": 3177,
+  "max_chars": 3199,
+  "short_chunk_threshold": 500,
+  "short_chunk_count": 13,
+  "oversized_chunk_count": 0,
+  "duplicate_chunk_id_count": 0,
+  "missing_required_metadata_count": 0,
+  "section_coverage_ratio": 0.9965,
+  "papers": [
+    {
+      "paper_id": "arxiv:2210.03629",
+      "slug": "react",
+      "page_count": 33,
+      "chunk_count": 55,
+      "mean_chars": 2158.67,
+      "min_chars": 484,
+      "max_chars": 3191,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2302.04761",
+      "slug": "toolformer",
+      "page_count": 17,
+      "chunk_count": 34,
+      "mean_chars": 2312.15,
+      "min_chars": 615,
+      "max_chars": 3199,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2303.11366",
+      "slug": "reflexion",
+      "page_count": 19,
+      "chunk_count": 30,
+      "mean_chars": 2128.5,
+      "min_chars": 113,
+      "max_chars": 3183,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2310.04406",
+      "slug": "lats",
+      "page_count": 23,
+      "chunk_count": 42,
+      "mean_chars": 2461.79,
+      "min_chars": 723,
+      "max_chars": 3190,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2310.08560",
+      "slug": "memgpt",
+      "page_count": 13,
+      "chunk_count": 26,
+      "mean_chars": 2398.0,
+      "min_chars": 519,
+      "max_chars": 3192,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2304.03442",
+      "slug": "generative-agents",
+      "page_count": 22,
+      "chunk_count": 57,
+      "mean_chars": 2529.79,
+      "min_chars": 535,
+      "max_chars": 3191,
+      "section_coverage_ratio": 0.9825
+    },
+    {
+      "paper_id": "arxiv:2305.16291",
+      "slug": "voyager",
+      "page_count": 42,
+      "chunk_count": 59,
+      "mean_chars": 2286.2,
+      "min_chars": 521,
+      "max_chars": 3195,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2303.17760",
+      "slug": "camel",
+      "page_count": 77,
+      "chunk_count": 108,
+      "mean_chars": 2049.09,
+      "min_chars": 213,
+      "max_chars": 3188,
+      "section_coverage_ratio": 1.0
+    },
+    {
+      "paper_id": "arxiv:2308.08155",
+      "slug": "autogen",
+      "page_count": 43,
+      "chunk_count": 76,
+      "mean_chars": 2237.51,
+      "min_chars": 245,
+      "max_chars": 3199,
+      "section_coverage_ratio": 0.9868
+    },
+    {
+      "paper_id": "arxiv:2308.03688",
+      "slug": "agentbench",
+      "page_count": 58,
+      "chunk_count": 84,
+      "mean_chars": 2218.13,
+      "min_chars": 433,
+      "max_chars": 3194,
+      "section_coverage_ratio": 1.0
+    }
+  ]
+}

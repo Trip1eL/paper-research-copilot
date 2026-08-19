@@ -1,0 +1,54 @@
+{
+  "config": {
+    "baseline_id": "answer_hybrid_rrf_v2",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/answer_generation_v2.jsonl",
+    "dataset_sha256": "133927aa39e4abf585666db1032be114d95920c1b5cf0940dd6c424a607b0c69",
+    "corpus_id": "agent-seed-v3",
+    "corpus_version": 3,
+    "collection_name": "agent_seed_v3_bge_m3_chunking_v1",
+    "retrieval_strategy": "hybrid_rrf",
+    "retrieval_parameters": {
+      "candidate_pool_size": 50,
+      "rrf_k": 60
+    },
+    "answer_model": "deepseek-v4-flash",
+    "answer_prompt_version": "answer_v2",
+    "answer_retry_attempts": 2,
+    "top_k": 10
+  },
+  "case_count": 32,
+  "answerable_count": 31,
+  "unanswerable_count": 1,
+  "generation_success_rate": 0.96875,
+  "answerability_accuracy": 0.78125,
+  "key_point_recall": 0.7123655913978494,
+  "citation_paper_precision": 0.7419354838709677,
+  "citation_paper_recall": 0.7580645161290323,
+  "strict_page_precision": 0.6053763440860215,
+  "strict_page_recall": 0.7419354838709677,
+  "sentence_citation_coverage": 0.601564027370479,
+  "empty_response_case_rate": 0.0,
+  "truncation_case_rate": 0.0625,
+  "retry_trigger_rate": 0.0625,
+  "retry_recovery_rate": 0.5,
+  "finish_reason_counts": {
+    "stop": 31,
+    "length": 3
+  },
+  "mean_total_latency_ms": 7985.24,
+  "p50_total_latency_ms": 4042.21,
+  "p95_total_latency_ms": 25168.23,
+  "failed_cases": [
+    "AE-015"
+  ],
+  "answerability_errors": [
+    "AE-015",
+    "AE-017",
+    "AE-018",
+    "AE-027",
+    "AE-030",
+    "AE-031",
+    "AE-032"
+  ]
+}

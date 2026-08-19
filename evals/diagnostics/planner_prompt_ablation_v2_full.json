@@ -1,0 +1,1847 @@
+[
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-001",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4353.1,
+    "usage": {
+      "input_tokens": 572,
+      "output_tokens": 295,
+      "total_tokens": 867
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种方法通过交错生成 Thought、Action 和 Observation，让语言模型同时推理并操作环境？",
+      "question_type": "single_paper",
+      "rationale": "该问题询问具有特定机制（交错生成 Thought、Action 和 Observation）的单一方法，属于单篇论文检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "语言模型交错生成 Thought、Action 和 Observation，同时进行推理和操作环境的方法",
+          "goal": "找到描述该方法核心机制与流程的论文证据"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-002",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4335.68,
+    "usage": {
+      "input_tokens": 573,
+      "output_tokens": 342,
+      "total_tokens": 915
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪项研究让语言模型自主学习调用计算器、问答、搜索、翻译和日历等外部 API？",
+      "question_type": "single_paper",
+      "rationale": "The question asks which single study introduced a specific capability: language models autonomously learning to call external APIs such as calculator, Q&A, search, translation, and calendar. This is an identity lookup for one described study, not a corpus-wide comparison or absence verification.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "语言模型 自主学习 调用外部API 计算器 问答 搜索 翻译 日历",
+          "goal": "Find the study that enables language models to autonomously learn to call external APIs for calculator, question answering, search, translation, and calendar."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-003",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5040.46,
+    "usage": {
+      "input_tokens": 580,
+      "output_tokens": 397,
+      "total_tokens": 977
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种方法由 Actor、Evaluator 和 Self-Reflection 组成闭环，并把语言反馈写入 episodic memory 以改进下一次尝试？",
+      "question_type": "single_paper",
+      "rationale": "The question asks which single method has a specific closed-loop architecture and episodic memory mechanism, without requesting a corpus-wide absence check or comparison of independent methods.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "Actor, Evaluator, Self-Reflection, language feedback, episodic memory, improve next attempt",
+          "goal": "Find the method described as a closed loop of Actor, Evaluator, and Self-Reflection that writes language feedback into episodic memory to improve subsequent attempts."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-004",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 10047.25,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 1059,
+      "total_tokens": 1640
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种语言智能体方法把 Monte Carlo Tree Search 的 selection、expansion、evaluation 和 backpropagation 用于推理与行动规划？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single language-agent method defined by a specific mechanism: applying Monte Carlo Tree Search's selection, expansion, evaluation, and backpropagation to reasoning and action planning. It does not require comparing independent methods or verifying corpus-wide absence.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "语言智能体方法 使用 Monte Carlo Tree Search selection expansion evaluation backpropagation 用于推理与行动规划",
+          "goal": "Retrieve the passage that describes this language-agent method and explicitly links all four MCTS phases to reasoning and action planning."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-005",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3907.59,
+    "usage": {
+      "input_tokens": 574,
+      "output_tokens": 364,
+      "total_tokens": 938
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种智能体架构通过主上下文、外部存储和类似操作系统 paging 的机制实现 virtual context management？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single agent architecture described by a specific mechanism (main context, external storage, and OS-paging-like virtual context management). It does not ask to compare independent methods or verify corpus-wide absence, so it is a single-paper retrieval task.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "agent architecture virtual context management main context external storage OS paging mechanism",
+          "goal": "Find the paper that presents the agent architecture using main context, external storage, and an operating-system-paging-like mechanism for virtual context management."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-006",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4263.3,
+    "usage": {
+      "input_tokens": 572,
+      "output_tokens": 380,
+      "total_tokens": 952
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪项研究使用 memory stream、reflection synthesis 和 plan generation 来模拟可信的人类行为？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single study that uses a specific combination of described mechanisms rather than comparing independent methods or verifying corpus-wide absence.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "memory stream reflection synthesis plan generation simulate believable human behavior",
+          "goal": "Retrieve the study that jointly uses memory stream, reflection synthesis, and plan generation to simulate believable human behavior."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-007",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 6470.9,
+    "usage": {
+      "input_tokens": 574,
+      "output_tokens": 586,
+      "total_tokens": 1160
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种开放世界具身智能体由 automatic curriculum、skill library 和 iterative prompting 三个核心组件组成？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a specific open-world embodied agent described by three named components; it does not ask to compare independent methods or verify corpus-wide absence, so a single retrieval task suffices.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "开放世界具身智能体 automatic curriculum skill library iterative prompting",
+          "goal": "Find a paper describing an open-world embodied agent whose architecture consists of the three core components: automatic curriculum, skill library, and iterative prompting."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-008",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4841.45,
+    "usage": {
+      "input_tokens": 578,
+      "output_tokens": 396,
+      "total_tokens": 974
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪个多智能体应用框架把 Agent 设计为 conversable 和 customizable，并允许组合模型、工具与人工参与？",
+      "question_type": "single_paper",
+      "rationale": "The question asks which single multi-agent application framework has a specific set of properties, so it targets one framework rather than comparing independent methods or verifying corpus-wide absence.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "多智能体应用框架 将 Agent 设计为 conversable 和 customizable，允许组合模型、工具与人工参与",
+          "goal": "Find the framework that is described as having conversable and customizable agents and supporting composition of models, tools, and human participation."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-009",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5839.48,
+    "usage": {
+      "input_tokens": 583,
+      "output_tokens": 519,
+      "total_tokens": 1102
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种模块化神经符号系统使用 router 将自然语言请求分发给可扩展的 expert modules，并让符号计算器而非语言模型完成算术？",
+      "question_type": "single_paper",
+      "rationale": "该问题描述了一个具体的单一系统特征，要求识别满足这些条件的模块化神经符号系统，不涉及多个系统间的比较或语料库范围的验证。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "模块化神经符号系统 使用 router 将自然语言请求分发给可扩展的 expert modules 并让符号计算器而非语言模型完成算术",
+          "goal": "找到并确认符合该描述的单一系统，提取其 router 分发机制和符号计算器使用方式的相关证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-010",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 6556.72,
+    "usage": {
+      "input_tokens": 576,
+      "output_tokens": 566,
+      "total_tokens": 1142
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种无需训练的迭代方法让同一个语言模型依次生成初稿、给出 actionable feedback，再根据反馈反复修改输出？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single method with a specific mechanism (training-free, iterative, same LM, draft, feedback, revise), not to compare independent methods or verify corpus-wide absence.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "无需训练的迭代方法 同一个语言模型 依次生成初稿 给出 actionable feedback 再根据反馈反复修改输出",
+          "goal": "Retrieve evidence describing this method and confirm its name and mechanism."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-011",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5936.62,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 583,
+      "total_tokens": 1168
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种推理框架把 thought 定义为可评估的语义单元，并使用 BFS 或 DFS、lookahead 与 backtracking 系统探索多个候选路径？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single reasoning framework based on its defining characteristics, not to compare independent methods or verify absence across the corpus. Therefore one retrieval task suffices.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "reasoning framework that defines thought as an evaluable semantic unit and uses BFS or DFS with lookahead and backtracking to systematically explore multiple candidate paths",
+          "goal": "Retrieve the paper describing this reasoning framework and its key mechanisms."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-012",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3310.82,
+    "usage": {
+      "input_tokens": 580,
+      "output_tokens": 278,
+      "total_tokens": 858
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种模型编排型智能体把复杂多模态请求拆为 task planning、model selection、task execution 和 response generation 四个阶段？",
+      "question_type": "single_paper",
+      "rationale": "The question asks which single model-orchestrated agent has a specific four-stage architecture. It does not ask to verify corpus-wide absence or compare independently described methods, so a single retrieval task is sufficient.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "模型编排型智能体 将复杂多模态请求 拆分为 task planning model selection task execution response generation 四个阶段",
+          "goal": "Find the paper describing this agent and its four-stage decomposition."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-013",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4209.24,
+    "usage": {
+      "input_tokens": 588,
+      "output_tokens": 396,
+      "total_tokens": 984
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种大规模工具学习方案收集 16,464 个 RESTful APIs，使用深度优先决策树寻找调用路径，并训练 neural API retriever 推荐候选接口？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single large-scale tool-learning approach by three specific technical details; no comparison across independent papers or corpus-wide verification is requested.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "large-scale tool learning scheme collecting 16,464 RESTful APIs depth-first decision tree call path neural API retriever candidate recommendation",
+          "goal": "Find the paper that describes this exact approach with these technical details."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-014",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7873.04,
+    "usage": {
+      "input_tokens": 583,
+      "output_tokens": 738,
+      "total_tokens": 1321
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪种软件工程多智能体框架把 SOP 编码为提示序列，让 Product Manager、Architect 和 Engineer 通过结构化产物形成 assembly line？",
+      "question_type": "single_paper",
+      "rationale": "The question asks which single framework has a specific described property, not to compare independent methods or verify corpus-wide absence. It is therefore a single-paper retrieval task.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "软件工程多智能体框架 将SOP编码为提示序列 Product Manager Architect Engineer 通过结构化产物形成assembly line",
+          "goal": "Retrieve the paper that presents a software engineering multi-agent framework described as encoding SOP as a sequence of prompts and using Product Manager, Architect, and Engineer roles to form an assembly line through structured artifacts."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-015",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4862.62,
+    "usage": {
+      "input_tokens": 584,
+      "output_tokens": 511,
+      "total_tokens": 1095
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "哪项 Web Agent 研究构建了电商、论坛、协作开发和内容管理四类真实网站，并用程序化 validators 检查任务功能正确性？",
+      "question_type": "single_paper",
+      "rationale": "The question asks to identify a single study that matches a specific combination of design features (four real website types plus programmatic validators), not a comparison of independent methods or a corpus-wide verification of absence/presence across multiple papers. Therefore it is routed as single_paper with one retrieval task.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "Web Agent 研究 构建 电商 论坛 协作开发 内容管理 四类真实网站 程序化 validators 检查任务功能正确性",
+          "goal": "Locate the Web Agent study described as building four real website categories (e-commerce, forum, collaborative development, content management) and using programmatic validators to check task functional correctness."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-016",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 6997.34,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 675,
+      "total_tokens": 1256
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在一个包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+      "question_type": "single_paper",
+      "rationale": "该问题询问的是同一个真实交互基准中两个指标（最佳 GPT-4 Agent 成功率、人类成功率），属于对同一篇论文或同一基准报告数值的检索，而不是跨论文比较或语料级存在性验证。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+          "goal": "查找该基准论文中报告的 GPT-4 Agent 与人类在 812 个长程网页任务上的端到端成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-017",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5326.88,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 464,
+      "total_tokens": 1049
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "交错生成 Thought、Action、Observation 的提示方法，与通过采样和 loss 过滤来学习 API calls 的方法，在工具使用机制上有何差异？",
+      "question_type": "cross_paper",
+      "rationale": "The question compares two independently described approaches to tool use: an interleaved Thought/Action/Observation prompting method and a method that learns API calls via sampling and loss filtering. Each side needs separate evidence retrieval.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "交错生成 Thought、Action、Observation 的提示方法 工具使用机制",
+          "goal": "Retrieve evidence describing how the interleaved Thought, Action, Observation prompting approach supports tool use."
+        },
+        {
+          "task_id": "T2",
+          "query": "通过采样和 loss 过滤 学习 API calls 的方法 工具使用机制",
+          "goal": "Retrieve evidence describing how the sampling and loss filtering approach learns API calls for tool use."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-018",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3281.99,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 313,
+      "total_tokens": 890
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "使用 episodic verbal feedback 改进后续尝试的方法，与在 Monte Carlo Tree Search 节点上进行评价和反思的方法有何区别？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks for a comparison between two independently described methods: one that uses episodic verbal feedback to improve subsequent attempts, and another that evaluates and reflects on Monte Carlo Tree Search nodes. Two independent evidence channels are needed, one per method.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "episodic verbal feedback to improve subsequent attempts method",
+          "goal": "Retrieve descriptions and mechanisms of the method that uses episodic verbal feedback to improve subsequent attempts."
+        },
+        {
+          "task_id": "T2",
+          "query": "evaluation and reflection on Monte Carlo Tree Search nodes method",
+          "goal": "Retrieve descriptions and mechanisms of the method that evaluates and reflects on Monte Carlo Tree Search nodes."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-019",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4536.86,
+    "usage": {
+      "input_tokens": 576,
+      "output_tokens": 466,
+      "total_tokens": 1042
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "操作系统式 virtual context memory hierarchy，与面向模拟人类行为的 memory stream，在长期记忆目标和组织方式上有何不同？",
+      "question_type": "cross_paper",
+      "rationale": "该问题比较两个独立描述的方法在长期记忆目标与组织方式上的差异，因此采用跨论文检索，并为每一方各建一个独立检索任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "操作系统式 virtual context memory hierarchy 的长期记忆目标和组织方式",
+          "goal": "收集关于虚拟上下文记忆层级（类操作系统式）在长期记忆设计目标与组织方式上的说明。"
+        },
+        {
+          "task_id": "T2",
+          "query": "面向模拟人类行为的 memory stream 的长期记忆目标和组织方式",
+          "goal": "收集关于用于模拟人类行为的记忆流在长期记忆设计目标与组织方式上的说明。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-020",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7590.18,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 750,
+      "total_tokens": 1335
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "强调 role-playing 与 inception prompting 的双角色研究框架，和强调 conversable、customizable 的多智能体应用框架，在对话编排上有何差异？",
+      "question_type": "cross_paper",
+      "rationale": "该问题比较两个独立描述的研究框架在对话编排上的差异，属于跨论文综合对比。每个框架各需一个独立检索任务，分别获取其对话编排机制的描述性证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "强调 role-playing 与 inception prompting 的双角色研究框架 对话编排",
+          "goal": "查找该双角色研究框架中关于对话编排机制的具体描述或实现方式"
+        },
+        {
+          "task_id": "T2",
+          "query": "强调 conversable、customizable 的多智能体应用框架 对话编排",
+          "goal": "查找该多智能体应用框架中关于对话编排机制的具体描述或实现方式"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-021",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3591.7,
+    "usage": {
+      "input_tokens": 586,
+      "output_tokens": 391,
+      "total_tokens": 977
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "基于 Monte Carlo Tree Search 的规划方法，与依靠 automatic curriculum 和可复用 skill library 的开放世界探索方法，分别如何组织搜索和持续学习？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks for a comparison of two independently described families of methods: one based on Monte Carlo Tree Search for planning, and another relying on automatic curriculum and a reusable skill library for open-world exploration. Each side describes a distinct mechanism, so one retrieval task per side is appropriate.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "Monte Carlo Tree Search based planning method how it organizes search and continual learning",
+          "goal": "Retrieve evidence describing how the MCTS-based planning approach structures its search process and supports continual learning."
+        },
+        {
+          "task_id": "T2",
+          "query": "open-world exploration method using automatic curriculum and reusable skill library how it organizes search and continual learning",
+          "goal": "Retrieve evidence describing how the open-world exploration approach uses automatic curriculum and a reusable skill library to organize exploration and continual learning."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-022",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4452.87,
+    "usage": {
+      "input_tokens": 589,
+      "output_tokens": 477,
+      "total_tokens": 1066
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "把环境评价转为 episodic verbal memory 的智能体反思方法，与让同一个模型直接批评并改写当前输出的方法，在反馈来源、记忆和迭代对象上有何区别？",
+      "question_type": "cross_paper",
+      "rationale": "The question compares two independently described reflection mechanisms, so one retrieval task is needed for each comparison side.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "将环境评价转为 episodic verbal memory 的智能体反思方法的反馈来源、记忆和迭代对象",
+          "goal": "抽取该反思方法在反馈来源、记忆形式和迭代对象上的设计"
+        },
+        {
+          "task_id": "T2",
+          "query": "让同一个模型直接批评并改写当前输出的方法的反馈来源、记忆和迭代对象",
+          "goal": "抽取该直接批评并改写当前输出的方法在反馈来源、记忆形式和迭代对象上的设计"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-023",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 2911.51,
+    "usage": {
+      "input_tokens": 591,
+      "output_tokens": 284,
+      "total_tokens": 875
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "使用 Monte Carlo Tree Search 统一行动规划的方法，与在文本 thought 状态上使用 BFS/DFS 的推理方法，在节点语义、搜索阶段和环境交互上有何不同？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks for a comparison between two independently described methods: one using Monte Carlo Tree Search for unified action planning, and another using BFS/DFS on textual thought states for reasoning. These are distinct approaches requiring separate evidence retrieval for each side.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "Monte Carlo Tree Search 统一行动规划 方法 节点语义 搜索阶段 环境交互",
+          "goal": "Retrieve descriptions of the MCTS-based unified action planning method, focusing on node semantics, search phases, and interaction with the environment."
+        },
+        {
+          "task_id": "T2",
+          "query": "文本 thought 状态上 BFS/DFS 推理方法 节点语义 搜索阶段 环境交互",
+          "goal": "Retrieve descriptions of the reasoning method using BFS/DFS on textual thought states, focusing on node semantics, search phases, and interaction with the environment."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-024",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3237.92,
+    "usage": {
+      "input_tokens": 583,
+      "output_tokens": 287,
+      "total_tokens": 870
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "操作系统式分层存储与 virtual context paging，和基于遗忘曲线、用户画像的长期对话记忆，分别解决什么上下文限制并如何淘汰信息？",
+      "question_type": "cross_paper",
+      "rationale": "The question compares two independently described mechanisms for context management and eviction: OS-style hierarchical storage with virtual context paging versus long-term conversation memory based on forgetting curves and user profiles. These are two distinct methods requiring separate evidence channels.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "operating system style hierarchical storage virtual context paging address context limitation information eviction",
+          "goal": "Find evidence about what context limitations are addressed by OS-style hierarchical storage with virtual context paging and how information is evicted."
+        },
+        {
+          "task_id": "T2",
+          "query": "forgetting curve user profile long-term conversation memory context limitation information eviction",
+          "goal": "Find evidence about what context limitations are addressed by forgetting-curve and user-profile based long-term conversation memory and how information is evicted."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-025",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 6348.36,
+    "usage": {
+      "input_tokens": 586,
+      "output_tokens": 550,
+      "total_tokens": 1136
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "交错执行 Thought、Action、Observation 的通用行动提示，与通过 router 调用符号 expert 的模块化架构，在工具选择和执行责任上有何区别？",
+      "question_type": "cross_paper",
+      "rationale": "该问题比较两种独立描述的方法：一种是交错执行Thought、Action、Observation的通用行动提示，另一种是通过router调用符号expert的模块化架构，要求区分二者在工具选择和执行责任上的不同。由于涉及两个独立方法体系的对比，需要分别检索每侧的证据，因此采用cross_paper。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "交错执行 Thought、Action、Observation 的通用行动提示中，工具选择和执行责任分别如何确定？",
+          "goal": "获取通用行动提示方法下工具选择与执行责任分配的相关描述或实证证据。"
+        },
+        {
+          "task_id": "T2",
+          "query": "通过 router 调用符号 expert 的模块化架构中，工具选择和执行责任分别由哪个组件承担？",
+          "goal": "获取模块化架构方法下工具选择与执行责任分配的相关描述或实证证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-026",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5993.95,
+    "usage": {
+      "input_tokens": 589,
+      "output_tokens": 692,
+      "total_tokens": 1281
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "覆盖八类异构交互环境的综合智能体评测，与聚焦真实可复现网站和功能正确性的网页评测，在任务范围、环境真实性和成功判定上有何差异？",
+      "question_type": "cross_paper",
+      "rationale": "该问题比较两种独立描述的综合智能体评测范式在三个维度上的差异，属于跨论文检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "覆盖八类异构交互环境的综合智能体评测，任务范围、环境真实性、成功判定",
+          "goal": "检索该类评测在任务范围、环境真实性和成功判定方面的设计细节，作为比较的一方证据。"
+        },
+        {
+          "task_id": "T2",
+          "query": "聚焦真实可复现网站和功能正确性的网页评测，任务范围、环境真实性、成功判定",
+          "goal": "检索该类网页评测在任务范围、环境真实性和成功判定方面的设计细节，作为比较的另一方证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-027",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 2761.79,
+    "usage": {
+      "input_tokens": 586,
+      "output_tokens": 224,
+      "total_tokens": 810
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "用于模拟社会行为的 memory stream、reflection 和 planning，与用于长期陪伴的记忆检索、遗忘更新和 user portrait，在记忆评分与应用目标上有何不同？",
+      "question_type": "cross_paper",
+      "rationale": "该问题对比两类独立描述的记忆机制及其应用目标，属于跨论文比较，需要分别检索每一侧的证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "用于模拟社会行为的 memory stream、reflection 和 planning，在记忆评分上有何特点？其应用目标是什么？",
+          "goal": "检索第一类方法中记忆评分机制和应用目标的具体描述"
+        },
+        {
+          "task_id": "T2",
+          "query": "用于长期陪伴的记忆检索、遗忘更新和 user portrait，在记忆评分上有何特点？其应用目标是什么？",
+          "goal": "检索第二类方法中记忆评分机制和应用目标的具体描述"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-028",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4535.43,
+    "usage": {
+      "input_tokens": 592,
+      "output_tokens": 519,
+      "total_tokens": 1111
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "依靠自动课程和可复用技能库持续探索开放世界的智能体，与把语言模型作为控制器选择多个现成 AI 模型完成多模态请求的系统，如何分别积累能力和编排任务？",
+      "question_type": "cross_paper",
+      "rationale": "The question compares two independently described systems/mechanisms: one is an agent that accumulates skills via automatic curricula and reusable skill libraries in open worlds; the other is a system that uses a language model as a controller to select multiple existing AI models for multimodal requests. Each side requires separate evidence retrieval.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "依靠自动课程和可复用技能库持续探索开放世界的智能体 如何积累能力和编排任务",
+          "goal": "Retrieve evidence describing how the agent accumulates capabilities and orchestrates tasks using automatic curricula and a reusable skill library in open-world exploration."
+        },
+        {
+          "task_id": "T2",
+          "query": "把语言模型作为控制器选择多个现成 AI 模型完成多模态请求的系统 如何积累能力和编排任务",
+          "goal": "Retrieve evidence describing how the language-model-as-controller system accumulates capabilities and orchestrates tasks by selecting multiple off-the-shelf AI models for multimodal requests."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-029",
+    "category": "cross_comparison",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4250.59,
+    "usage": {
+      "input_tokens": 590,
+      "output_tokens": 445,
+      "total_tokens": 1035
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "将请求路由到符号 expert 的模块化系统，与检索最新 API 文档后生成准确调用的模型，在外部能力接入、更新适应性和错误来源上有何差异？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks for a comparison between two independently described methods across three dimensions. A cross-paper plan with one task per method side provides separate evidence channels for each method's characteristics.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "将请求路由到符号 expert 的模块化系统 外部能力接入 更新适应性 错误来源",
+          "goal": "Find evidence describing how a modular system that routes requests to symbolic experts handles external capability integration, adapts to updates, and what its error sources are."
+        },
+        {
+          "task_id": "T2",
+          "query": "检索最新 API 文档后生成准确调用的模型 外部能力接入 更新适应性 错误来源",
+          "goal": "Find evidence describing how a model that retrieves the latest API documentation and then generates accurate API calls handles external capability integration, adapts to updates, and what its error sources are."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-030",
+    "category": "multi_method_synthesis",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 3,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 3,
+    "generation_latency_ms": 44669.63,
+    "usage": {
+      "input_tokens": 592,
+      "output_tokens": 976,
+      "total_tokens": 1568
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "用户比较三种独立方案，要求分别说明每种方案的训练信号和检索角色，属于跨论文的综合比较。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案中，训练信号和检索角色分别是什么？",
+          "goal": "提取该方案的训练信号和检索角色"
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案中，训练信号和检索角色分别是什么？",
+          "goal": "提取该方案的训练信号和检索角色"
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案中，训练信号和检索角色分别是什么？",
+          "goal": "提取该方案的训练信号和检索角色"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-031",
+    "category": "multi_method_synthesis",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 4,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3",
+      "F4"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5021.55,
+    "usage": {
+      "input_tokens": 592,
+      "output_tokens": 536,
+      "total_tokens": 1128
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "双角色 inception prompting、可定制 conversable agents、动态专家招募，以及基于 SOP 的软件流水线，这四类多智能体设计如何分别约束角色、通信和任务流程？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks how four distinct multi-agent design patterns constrain roles, communication, and workflow, which requires retrieving separate evidence for each independently described approach.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "双角色 inception prompting 多智能体设计 如何约束角色 通信 任务流程",
+          "goal": "Find evidence describing how dual-role inception prompting constrains agent roles, communication, and task flow."
+        },
+        {
+          "task_id": "T2",
+          "query": "可定制 conversable agents 多智能体设计 如何约束角色 通信 任务流程",
+          "goal": "Find evidence describing how customizable conversable agents constrain agent roles, communication, and task flow."
+        },
+        {
+          "task_id": "T3",
+          "query": "动态专家招募 多智能体设计 如何约束角色 通信 任务流程",
+          "goal": "Find evidence describing how dynamic expert recruitment constrains agent roles, communication, and task flow."
+        },
+        {
+          "task_id": "T4",
+          "query": "基于 SOP 的软件流水线 多智能体设计 如何约束角色 通信 任务流程",
+          "goal": "Find evidence describing how SOP-based software pipelines constrain agent roles, communication, and task flow."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-032",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3282.97,
+    "usage": {
+      "input_tokens": 580,
+      "output_tokens": 344,
+      "total_tokens": 924
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中的论文是否报告了 GPT-5.5 在 SWE-bench Verified 上的解决率？具体数值是多少？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks whether the current corpus reports a specific result for GPT-5.5 on SWE-bench Verified and requests the numerical value. This is a corpus-wide existence/absence check, so two independent evidence channels are needed: one for main-text claims and one for evaluation/results artifacts.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "GPT-5.5 SWE-bench Verified 解决率",
+          "goal": "Find main-text statements explicitly reporting or mentioning GPT-5.5's solve rate on SWE-bench Verified and any specific numerical value."
+        },
+        {
+          "task_id": "T2",
+          "query": "GPT-5.5 SWE-bench Verified 解决率 数值 表格 结果",
+          "goal": "Find evaluation sections, tables, figures, or appendices that report the SWE-bench Verified solve rate for GPT-5.5 with a specific numerical value."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-033",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 2,
+    "generation_latency_ms": 26245.06,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 956,
+      "total_tokens": 1533
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题需要在一组论文中找出满足特定评测条件的方法，并分别提取其成功率，属于跨论文的综合检索与属性提取。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪些论文中的方法在 tau-bench 的 airline 与 retail 场景上进行了评测？",
+          "goal": "定位在 tau-bench airline 和 retail 两个场景上评测过的方法，并识别对应的论文和方法名称。"
+        },
+        {
+          "task_id": "T2",
+          "query": "这些方法在 tau-bench airline 与 retail 场景上的成功率分别是多少？",
+          "goal": "从论文的评测结果中提取所识别方法在 airline 和 retail 两个场景下的成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-034",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 3,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7652.34,
+    "usage": {
+      "input_tokens": 571,
+      "output_tokens": 801,
+      "total_tokens": 1372
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中哪些研究评估了代码生成能力，分别使用了什么基准和成功指标？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求从当前语料中归纳多项研究是否评估了代码生成能力，并分别提取每项研究使用的基准与成功指标，属于跨论文的综合检索任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前语料中哪些研究评估了代码生成能力",
+          "goal": "识别并列出语料中所有评估代码生成能力的研究。"
+        },
+        {
+          "task_id": "T2",
+          "query": "评估代码生成能力的研究分别使用了什么基准",
+          "goal": "提取这些研究在评估代码生成能力时使用的基准。"
+        },
+        {
+          "task_id": "T3",
+          "query": "评估代码生成能力的研究分别使用了什么成功指标",
+          "goal": "提取这些研究在评估代码生成能力时使用的成功指标。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-035",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4440.74,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 482,
+      "total_tokens": 1067
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前论文库是否包含 Claude 3.5 Sonnet 在 GAIA Level 3 上准确率的直接报告？请核验正文和实验表格。",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求核验当前论文库中是否存在某一具体事实的直接报告，属于语料库范围的存续性验证；需要分别从正文文本和实验表格两个独立证据通道检索同一实体、基准、指标和数值，因此使用跨论文检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前论文库正文中是否直接报告了 Claude 3.5 Sonnet 在 GAIA Level 3 上的准确率？",
+          "goal": "检索正文陈述，确认是否存在关于 Claude 3.5 Sonnet 在 GAIA Level 3 上准确率的直接报告。"
+        },
+        {
+          "task_id": "T2",
+          "query": "当前论文库的实验表格、图表或附录中是否直接报告了 Claude 3.5 Sonnet 在 GAIA Level 3 上的准确率？",
+          "goal": "独立检查评估/结果部分的表格、图或附录，确认是否存在同一直接报告证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-036",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 3,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5487.78,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 580,
+      "total_tokens": 1157
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在当前语料中，哪些工作使用树搜索来改进推理或行动？请分别归纳它们的搜索状态和扩展策略。",
+      "question_type": "cross_paper",
+      "rationale": "用户要求检索整个语料中所有使用树搜索改进推理或行动的工作，并分别归纳其搜索状态和扩展策略，属于语料级综合检索，需要先发现符合条件的工作，再分侧面抽取两类属性。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前语料中哪些工作使用树搜索来改进推理或行动",
+          "goal": "发现所有使用树搜索改进推理或行动的工作，作为后续属性抽取的对象集合"
+        },
+        {
+          "task_id": "T2",
+          "query": "使用树搜索改进推理或行动的工作中，各自的搜索状态（state）是什么",
+          "goal": "分别归纳这些工作定义的搜索状态或状态表示方式"
+        },
+        {
+          "task_id": "T3",
+          "query": "使用树搜索改进推理或行动的工作中，各自的树扩展策略是什么",
+          "goal": "分别归纳这些工作如何扩展搜索树，包括节点生成、分支或扩展机制"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-037",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 9041.22,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 875,
+      "total_tokens": 1452
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+      "question_type": "single_paper",
+      "rationale": "问题询问一种特定方法（将推理轨迹和环境行动放在同一提示轨迹中）在哪些知识问答与交互式决策环境上进行了验证，这是一种对单个方法的评估范围提取，不涉及多方法比较或语料库范围的验证，因此归类为单篇论文任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+          "goal": "从论文中找出该方法在知识问答和交互式决策这两类环境上的验证情况，列出所有相关的评测基准、数据集或环境名称。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-038",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 9717.84,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 1004,
+      "total_tokens": 1581
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "ReAct 和 Toolformer 是否都在推理时动态调用工具？请分别核验两种方法的工具调用发生阶段。",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求分别核验 ReAct 与 Toolformer 两种独立方法的工具调用发生阶段，属于跨论文比较，每种方法各需独立检索证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "ReAct 方法中工具调用发生在哪个阶段？是否在推理时动态调用工具？",
+          "goal": "获取 ReAct 方法工具调用阶段的直接描述，验证其是否在推理时动态调用工具。"
+        },
+        {
+          "task_id": "T2",
+          "query": "Toolformer 方法中工具调用发生在哪个阶段？是否在推理时动态调用工具？",
+          "goal": "获取 Toolformer 方法工具调用阶段的直接描述，验证其是否在推理时动态调用工具。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-039",
+    "category": "routing_boundary",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": false,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 2,
+    "generation_latency_ms": 25812.33,
+    "usage": {
+      "input_tokens": 569,
+      "output_tokens": 772,
+      "total_tokens": 1341
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "需要从多篇论文中识别哪一种方法采用了类似操作系统 paging 的机制，属于跨论文的综合检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "使用类似操作系统 paging 的机制管理有限上下文的方法",
+          "goal": "在论文正文中定位明确描述采用类似操作系统 paging 机制来管理有限上下文的方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "分页机制 有限上下文管理 类似操作系统",
+          "goal": "独立检索相关术语，验证是否有论文将有限上下文管理与操作系统分页机制进行类比或实现。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_full",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-040",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 8340.21,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 841,
+      "total_tokens": 1422
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "比较一种把环境反馈写入跨回合记忆的方法，和另一种在单次生成中反复批评初稿的方法，它们分别迭代什么对象？",
+      "question_type": "cross_paper",
+      "rationale": "问题以两种独立描述的方法进行比较，分别询问各自迭代的对象，因此需要分两侧独立检索证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "一种把环境反馈写入跨回合记忆的方法，它迭代什么对象？",
+          "goal": "检索该方法的迭代对象（例如记忆、策略或动作）的证据"
+        },
+        {
+          "task_id": "T2",
+          "query": "一种在单次生成中反复批评初稿的方法，它迭代什么对象？",
+          "goal": "检索该方法在生成过程中反复修改或批评的迭代对象（例如草稿、文本）的证据"
+        }
+      ],
+      "revision": 0
+    }
+  }
+]

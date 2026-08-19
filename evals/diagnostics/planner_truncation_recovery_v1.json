@@ -1,0 +1,1847 @@
+[
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 1,
+    "case_id": "PR-030",
+    "success": false,
+    "error": "ValueError: Research Planner failed after 3 attempts: Research Planner returned a truncated response",
+    "cache_hit": false,
+    "route": null,
+    "strict_route": false,
+    "acceptable_route": false,
+    "task_count": 0,
+    "strict_task_count": false,
+    "acceptable_task_count": false,
+    "covered_facets": [],
+    "facet_coverage": 0.0,
+    "title_leaks": [],
+    "generation_latency_ms": 60863.36,
+    "attempt_count": 3,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 19044.41,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1800,
+          "total_tokens": 2392
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 20295.59,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1800,
+          "total_tokens": 2392
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 3,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 293,
+        "latency_ms": 20022.39,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1800,
+          "total_tokens": 2392
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "8b80a3f8f50189e3e78aedeb9454ca9871705502821e6efd22c69f59527e9d63"
+      }
+    ],
+    "plan": null
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 1,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 11341.7,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 406,
+        "latency_ms": 11341.36,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1171,
+          "total_tokens": 1763
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "2e047e4055a6212c43fb84757f134ce9937778ef787ec41d46c59a5a0013466c"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "问题比较三种独立方案在训练信号和检索角色上的差异，需要分别检索每一种方案的证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案中，训练信号和检索角色分别是什么？",
+          "goal": "提取该方案中训练信号（loss过滤自监督API calls）和检索角色的证据"
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案中，训练信号和检索角色分别是什么？",
+          "goal": "提取该方案中训练信号和检索角色的证据"
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案中，训练信号和检索角色分别是什么？",
+          "goal": "提取该方案中训练信号和检索角色的证据"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 1,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 48011.65,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 25970.04,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 2400,
+          "total_tokens": 2992
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 960,
+        "latency_ms": 21541.27,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 2128,
+          "total_tokens": 2720
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "838adc6ac956e67e8576277051a5fbe580b65fdc23ef303905bf89c203e2a558"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks about three separately described schemes for using API calls, document retrieval, and instruction data with neural retrieval, and asks for the training signal and retrieval role of each scheme. These are independent methodological sides, so one retrieval task is created per scheme.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案，训练信号是什么？检索角色是什么？",
+          "goal": "Extract the training signal and retrieval role of the scheme that filters self-supervised API calls by loss."
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案，训练信号是什么？检索角色是什么？",
+          "goal": "Extract the training signal and retrieval role of the scheme that adapts to API version changes via document retrieval."
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案，训练信号是什么？检索角色是什么？",
+          "goal": "Extract the training signal and retrieval role of the scheme that masters real APIs with large-scale instruction data and a neural retriever."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 1,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 25052.35,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 18777.02,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 1800,
+          "total_tokens": 2377
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 460,
+        "latency_ms": 5774.92,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 525,
+          "total_tokens": 1102
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "429c5cb9900951b35f9fbee2f8db5138e0c80e48fba9bcdf5429e71d9eb92a4c"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "问题要求从多篇论文中找出哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测并报告成功率，属于语料库范围内的综合检索，需要分别发现匹配的方法和提取对应的成功率证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "tau-bench airline retail 场景 方法 评测",
+          "goal": "找出哪些方法在 tau-bench 的 airline 和 retail 场景上进行了评测"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail 成功率 数值",
+          "goal": "提取这些方法在 airline 和 retail 场景上报告的成功率数值"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 1,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 5725.77,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 479,
+        "latency_ms": 5725.61,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 585,
+          "total_tokens": 1162
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "02bc2961555b11594d1d5dd93c9a595419fa7678d16d6bb69cbd108b0c769043"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求从多篇论文中找出满足“在 tau-bench 的 airline 与 retail 场景上进行评测”这一条件的方法，并提取其成功率，属于跨论文的综合检索与属性抽取。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "tau-bench airline retail 场景 评测 方法",
+          "goal": "从这些论文中查找并识别所有在 tau-bench 的 airline 与 retail 场景上进行评测的方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail 成功率 success rate",
+          "goal": "提取上述方法在 tau-bench airline 与 retail 场景上报告的成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 1,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 11499.36,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 566,
+        "latency_ms": 11499.2,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 1015,
+          "total_tokens": 1592
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "4777496324061b2c62428eb51b10465f50592ce5c1f6433ce29dfb2d81db52bd"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求在论文库中核查是否有方法在 tau-bench 的 airline 与 retail 场景上评测并报告成功率，属于语料库范围内的事实存在性验证，需要从正文与结果/表格两个独立证据渠道分别检索同一具体证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "在 tau-bench 的 airline 与 retail 场景上评测，并报告成功率的方法",
+          "goal": "在论文正文中查找明确说明某方法在 tau-bench 的 airline 与 retail 场景上评测，并给出成功率数值的陈述。"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail success rate evaluation results",
+          "goal": "在论文的实验结果部分、表格、图或附录中独立核对是否存在 tau-bench airline 与 retail 场景的成功率结果，并提取对应方法名称与数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 1,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 31262.69,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 19064.8,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 1800,
+          "total_tokens": 2369
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 522,
+        "latency_ms": 11697.59,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 952,
+          "total_tokens": 1521
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "33453d3c06cbeaf4c2e850e286e0bdff4a16f28ed7ffade3994e94a40e6229eb"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "问题要求在给定的一组论文中找出满足特定机制（类似操作系统 paging 的有限上下文管理）的方法，属于语料库范围的属性发现与筛选，因此采用 cross_paper。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "这些论文中，哪些方法使用类似操作系统 paging 的机制管理有限上下文？查找正文中关于分页、换页、虚拟内存、page、paging 或类似术语的讨论。",
+          "goal": "从论文正文中发现所有候选方法，判断哪些方法明确描述了类似操作系统 paging 的上下文管理机制。"
+        },
+        {
+          "task_id": "T2",
+          "query": "这些论文中，关于有限上下文管理的具体实现或系统设计描述是什么？查找方法如何将有限上下文划分、调度或换入换出。",
+          "goal": "提取被描述为使用类似 paging 机制的具体做法，从而确认哪一种方法满足用户所问的属性。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 1,
+    "case_id": "PR-039",
+    "success": false,
+    "error": "ValueError: Research Planner failed after 3 attempts: Research Planner returned a truncated response",
+    "cache_hit": false,
+    "route": null,
+    "strict_route": false,
+    "acceptable_route": false,
+    "task_count": 0,
+    "strict_task_count": false,
+    "acceptable_task_count": false,
+    "covered_facets": [],
+    "facet_coverage": 0.0,
+    "title_leaks": [],
+    "generation_latency_ms": 64209.55,
+    "attempt_count": 3,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 21441.79,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 1800,
+          "total_tokens": 2369
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 20119.75,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 645,
+          "output_tokens": 1800,
+          "total_tokens": 2445
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 3,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 21146.5,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 645,
+          "output_tokens": 1800,
+          "total_tokens": 2445
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "plan": null
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 1,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 9212.09,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 475,
+        "latency_ms": 9211.94,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 846,
+          "total_tokens": 1415
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "f7614cea352677c840b98526d19ddf6dc7d8dfc3c0fba7082068d02b7a741648"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "该问题需要在当前论文集合中综合查找并判断哪一种方法采用了类似操作系统 paging 的机制来管理有限上下文，属于跨论文的机制发现与比较，而非针对单一论文。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "类似操作系统 paging 的机制 管理 有限上下文 方法",
+          "goal": "在论文正文中查找描述采用操作系统式分页/换页机制来管理有限上下文的方法，并确认具体是哪一种方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "OS paging-like mechanism limited context window management",
+          "goal": "使用英文表述独立检索同一类机制，防止因语言表述差异漏检，并提取相关方法及其上下文管理机制证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 2,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 10384.42,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 549,
+        "latency_ms": 10384.22,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1164,
+          "total_tokens": 1756
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "f571bbf0379d7dce81d8b0fcdb4df1e76e6970f7fbd550fa023518b37e0013a1"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "该问题比较三种独立描述的方法/方案，要求分别说明每种方案的训练信号和检索角色，因此属于跨论文比较，需要为每个比较侧单独检索证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案：训练信号是什么？检索角色是什么？",
+          "goal": "查找该方案中训练信号的性质以及检索模块承担的角色。"
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案：训练信号是什么？检索角色是什么？",
+          "goal": "查找该方案中训练信号的性质以及检索模块承担的角色。"
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案：训练信号是什么？检索角色是什么？",
+          "goal": "查找该方案中训练信号的性质以及检索模块承担的角色。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 2,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 7171.93,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 1033,
+        "latency_ms": 7171.69,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 851,
+          "total_tokens": 1443
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "7d4e2912a21ad1a0f599f4178f17962e9d11f4061afe45db8e3ffa1210257cc6"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "The question compares three independently described schemes and asks for the training signal and retrieval role of each, so it is a cross-paper synthesis with one retrieval task per comparison side.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案，训练信号是什么，检索角色是什么",
+          "goal": "Find evidence describing the training signal and retrieval role for the scheme that filters self-supervised API calls by loss."
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案，训练信号是什么，检索角色是什么",
+          "goal": "Find evidence describing the training signal and retrieval role for the scheme that adapts to API version changes via document retrieval."
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案，训练信号是什么，检索角色是什么",
+          "goal": "Find evidence describing the training signal and retrieval role for the scheme that masters real interfaces using large-scale instruction data and neural retrievers."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 2,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 68763.57,
+    "attempt_count": 3,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 25786.35,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 2400,
+          "total_tokens": 2992
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 27530.83,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 2400,
+          "total_tokens": 2992
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 3,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 1048,
+        "latency_ms": 13945.5,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1452,
+          "total_tokens": 2044
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "c7a0b53e49cff193f20189b0f57022f7ffc88520395afa2420d4106dd82dd9dc"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "The question describes three distinct schemes for API learning and asks for the training signal and retrieval role of each. These are independent evidence channels, so one task is created per scheme.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案中，训练信号是什么，检索角色是什么？",
+          "goal": "Retrieve evidence describing the training signal and retrieval role in the scheme that filters self-supervised API calls via loss."
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案中，训练信号是什么，检索角色是什么？",
+          "goal": "Retrieve evidence describing the training signal and retrieval role in the scheme that adapts to API version changes via document retrieval."
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案中，训练信号是什么，检索角色是什么？",
+          "goal": "Retrieve evidence describing the training signal and retrieval role in the scheme that masters real interfaces via large-scale instruction data and neural retrievers."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 2,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 6769.76,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 394,
+        "latency_ms": 6769.51,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 640,
+          "total_tokens": 1217
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "fb16ea01654058cde54f4e5b6e039732099c76f44366325799312f0cde967a9d"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题需要从多篇论文中筛选出在 tau-bench 的 airline 与 retail 场景上评测过的方法，并提取其成功率，属于跨论文综合检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪些论文中的方法在 tau-bench 的 airline 与 retail 场景上进行了评测",
+          "goal": "找出所有在 tau-bench 的 airline 和 retail 两个场景上都进行评测的方法或论文"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench 的 airline 与 retail 场景上各方法的成功率分别是多少",
+          "goal": "提取已识别方法在 tau-bench airline 与 retail 场景下报告的成功率数值"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 2,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 16887.77,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 427,
+        "latency_ms": 16887.57,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 1710,
+          "total_tokens": 2287
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "162f0ed001f4ac9c5aacc956da4b606f6604722194661fc54eb37e2b2e7d43f8"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题需要从当前论文库中识别哪种方法在tau-bench的airline与retail场景上进行了评测，并提取对应的成功率，属于跨论文综合检索，而非针对单一论文的查询。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "tau-bench airline retail 评测 方法",
+          "goal": "找出哪些方法在tau-bench的airline与retail场景上进行了评测"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail 成功率",
+          "goal": "提取这些方法在airline与retail场景上的成功率数值"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 2,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 4844.16,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 799,
+        "latency_ms": 4843.89,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 425,
+          "total_tokens": 1002
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "b069087f72cb8191bfde5b07ce3349a490c0d0da96897aeedb3890b960f6524d"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks which methods among a set of papers were evaluated on tau-bench airline and retail, and their success rates. This requires discovering candidate papers/methods from the corpus and then extracting the specific success rates reported for those scenarios.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "methods evaluated on tau-bench airline and retail scenarios",
+          "goal": "Find papers that report evaluations of any method on tau-bench airline and retail scenarios."
+        },
+        {
+          "task_id": "T2",
+          "query": "success rate on tau-bench airline and retail benchmark",
+          "goal": "Extract the reported success rates for the identified methods on the tau-bench airline and retail scenarios."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 2,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 13530.43,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 462,
+        "latency_ms": 13530.29,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 1167,
+          "total_tokens": 1736
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "5ab27fde4fba22a7e41ec486159bd8251f760ff1c488c8793332a52d18772bcd"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求在这批论文中综合查找哪一种方法满足“使用类似操作系统分页机制管理有限上下文”的属性，属于跨论文的综合检索，而非针对单一论文的事实提取。需要多个独立检索任务分别发现相关机制描述并确认对应的方法。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "类似操作系统 paging 的机制 管理 有限上下文",
+          "goal": "在所有论文的正文中检索明确描述使用类似操作系统分页机制来管理有限上下文的段落，定位可能的方法及其相关描述。"
+        },
+        {
+          "task_id": "T2",
+          "query": "有限上下文 分页机制 方法 使用",
+          "goal": "独立检索论文中关于有限上下文与分页机制结合的表述，确认哪一种方法采用了该机制，并提取方法名称或标识。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 2,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 20928.85,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 444,
+        "latency_ms": 20928.71,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 1632,
+          "total_tokens": 2201
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "d5f832ba0236eec37163a31313b0ddf4294aa96f83076c4fda214d053cf49b20"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求在一组论文中识别出使用类似操作系统 paging 机制管理有限上下文的方法，属于跨论文综合检索，需要从机制描述和上下文管理两个方面独立获取证据并交叉验证。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "使用类似操作系统 paging 机制 管理 有限上下文 方法",
+          "goal": "检索论文中明确描述利用类似操作系统 paging（分页）机制来管理有限上下文的方法或模型。"
+        },
+        {
+          "task_id": "T2",
+          "query": "有限上下文 管理 机制 分页 上下文窗口",
+          "goal": "检索论文中关于有限上下文管理的机制描述，特别是采用分页或页面调度方式的实现，用于佐证哪些方法满足条件。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 2,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 37463.57,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 27779.0,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 2400,
+          "total_tokens": 2969
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 397,
+        "latency_ms": 9183.57,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 813,
+          "total_tokens": 1382
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "90f569056ce782e20e211408b621d24e36fc9372686cf1a8ea592e4c9a3532dd"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "问题询问的是在这些论文集合中哪一种方法采用了类似操作系统paging的机制，需要从多个论文中识别匹配的方法，属于跨论文的发现性检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "类似操作系统 paging 的机制 管理有限上下文 方法",
+          "goal": "查找在方法描述中使用类似操作系统paging机制管理有限上下文的具体方法"
+        },
+        {
+          "task_id": "T2",
+          "query": "这些论文 方法 分页 上下文管理 操作系统 paging",
+          "goal": "从论文集合中识别提及分页式上下文管理机制的方法"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 3,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 27396.6,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 18697.18,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1800,
+          "total_tokens": 2392
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 551,
+        "latency_ms": 8198.32,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 872,
+          "total_tokens": 1464
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "99c659a13bb084ff09156ccc9238335268839d0957b0c828b6c284cf67920967"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "问题要求对比三种独立描述方案的训练信号与检索角色，三种方案分别对应不同的方法或文献，需要分别检索每种方案的证据，因此采用跨论文检索并每个方案一个任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案中，训练信号是什么，检索角色是什么",
+          "goal": "获取第一种方案中训练信号和检索角色的直接描述"
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案中，训练信号是什么，检索角色是什么",
+          "goal": "获取第二种方案中训练信号和检索角色的直接描述"
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案中，训练信号是什么，检索角色是什么",
+          "goal": "获取第三种方案中训练信号和检索角色的直接描述"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 3,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "single_paper",
+    "strict_route": false,
+    "acceptable_route": false,
+    "task_count": 1,
+    "strict_task_count": false,
+    "acceptable_task_count": false,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 10813.56,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 547,
+        "latency_ms": 10813.35,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 997,
+          "total_tokens": 1589
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "323a9924ef209ab29caef86999703009f20070bfb2054725df8ac87204360f61"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "single_paper",
+      "rationale": "The question asks about three schemes described together and their training signals and retrieval roles, which appear to be components of a single discussed work rather than a comparison across independent papers.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+          "goal": "Extract the training signal and retrieval role for each of the three schemes described in the question."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 3,
+    "case_id": "PR-030",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 3,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 44707.36,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 27578.64,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 2400,
+          "total_tokens": 2992
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 592,
+        "latency_ms": 16628.14,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 592,
+          "output_tokens": 1834,
+          "total_tokens": 2426
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "02b975e2b82ae6b77ab270bb3151a0c85a3e09fb2c56d0d73a9011c1aa8d1d41"
+      }
+    ],
+    "plan": {
+      "question": "通过 loss 过滤自监督 API calls、通过文档检索适应 API 版本变化、以及通过大规模指令数据和神经检索器掌握真实接口的三种方案，训练信号和检索角色分别是什么？",
+      "question_type": "cross_paper",
+      "rationale": "用户对比三种不同方案，并要求分别说明每种方案的训练信号和检索角色；三种方案对应不同的机制与证据，需要独立检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "通过 loss 过滤自监督 API calls 的方案中，训练信号和检索角色分别是什么？",
+          "goal": "获取该方案中训练信号来源（loss 过滤自监督 API calls）以及检索在其中所起作用的证据。"
+        },
+        {
+          "task_id": "T2",
+          "query": "通过文档检索适应 API 版本变化的方案中，训练信号和检索角色分别是什么？",
+          "goal": "获取该方案中训练信号来源以及文档检索如何适应 API 版本变化的证据。"
+        },
+        {
+          "task_id": "T3",
+          "query": "通过大规模指令数据和神经检索器掌握真实接口的方案中，训练信号和检索角色分别是什么？",
+          "goal": "获取该方案中训练信号来源（大规模指令数据）以及神经检索器在掌握真实接口中的作用的证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 3,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 12204.09,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 482,
+        "latency_ms": 12203.92,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 1212,
+          "total_tokens": 1789
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "e775c31d4c543ca0570ce3d4f324ed5ab1dfab2c11931c9aa8756f144ad9ffb4"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求从论文集合中找出在 tau-bench 的 airline 与 retail 场景上进行评测的方法，并获取其成功率，属于跨论文的综合发现与属性提取，需要分别检索方法身份和成功率数值。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪些方法在 tau-bench 的 airline 与 retail 场景上进行了评测",
+          "goal": "识别在 tau-bench airline 和 retail 场景上被评测的方法名称"
+        },
+        {
+          "task_id": "T2",
+          "query": "在 tau-bench 的 airline 与 retail 场景上进行了评测的方法的成功率分别是多少",
+          "goal": "提取这些方法在 airline 和 retail 场景下的成功率数值"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 3,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 13032.41,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 515,
+        "latency_ms": 13032.25,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 1283,
+          "total_tokens": 1860
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "b56ee48f760f92d6886cdbce7ea0318c46fc621477ae56a90f124384664e5d3b"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "问题要求在给定的多篇论文中找出在 tau-bench airline 与 retail 场景上评测过的方法，并提取其成功率，属于跨论文的发现与属性抽取，因此采用 cross_paper，分为定位方法和提取指标两个独立任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测？",
+          "goal": "在论文语料中定位所有在 tau-bench 的 airline 和 retail 两个场景上都进行了评测的方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "在 tau-bench airline 与 retail 场景上的成功率分别是多少？",
+          "goal": "提取各方法在 tau-bench airline 与 retail 场景上报告的成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 3,
+    "case_id": "PR-033",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": true,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": true,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 12091.89,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 745,
+        "latency_ms": 12091.66,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 1059,
+          "total_tokens": 1636
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "beb9550cc00ac127b30ad225e61875d4dba1df0fe325e47be2cd3f2fef5d09e6"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks which method among a set of papers was evaluated on tau-bench's airline and retail scenarios and what success rates were reported. This requires discovering the method(s) and extracting the corresponding success rates, which are separate evidence needs across the corpus.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "tau-bench airline retail 场景 评测 方法",
+          "goal": "Find methods or papers that report evaluation on the tau-bench airline and retail scenarios."
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail 成功率 多少",
+          "goal": "Extract success rate values reported for the tau-bench airline and retail scenarios."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_1800",
+    "max_tokens": 1800,
+    "retry_mode": "same_prompt",
+    "repetition": 3,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 25961.51,
+    "attempt_count": 2,
+    "retry_recovered": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "truncated",
+        "finish_reason": "length",
+        "content_length": 0,
+        "latency_ms": 17566.55,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 1800,
+          "total_tokens": 2369
+        },
+        "error_type": "_PlannerTruncatedError",
+        "error": "Research Planner returned a truncated response",
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt": 2,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 344,
+        "latency_ms": 7893.97,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 611,
+          "total_tokens": 1180
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "af13aeeeb82aab3fcab983e94b31452915bcd98a1738e531547bd89ea2d2cd38"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "用户要求在给定的论文集合中识别出哪一种方法采用了类似操作系统 paging 的机制来管理有限上下文，这属于跨论文的属性筛选，需要从多个独立描述中寻找匹配证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "类似操作系统 paging 的机制 管理 有限上下文",
+          "goal": "查找论文中明确描述使用类似操作系统分页机制来管理有限上下文的方法段落。"
+        },
+        {
+          "task_id": "T2",
+          "query": "方法 使用 paging 机制 处理 上下文 长度限制",
+          "goal": "独立检索哪些方法描述了基于页面置换或分页思想处理上下文长度限制的内容，以交叉验证目标方法。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "compact_1800",
+    "max_tokens": 1800,
+    "retry_mode": "compact_json",
+    "repetition": 3,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 11685.22,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 653,
+        "latency_ms": 11685.03,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 980,
+          "total_tokens": 1549
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "f5179fa8a878f0e25c7afab998087f76d64779090c4e8d1b13a89abf5e5c22b1"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks which paper among a collection describes a method using an OS-paging-like mechanism to manage limited context, requiring a corpus-wide search for the property rather than a single-paper fact lookup.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "这些论文中 哪种方法 使用类似操作系统 paging 的机制 管理有限上下文",
+          "goal": "Retrieve passages that explicitly describe a method using a paging-like mechanism to manage limited context."
+        },
+        {
+          "task_id": "T2",
+          "query": "方法 使用 page/paging/virtual memory/swap 机制 管理有限上下文",
+          "goal": "Identify papers that describe the same mechanism using related paging, swapping, or virtual-memory terminology."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "strategy_id": "same_2400",
+    "max_tokens": 2400,
+    "retry_mode": "same_prompt",
+    "repetition": 3,
+    "case_id": "PR-039",
+    "success": true,
+    "error": null,
+    "cache_hit": false,
+    "route": "cross_paper",
+    "strict_route": false,
+    "acceptable_route": true,
+    "task_count": 2,
+    "strict_task_count": false,
+    "acceptable_task_count": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "facet_coverage": 1.0,
+    "title_leaks": [],
+    "generation_latency_ms": 9032.92,
+    "attempt_count": 1,
+    "retry_recovered": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "accepted",
+        "finish_reason": "stop",
+        "content_length": 471,
+        "latency_ms": 9032.78,
+        "response_model": "deepseek-v4-flash",
+        "usage": {
+          "input_tokens": 569,
+          "output_tokens": 801,
+          "total_tokens": 1370
+        },
+        "error_type": null,
+        "error": null,
+        "raw_response_sha256": "e6dfdd9a9946881e718201abc3b4d3b195fb900208bab0906ae45312c954aac5"
+      }
+    ],
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "该问题询问在当前论文集合中哪一种方法使用了类似操作系统 paging 的机制，这需要在多篇论文之间进行对比和筛选，以确认哪些方法符合该属性。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "类似操作系统 paging 的机制 管理 有限上下文",
+          "goal": "检索论文正文或方法描述中直接提及使用类似操作系统 paging 机制来管理有限上下文的内容，用于识别候选方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "operating system paging mechanism limited context management",
+          "goal": "独立检查论文的实验、方法或结果部分是否以英文术语描述该机制，为候选方法提供交叉验证证据。"
+        }
+      ],
+      "revision": 0
+    }
+  }
+]

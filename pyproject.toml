@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paper-research-copilot"
+version = "1.0.0"
+description = "An evidence-driven Agentic RAG system for academic research."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "bm25s>=0.2.14,<0.3",
+  "fastapi>=0.135,<1",
+  "httpx>=0.28,<1",
+  "langgraph>=1.1,<2",
+  "numpy>=2.2,<3",
+  "PyStemmer>=2.2,<3",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.7,<3",
+  "pypdf>=6.10,<7",
+  "python-dotenv>=1.2,<2",
+  "qdrant-client>=1.14,<2",
+  "uvicorn>=0.46,<1",
+]
+
+[project.scripts]
+paper-rag = "paper_research_copilot.cli:main"
+paper-research-api = "paper_research_copilot.api.app:main"
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.14,<2",
+  "pytest>=9,<10",
+  "ruff>=0.9,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/paper_research_copilot"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["paper_research_copilot"]

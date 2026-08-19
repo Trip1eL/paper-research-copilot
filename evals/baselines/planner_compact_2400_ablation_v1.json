@@ -1,0 +1,88 @@
+{
+  "baseline_id": "planner_compact_2400_ablation_v1",
+  "evaluated_on": "2026-08-18",
+  "model": "deepseek-v4-flash",
+  "prompt_version": "research_planner_corpus_verification_v2",
+  "dataset_path": "evals/datasets/planner_routing_v2.jsonl",
+  "dataset_sha256": "ea7ccb561522b4eedbb1955eb9d322bd2004bd7542bffe2d3694bfeb75695fe9",
+  "case_ids": [
+    "PR-030",
+    "PR-033",
+    "PR-039"
+  ],
+  "repetitions": 3,
+  "run_count": 18,
+  "retry_attempts": 3,
+  "strategy_ids": [
+    "same_2400",
+    "compact_2400"
+  ],
+  "execution_order": "repetition -> case -> strategy",
+  "quality_gate": "success=100%; acceptable_route=100%; acceptable_task_count=100%; facet_coverage=100%; title_leakage=0%",
+  "raw_trace_path": "data/agent/planner_compact_2400_ablation_v1_raw.jsonl",
+  "raw_trace_versioned": false,
+  "strategies": [
+    {
+      "strategy_id": "same_2400",
+      "max_tokens": 2400,
+      "retry_mode": "same_prompt",
+      "run_count": 9,
+      "success_rate": 1.0,
+      "strict_route_accuracy": 0.6666666666666666,
+      "acceptable_route_accuracy": 0.8888888888888888,
+      "strict_task_count_accuracy": 0.5555555555555556,
+      "acceptable_task_count_accuracy": 0.7777777777777778,
+      "facet_coverage": 1.0,
+      "title_leakage_rate": 0.0,
+      "retry_rate": 0.0,
+      "retry_recovery_rate": null,
+      "truncated_attempt_count": 0,
+      "outcome_counts": {
+        "accepted": 9
+      },
+      "p50_generation_latency_ms": 10155.82,
+      "p95_generation_latency_ms": 20151.16,
+      "attempt_count": 9,
+      "model_call_count": 9,
+      "cache_hit_count": 0,
+      "total_input_tokens": 5214,
+      "total_output_tokens": 9229,
+      "total_tokens": 14443,
+      "quality_gate_passed": false,
+      "complexity_rank": 0
+    },
+    {
+      "strategy_id": "compact_2400",
+      "max_tokens": 2400,
+      "retry_mode": "compact_json",
+      "run_count": 9,
+      "success_rate": 0.8888888888888888,
+      "strict_route_accuracy": 0.6666666666666666,
+      "acceptable_route_accuracy": 0.7777777777777778,
+      "strict_task_count_accuracy": 0.6666666666666666,
+      "acceptable_task_count_accuracy": 0.7777777777777778,
+      "facet_coverage": 0.8888888888888888,
+      "title_leakage_rate": 0.0,
+      "retry_rate": 0.3333333333333333,
+      "retry_recovery_rate": 0.6666666666666666,
+      "truncated_attempt_count": 6,
+      "outcome_counts": {
+        "accepted": 8,
+        "truncated": 6
+      },
+      "p50_generation_latency_ms": 16261.06,
+      "p95_generation_latency_ms": 73118.45,
+      "attempt_count": 14,
+      "model_call_count": 14,
+      "cache_hit_count": 0,
+      "total_input_tokens": 8471,
+      "total_output_tokens": 25735,
+      "total_tokens": 34206,
+      "quality_gate_passed": false,
+      "complexity_rank": 1
+    }
+  ],
+  "recommended_strategy": null,
+  "recommendation_reason": "没有策略通过全部质量门槛；保留当前生产配置，不继续进行同类 Prompt 微调。",
+  "production_default_changed": false
+}

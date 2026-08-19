@@ -1,0 +1,1413 @@
+[
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-016",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 6997.34,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 675,
+      "total_tokens": 1256
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在一个包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+      "question_type": "single_paper",
+      "rationale": "该问题询问的是同一个真实交互基准中两个指标（最佳 GPT-4 Agent 成功率、人类成功率），属于对同一篇论文或同一基准报告数值的检索，而不是跨论文比较或语料级存在性验证。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+          "goal": "查找该基准论文中报告的 GPT-4 Agent 与人类在 812 个长程网页任务上的端到端成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-032",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3282.97,
+    "usage": {
+      "input_tokens": 580,
+      "output_tokens": 344,
+      "total_tokens": 924
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中的论文是否报告了 GPT-5.5 在 SWE-bench Verified 上的解决率？具体数值是多少？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks whether the current corpus reports a specific result for GPT-5.5 on SWE-bench Verified and requests the numerical value. This is a corpus-wide existence/absence check, so two independent evidence channels are needed: one for main-text claims and one for evaluation/results artifacts.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "GPT-5.5 SWE-bench Verified 解决率",
+          "goal": "Find main-text statements explicitly reporting or mentioning GPT-5.5's solve rate on SWE-bench Verified and any specific numerical value."
+        },
+        {
+          "task_id": "T2",
+          "query": "GPT-5.5 SWE-bench Verified 解决率 数值 表格 结果",
+          "goal": "Find evaluation sections, tables, figures, or appendices that report the SWE-bench Verified solve rate for GPT-5.5 with a specific numerical value."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-033",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 2,
+    "generation_latency_ms": 26245.06,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 956,
+      "total_tokens": 1533
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题需要在一组论文中找出满足特定评测条件的方法，并分别提取其成功率，属于跨论文的综合检索与属性提取。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪些论文中的方法在 tau-bench 的 airline 与 retail 场景上进行了评测？",
+          "goal": "定位在 tau-bench airline 和 retail 两个场景上评测过的方法，并识别对应的论文和方法名称。"
+        },
+        {
+          "task_id": "T2",
+          "query": "这些方法在 tau-bench airline 与 retail 场景上的成功率分别是多少？",
+          "goal": "从论文的评测结果中提取所识别方法在 airline 和 retail 两个场景下的成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-034",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 3,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7652.34,
+    "usage": {
+      "input_tokens": 571,
+      "output_tokens": 801,
+      "total_tokens": 1372
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中哪些研究评估了代码生成能力，分别使用了什么基准和成功指标？",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求从当前语料中归纳多项研究是否评估了代码生成能力，并分别提取每项研究使用的基准与成功指标，属于跨论文的综合检索任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前语料中哪些研究评估了代码生成能力",
+          "goal": "识别并列出语料中所有评估代码生成能力的研究。"
+        },
+        {
+          "task_id": "T2",
+          "query": "评估代码生成能力的研究分别使用了什么基准",
+          "goal": "提取这些研究在评估代码生成能力时使用的基准。"
+        },
+        {
+          "task_id": "T3",
+          "query": "评估代码生成能力的研究分别使用了什么成功指标",
+          "goal": "提取这些研究在评估代码生成能力时使用的成功指标。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-035",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4440.74,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 482,
+      "total_tokens": 1067
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前论文库是否包含 Claude 3.5 Sonnet 在 GAIA Level 3 上准确率的直接报告？请核验正文和实验表格。",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求核验当前论文库中是否存在某一具体事实的直接报告，属于语料库范围的存续性验证；需要分别从正文文本和实验表格两个独立证据通道检索同一实体、基准、指标和数值，因此使用跨论文检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前论文库正文中是否直接报告了 Claude 3.5 Sonnet 在 GAIA Level 3 上的准确率？",
+          "goal": "检索正文陈述，确认是否存在关于 Claude 3.5 Sonnet 在 GAIA Level 3 上准确率的直接报告。"
+        },
+        {
+          "task_id": "T2",
+          "query": "当前论文库的实验表格、图表或附录中是否直接报告了 Claude 3.5 Sonnet 在 GAIA Level 3 上的准确率？",
+          "goal": "独立检查评估/结果部分的表格、图或附录，确认是否存在同一直接报告证据。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-036",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 3,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5487.78,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 580,
+      "total_tokens": 1157
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在当前语料中，哪些工作使用树搜索来改进推理或行动？请分别归纳它们的搜索状态和扩展策略。",
+      "question_type": "cross_paper",
+      "rationale": "用户要求检索整个语料中所有使用树搜索改进推理或行动的工作，并分别归纳其搜索状态和扩展策略，属于语料级综合检索，需要先发现符合条件的工作，再分侧面抽取两类属性。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前语料中哪些工作使用树搜索来改进推理或行动",
+          "goal": "发现所有使用树搜索改进推理或行动的工作，作为后续属性抽取的对象集合"
+        },
+        {
+          "task_id": "T2",
+          "query": "使用树搜索改进推理或行动的工作中，各自的搜索状态（state）是什么",
+          "goal": "分别归纳这些工作定义的搜索状态或状态表示方式"
+        },
+        {
+          "task_id": "T3",
+          "query": "使用树搜索改进推理或行动的工作中，各自的树扩展策略是什么",
+          "goal": "分别归纳这些工作如何扩展搜索树，包括节点生成、分支或扩展机制"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-037",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 9041.22,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 875,
+      "total_tokens": 1452
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+      "question_type": "single_paper",
+      "rationale": "问题询问一种特定方法（将推理轨迹和环境行动放在同一提示轨迹中）在哪些知识问答与交互式决策环境上进行了验证，这是一种对单个方法的评估范围提取，不涉及多方法比较或语料库范围的验证，因此归类为单篇论文任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+          "goal": "从论文中找出该方法在知识问答和交互式决策这两类环境上的验证情况，列出所有相关的评测基准、数据集或环境名称。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-038",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 9717.84,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 1004,
+      "total_tokens": 1581
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "ReAct 和 Toolformer 是否都在推理时动态调用工具？请分别核验两种方法的工具调用发生阶段。",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求分别核验 ReAct 与 Toolformer 两种独立方法的工具调用发生阶段，属于跨论文比较，每种方法各需独立检索证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "ReAct 方法中工具调用发生在哪个阶段？是否在推理时动态调用工具？",
+          "goal": "获取 ReAct 方法工具调用阶段的直接描述，验证其是否在推理时动态调用工具。"
+        },
+        {
+          "task_id": "T2",
+          "query": "Toolformer 方法中工具调用发生在哪个阶段？是否在推理时动态调用工具？",
+          "goal": "获取 Toolformer 方法工具调用阶段的直接描述，验证其是否在推理时动态调用工具。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-039",
+    "category": "routing_boundary",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": false,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 2,
+    "generation_latency_ms": 25812.33,
+    "usage": {
+      "input_tokens": 569,
+      "output_tokens": 772,
+      "total_tokens": 1341
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "需要从多篇论文中识别哪一种方法采用了类似操作系统 paging 的机制，属于跨论文的综合检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "使用类似操作系统 paging 的机制管理有限上下文的方法",
+          "goal": "在论文正文中定位明确描述采用类似操作系统 paging 机制来管理有限上下文的方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "分页机制 有限上下文管理 类似操作系统",
+          "goal": "独立检索相关术语，验证是否有论文将有限上下文管理与操作系统分页机制进行类比或实现。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r1",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-040",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 8340.21,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 841,
+      "total_tokens": 1422
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "比较一种把环境反馈写入跨回合记忆的方法，和另一种在单次生成中反复批评初稿的方法，它们分别迭代什么对象？",
+      "question_type": "cross_paper",
+      "rationale": "问题以两种独立描述的方法进行比较，分别询问各自迭代的对象，因此需要分两侧独立检索证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "一种把环境反馈写入跨回合记忆的方法，它迭代什么对象？",
+          "goal": "检索该方法的迭代对象（例如记忆、策略或动作）的证据"
+        },
+        {
+          "task_id": "T2",
+          "query": "一种在单次生成中反复批评初稿的方法，它迭代什么对象？",
+          "goal": "检索该方法在生成过程中反复修改或批评的迭代对象（例如草稿、文本）的证据"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-016",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5615.8,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 609,
+      "total_tokens": 1190
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在一个包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+      "question_type": "single_paper",
+      "rationale": "The question asks for two metrics (best GPT-4 agent and human end-to-end success rates) from the same described benchmark, so it should be one retrieval task for that benchmark's reported results.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "在一个包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+          "goal": "Retrieve the reported end-to-end success rates for the best GPT-4 agent and for humans on the 812-task long-horizon web benchmark."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-032",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4257.35,
+    "usage": {
+      "input_tokens": 580,
+      "output_tokens": 478,
+      "total_tokens": 1058
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中的论文是否报告了 GPT-5.5 在 SWE-bench Verified 上的解决率？具体数值是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题是在验证当前语料库中是否存在报告 GPT-5.5 在 SWE-bench Verified 上解决率的证据，属于语料库范围的存活性检查，因此使用跨论文检索，并通过两个独立证据通道分别检索正文陈述和实验结果/表格等报告。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "GPT-5.5 在 SWE-bench Verified 上的解决率",
+          "goal": "在论文正文中检索是否明确陈述 GPT-5.5 在 SWE-bench Verified 上的解决率数值。"
+        },
+        {
+          "task_id": "T2",
+          "query": "GPT-5.5 SWE-bench Verified 解决率 实验 结果 表格",
+          "goal": "在评估、结果、表格、图表或附录中独立查找 GPT-5.5 在 SWE-bench Verified 上的解决率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-033",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7537.98,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 794,
+      "total_tokens": 1371
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "问题要求从多篇论文中找出在 tau-bench 的 airline 与 retail 场景上评测过的方法及其成功率，属于跨论文综合检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "tau-bench airline retail 评测 方法",
+          "goal": "定位在 tau-bench 的 airline 与 retail 场景上进行评测的方法描述，识别具体方法名称。"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail 成功率",
+          "goal": "提取这些方法在 airline 与 retail 场景上的成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-034",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5164.55,
+    "usage": {
+      "input_tokens": 571,
+      "output_tokens": 529,
+      "total_tokens": 1100
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中哪些研究评估了代码生成能力，分别使用了什么基准和成功指标？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks for a corpus-wide synthesis: which studies evaluate code generation ability and what benchmarks and success metrics each uses. This requires discovering the relevant studies and then extracting their reported evaluation details, so independent tasks are used.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "评估代码生成能力 研究",
+          "goal": "Identify studies in the current corpus that evaluate code generation ability."
+        },
+        {
+          "task_id": "T2",
+          "query": "代码生成 基准 成功指标",
+          "goal": "Extract the benchmarks and success metrics reported for code generation in the identified studies."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-035",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5998.34,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 685,
+      "total_tokens": 1270
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前论文库是否包含 Claude 3.5 Sonnet 在 GAIA Level 3 上准确率的直接报告？请核验正文和实验表格。",
+      "question_type": "cross_paper",
+      "rationale": "The question asks whether the current paper library contains a direct report of a specific model-benchmark accuracy value, which is a corpus-wide existence/absence check. Therefore, two independent evidence-channel tasks are used: one for main-text statements and one for experimental tables/results sections.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "Claude 3.5 Sonnet 在 GAIA Level 3 上的准确率 正文 直接报告",
+          "goal": "Find main-text statements that directly report Claude 3.5 Sonnet's accuracy on GAIA Level 3."
+        },
+        {
+          "task_id": "T2",
+          "query": "Claude 3.5 Sonnet GAIA Level 3 accuracy table results",
+          "goal": "Find evaluation tables, figures, or results sections that directly report Claude 3.5 Sonnet's accuracy on GAIA Level 3."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-036",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 3,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 8285.23,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 889,
+      "total_tokens": 1466
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在当前语料中，哪些工作使用树搜索来改进推理或行动？请分别归纳它们的搜索状态和扩展策略。",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求在语料范围内找出所有使用树搜索改进推理或行动的工作，并分别归纳它们的搜索状态与扩展策略，属于语料级综合归纳，需要多个独立检索侧获取候选工作和两类属性。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "当前语料中哪些工作使用树搜索来改进推理或行动？",
+          "goal": "定位所有使用树搜索改进推理或行动的候选工作，作为后续归纳的对象。"
+        },
+        {
+          "task_id": "T2",
+          "query": "使用树搜索改进推理或行动的工作中，各自的搜索状态（state）是如何定义或表示的？",
+          "goal": "分别提取并归纳这些工作的树搜索状态设计。"
+        },
+        {
+          "task_id": "T3",
+          "query": "使用树搜索改进推理或行动的工作中，各自的扩展策略（如何选择或生成子节点）是什么？",
+          "goal": "分别提取并归纳这些工作的树搜索扩展策略。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-037",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5540.64,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 564,
+      "total_tokens": 1141
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+      "question_type": "single_paper",
+      "rationale": "问题描述的是同一种方法的验证范围，要求获取该方法在知识问答与交互式决策环境上的评测对象，属于单篇论文内的信息检索。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+          "goal": "检索论文中该方法评测所使用的知识问答数据集与交互式决策环境列表。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-038",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4483.95,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 587,
+      "total_tokens": 1164
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "ReAct 和 Toolformer 是否都在推理时动态调用工具？请分别核验两种方法的工具调用发生阶段。",
+      "question_type": "cross_paper",
+      "rationale": "该问题要求分别核验 ReAct 和 Toolformer 两种独立方法的工具调用发生阶段，属于对两种方法的比较性事实核验，因此按方法拆分为两个检索任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "ReAct 是否在推理时动态调用工具？工具调用发生阶段",
+          "goal": "核验 ReAct 方法中工具调用的发生阶段，是否为推理时动态调用工具。"
+        },
+        {
+          "task_id": "T2",
+          "query": "Toolformer 是否在推理时动态调用工具？工具调用发生阶段",
+          "goal": "核验 Toolformer 方法中工具调用的发生阶段，是否为推理时动态调用工具。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-039",
+    "category": "routing_boundary",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 2953.92,
+    "usage": {
+      "input_tokens": 569,
+      "output_tokens": 298,
+      "total_tokens": 867
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "single_paper",
+      "rationale": "The question asks which one method among the provided papers uses an OS-paging-like mechanism to manage limited context. It seeks a single matching method, not a corpus-wide existence check or a comparison of independently described methods.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "使用类似操作系统 paging 的机制管理有限上下文",
+          "goal": "Find the paper or method that describes using an OS-paging-like mechanism to manage limited context."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r2",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-040",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 2926.03,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 261,
+      "total_tokens": 842
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "比较一种把环境反馈写入跨回合记忆的方法，和另一种在单次生成中反复批评初稿的方法，它们分别迭代什么对象？",
+      "question_type": "cross_paper",
+      "rationale": "The question compares two independently described methods and asks what object each one iterates on. A separate retrieval task is needed for each comparison side.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "把环境反馈写入跨回合记忆的方法 迭代什么对象",
+          "goal": "Identify what object is iteratively updated or refined by the method that writes environmental feedback into cross-turn memory."
+        },
+        {
+          "task_id": "T2",
+          "query": "在单次生成中反复批评初稿的方法 迭代什么对象",
+          "goal": "Identify what object is iteratively criticized or revised by the method that repeatedly critiques a draft within a single generation."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-016",
+    "category": "single_lookup",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5092.36,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 529,
+      "total_tokens": 1110
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在一个包含 812 个长程网页任务的真实交互基准中，最佳 GPT-4 Agent 与人类的端到端成功率分别是多少？",
+      "question_type": "single_paper",
+      "rationale": "The question asks for two endpoint success rates reported in one specific benchmark setting (812 long-horizon web tasks) for a GPT-4 agent and humans, which is a single-paper factual retrieval.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "包含 812 个长程网页任务的真实交互基准 最佳 GPT-4 Agent 与人类 端到端成功率",
+          "goal": "Retrieve the reported end-to-end success rates for the best GPT-4 agent and for humans in the benchmark described with 812 long-horizon web tasks."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-032",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3976.7,
+    "usage": {
+      "input_tokens": 580,
+      "output_tokens": 434,
+      "total_tokens": 1014
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中的论文是否报告了 GPT-5.5 在 SWE-bench Verified 上的解决率？具体数值是多少？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks whether any paper in the current corpus reports a specific metric (GPT-5.5 solution rate on SWE-bench Verified) and what the exact value is. This is a corpus-wide existence/absence verification, so two independent evidence-channel tasks are needed: one for main-text statements and one for results/tables/figures.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "GPT-5.5 SWE-bench Verified 解决率 具体数值",
+          "goal": "Find main-text statements reporting whether GPT-5.5's solution rate on SWE-bench Verified is given and the exact numerical value."
+        },
+        {
+          "task_id": "T2",
+          "query": "GPT-5.5 SWE-bench Verified resolution rate results tables figures evaluation",
+          "goal": "Check evaluation sections, tables, figures, or appendices for any reported GPT-5.5 SWE-bench Verified resolution rate and its exact value."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-033",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7686.96,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 825,
+      "total_tokens": 1402
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪种方法在 tau-bench 的 airline 与 retail 场景上进行了评测，成功率分别是多少？",
+      "question_type": "cross_paper",
+      "rationale": "该问题是在一个论文集合中查找满足特定评测条件的方法及其成功率，属于跨论文的综合检索任务，需要先定位相关方法，再提取其成功率。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "tau-bench airline retail 场景 评测 方法",
+          "goal": "找出在 tau-bench 的 airline 与 retail 场景上有评测结果的方法。"
+        },
+        {
+          "task_id": "T2",
+          "query": "tau-bench airline retail 成功率 数值",
+          "goal": "提取上述方法在 tau-bench airline 与 retail 场景上的具体成功率数值。"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-034",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 4568.28,
+    "usage": {
+      "input_tokens": 571,
+      "output_tokens": 446,
+      "total_tokens": 1017
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前语料中哪些研究评估了代码生成能力，分别使用了什么基准和成功指标？",
+      "question_type": "cross_paper",
+      "rationale": "The question asks for a corpus-wide synthesis of all studies that evaluate code generation and the benchmarks and success metrics they respectively use, requiring discovery of matching works and extraction of their reported evaluation details.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪些研究评估了代码生成能力",
+          "goal": "Identify all papers in the current corpus that evaluate code generation capability."
+        },
+        {
+          "task_id": "T2",
+          "query": "代码生成 使用的基准 成功指标",
+          "goal": "Extract the benchmarks and success metrics reported for code generation evaluation from the identified studies."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-035",
+    "category": "corpus_verification",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 2,
+    "generation_latency_ms": 20136.31,
+    "usage": {
+      "input_tokens": 585,
+      "output_tokens": 395,
+      "total_tokens": 980
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "当前论文库是否包含 Claude 3.5 Sonnet 在 GAIA Level 3 上准确率的直接报告？请核验正文和实验表格。",
+      "question_type": "cross_paper",
+      "rationale": "This is a corpus-wide verification asking whether the paper library directly reports Claude 3.5 Sonnet's accuracy on GAIA Level 3, with explicit verification of both main text and experimental tables. Two independent evidence channels are needed.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "Claude 3.5 Sonnet GAIA Level 3 accuracy direct report",
+          "goal": "Search main-text statements for a direct report of Claude 3.5 Sonnet's accuracy on GAIA Level 3."
+        },
+        {
+          "task_id": "T2",
+          "query": "Claude 3.5 Sonnet GAIA Level 3 accuracy evaluation results table figure appendix",
+          "goal": "Independently check evaluation/results sections, tables, figures, or appendices for the same requested evidence of Claude 3.5 Sonnet's GAIA Level 3 accuracy."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-036",
+    "category": "corpus_verification",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 5550.49,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 547,
+      "total_tokens": 1124
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "在当前语料中，哪些工作使用树搜索来改进推理或行动？请分别归纳它们的搜索状态和扩展策略。",
+      "question_type": "cross_paper",
+      "rationale": "该问题需要在当前语料中检索所有满足“使用树搜索改进推理或行动”的工作，并进一步归纳它们各自的搜索状态与扩展策略，属于语料级综合任务，因此将工作发现与属性提取分为两个独立检索任务。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "哪些工作使用树搜索来改进推理或行动？",
+          "goal": "从当前语料中发现所有使用树搜索改进推理或行动的工作"
+        },
+        {
+          "task_id": "T2",
+          "query": "使用树搜索改进推理或行动的工作中，各自的搜索状态（search state）和扩展策略（expansion strategy）是什么？",
+          "goal": "从已发现的工作中分别提取并归纳其搜索状态与扩展策略"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-037",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "single_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 1,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 6388.82,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 703,
+      "total_tokens": 1280
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "一种将推理轨迹和环境行动放在同一提示轨迹中的方法，在哪些知识问答与交互式决策环境上进行了验证？",
+      "question_type": "single_paper",
+      "rationale": "The question asks about the validation environments for a single described method (interleaving reasoning traces and environmental actions in the same prompt trajectory), not a corpus-wide existence check or comparison of independent methods.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "将推理轨迹和环境行动放在同一提示轨迹中的方法 在哪些知识问答与交互式决策环境上进行了验证",
+          "goal": "Retrieve sections describing the experimental setups, benchmarks, and interactive decision-making environments used to validate this method."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-038",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 3373.58,
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 276,
+      "total_tokens": 853
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "ReAct 和 Toolformer 是否都在推理时动态调用工具？请分别核验两种方法的工具调用发生阶段。",
+      "question_type": "cross_paper",
+      "rationale": "The question asks to separately verify the tool invocation phase for two independently described methods, ReAct and Toolformer, requiring one evidence-retrieval task per comparison side.",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "ReAct method tool calling phase: does ReAct dynamically call tools during inference/reasoning time?",
+          "goal": "Retrieve evidence describing when ReAct invokes tools, specifically whether tool calls occur dynamically during the inference/reasoning process rather than during training."
+        },
+        {
+          "task_id": "T2",
+          "query": "Toolformer method tool calling phase: does Toolformer dynamically call tools during inference/reasoning time?",
+          "goal": "Retrieve evidence describing when Toolformer invokes tools, specifically whether tool calls occur dynamically during inference/reasoning time or are determined at another stage such as training."
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-039",
+    "category": "routing_boundary",
+    "label_sensitive": true,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": false,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": false,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 8748.49,
+    "usage": {
+      "input_tokens": 569,
+      "output_tokens": 770,
+      "total_tokens": 1339
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "这些论文中，哪一种方法使用类似操作系统 paging 的机制管理有限上下文？",
+      "question_type": "cross_paper",
+      "rationale": "需要从一组论文中识别出哪一种方法使用了类似操作系统 paging 的机制来管理有限上下文，属于跨论文综合检索，而非针对单一论文的提问。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "这些论文中，使用类似操作系统 paging 的机制管理有限上下文的方法",
+          "goal": "识别并列出哪些方法明确采用了类似操作系统分页的机制来管理有限上下文"
+        },
+        {
+          "task_id": "T2",
+          "query": "类似操作系统 paging 的机制 有限上下文管理 方法 实现细节",
+          "goal": "查找相关方法中该机制的具体实现描述，以确认匹配的方法及其工作方式"
+        }
+      ],
+      "revision": 0
+    }
+  },
+  {
+    "variant_id": "deepseek_prompt_v2_r3",
+    "model": "deepseek-v4-flash",
+    "case_id": "PR-040",
+    "category": "routing_boundary",
+    "label_sensitive": false,
+    "success": true,
+    "error": null,
+    "cache_hit": true,
+    "actual_question_type": "cross_paper",
+    "strict_router_correct": true,
+    "acceptable_router_correct": true,
+    "task_count": 2,
+    "strict_task_count_correct": true,
+    "acceptable_task_count_correct": true,
+    "covered_facets": [
+      "F1",
+      "F2"
+    ],
+    "task_coverage": 1.0,
+    "title_leaks": [],
+    "attempts": 1,
+    "generation_latency_ms": 7093.38,
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 642,
+      "total_tokens": 1223
+    },
+    "response_model": "deepseek-v4-flash",
+    "plan": {
+      "question": "比较一种把环境反馈写入跨回合记忆的方法，和另一种在单次生成中反复批评初稿的方法，它们分别迭代什么对象？",
+      "question_type": "cross_paper",
+      "rationale": "问题比较两种独立描述的方法各自的迭代对象，因此需要分别检索两种方法的机制证据。",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "query": "将环境反馈写入跨回合记忆的方法，迭代什么对象？",
+          "goal": "检索该方法中环境反馈如何写入跨回合记忆，以及被迭代的对象是什么"
+        },
+        {
+          "task_id": "T2",
+          "query": "在单次生成中反复批评初稿的方法，迭代什么对象？",
+          "goal": "检索该方法在单次生成中反复批评初稿后所迭代的对象是什么"
+        }
+      ],
+      "revision": 0
+    }
+  }
+]

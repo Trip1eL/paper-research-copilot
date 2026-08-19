@@ -1,0 +1,155 @@
+{
+  "config": {
+    "baseline_id": "planner_prompt_ablation_v2_full",
+    "evaluated_on": "2026-08-18",
+    "dataset_path": "evals/datasets/planner_routing_v2.jsonl",
+    "dataset_sha256": "ea7ccb561522b4eedbb1955eb9d322bd2004bd7542bffe2d3694bfeb75695fe9",
+    "case_ids": [
+      "PR-001",
+      "PR-002",
+      "PR-003",
+      "PR-004",
+      "PR-005",
+      "PR-006",
+      "PR-007",
+      "PR-008",
+      "PR-009",
+      "PR-010",
+      "PR-011",
+      "PR-012",
+      "PR-013",
+      "PR-014",
+      "PR-015",
+      "PR-016",
+      "PR-017",
+      "PR-018",
+      "PR-019",
+      "PR-020",
+      "PR-021",
+      "PR-022",
+      "PR-023",
+      "PR-024",
+      "PR-025",
+      "PR-026",
+      "PR-027",
+      "PR-028",
+      "PR-029",
+      "PR-030",
+      "PR-031",
+      "PR-032",
+      "PR-033",
+      "PR-034",
+      "PR-035",
+      "PR-036",
+      "PR-037",
+      "PR-038",
+      "PR-039",
+      "PR-040"
+    ],
+    "label_sensitive_case_ids": [
+      "PR-032",
+      "PR-035",
+      "PR-039"
+    ],
+    "prompt_version": "research_planner_corpus_verification_v2",
+    "retry_attempts": 3,
+    "candidate_models": [
+      "deepseek-v4-flash"
+    ],
+    "quality_gate": "success=100%; core_router=100%; core_task_count=100%; task_coverage=100%; acceptable_router=100%; acceptable_task_count=100%; title_leakage=0%",
+    "notes": [
+      "DeepSeek 使用 corpus-verification Prompt v2；与 v1 保持相同 Schema、max_tokens、重试和泄漏审计。",
+      "全集 Gate 用于检查定向 Prompt 是否对其他问题类别产生回退。"
+    ]
+  },
+  "variants": [
+    {
+      "variant_id": "deepseek_prompt_v2_full",
+      "model": "deepseek-v4-flash",
+      "case_count": 40,
+      "core_case_count": 37,
+      "label_sensitive_case_count": 3,
+      "planning_success_rate": 1.0,
+      "strict_router_accuracy": 0.975,
+      "acceptable_router_accuracy": 1.0,
+      "strict_task_count_accuracy": 0.925,
+      "acceptable_task_count_accuracy": 1.0,
+      "task_coverage": 1.0,
+      "core_router_accuracy": 1.0,
+      "core_task_count_accuracy": 0.9459459459459459,
+      "core_task_coverage": 1.0,
+      "boundary_strict_router_accuracy": 0.6666666666666666,
+      "boundary_acceptable_router_accuracy": 1.0,
+      "boundary_acceptable_task_count_accuracy": 1.0,
+      "boundary_task_coverage": 1.0,
+      "title_leakage_rate": 0.0,
+      "schema_retry_rate": 0.075,
+      "p50_generation_latency_ms": 5040.46,
+      "p95_generation_latency_ms": 25812.33,
+      "known_input_tokens": 23257,
+      "known_output_tokens": 22114,
+      "model_call_count": 44,
+      "quality_gate_passed": false,
+      "failed_cases": [],
+      "strict_route_error_cases": [
+        "PR-039"
+      ],
+      "unacceptable_route_cases": [],
+      "core_task_error_cases": [
+        "PR-034",
+        "PR-036"
+      ],
+      "low_coverage_cases": [],
+      "leakage_cases": [],
+      "categories": [
+        {
+          "category": "single_lookup",
+          "case_count": 16,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "cross_comparison",
+          "case_count": 13,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "multi_method_synthesis",
+          "case_count": 2,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "corpus_verification",
+          "case_count": 5,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.6,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "routing_boundary",
+          "case_count": 4,
+          "strict_router_accuracy": 0.75,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.75,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        }
+      ]
+    }
+  ],
+  "recommended_model": null,
+  "recommendation_reason": "没有候选模型通过全部 v2 质量门槛，保留当前生产 Planner。"
+}

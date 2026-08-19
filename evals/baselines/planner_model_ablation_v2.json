@@ -1,0 +1,246 @@
+{
+  "config": {
+    "baseline_id": "planner_model_ablation_v2",
+    "evaluated_on": "2026-08-18",
+    "dataset_path": "evals/datasets/planner_routing_v2.jsonl",
+    "dataset_sha256": "c7beedc13ab53352dd65736316584b5225f44eac6fdd62e79c7e4ba86822425a",
+    "case_ids": [
+      "PR-001",
+      "PR-002",
+      "PR-003",
+      "PR-004",
+      "PR-005",
+      "PR-006",
+      "PR-007",
+      "PR-008",
+      "PR-009",
+      "PR-010",
+      "PR-011",
+      "PR-012",
+      "PR-013",
+      "PR-014",
+      "PR-015",
+      "PR-016",
+      "PR-017",
+      "PR-018",
+      "PR-019",
+      "PR-020",
+      "PR-021",
+      "PR-022",
+      "PR-023",
+      "PR-024",
+      "PR-025",
+      "PR-026",
+      "PR-027",
+      "PR-028",
+      "PR-029",
+      "PR-030",
+      "PR-031",
+      "PR-032",
+      "PR-033",
+      "PR-034",
+      "PR-035",
+      "PR-036",
+      "PR-037",
+      "PR-038",
+      "PR-039",
+      "PR-040"
+    ],
+    "label_sensitive_case_ids": [
+      "PR-032",
+      "PR-035",
+      "PR-039"
+    ],
+    "prompt_version": "research_planner_v1",
+    "retry_attempts": 3,
+    "candidate_models": [
+      "gpt-5.5",
+      "deepseek-v4-flash"
+    ],
+    "quality_gate": "success=100%; core_router=100%; core_task_count=100%; task_coverage=100%; acceptable_router=100%; acceptable_task_count=100%; title_leakage=0%",
+    "notes": [
+      "两组使用相同的 system/user Prompt、max_tokens、Pydantic Schema、重试策略和 Corpus alias 泄漏审计。",
+      "Strict 指标遵循唯一金标；Acceptable 指标允许人工标注的合理替代；Core 指标排除 label-sensitive Cases。",
+      "Route 和 Task Count 可采用 Acceptable 标注，但所有 Case 的证据 Facet Coverage 仍须为 100%。",
+      "缓存命中时读取原始 generation latency；Provider 负载随时间变化，延迟仅用于方向性对比。"
+    ]
+  },
+  "variants": [
+    {
+      "variant_id": "gpt_5_5",
+      "model": "gpt-5.5",
+      "case_count": 40,
+      "core_case_count": 37,
+      "label_sensitive_case_count": 3,
+      "planning_success_rate": 1.0,
+      "strict_router_accuracy": 0.95,
+      "acceptable_router_accuracy": 0.975,
+      "strict_task_count_accuracy": 0.95,
+      "acceptable_task_count_accuracy": 0.975,
+      "task_coverage": 1.0,
+      "core_router_accuracy": 0.972972972972973,
+      "core_task_count_accuracy": 0.972972972972973,
+      "core_task_coverage": 1.0,
+      "boundary_strict_router_accuracy": 0.6666666666666666,
+      "boundary_acceptable_router_accuracy": 1.0,
+      "boundary_acceptable_task_count_accuracy": 1.0,
+      "boundary_task_coverage": 1.0,
+      "title_leakage_rate": 0.0,
+      "schema_retry_rate": 0.0,
+      "p50_generation_latency_ms": 10675.25,
+      "p95_generation_latency_ms": 13595.39,
+      "known_input_tokens": 9361,
+      "known_output_tokens": 10876,
+      "model_call_count": 40,
+      "quality_gate_passed": false,
+      "failed_cases": [],
+      "strict_route_error_cases": [
+        "PR-016",
+        "PR-039"
+      ],
+      "unacceptable_route_cases": [
+        "PR-016"
+      ],
+      "core_task_error_cases": [
+        "PR-016"
+      ],
+      "low_coverage_cases": [],
+      "leakage_cases": [],
+      "categories": [
+        {
+          "category": "single_lookup",
+          "case_count": 16,
+          "strict_router_accuracy": 0.9375,
+          "acceptable_router_accuracy": 0.9375,
+          "strict_task_count_accuracy": 0.9375,
+          "acceptable_task_count_accuracy": 0.9375,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "cross_comparison",
+          "case_count": 13,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "multi_method_synthesis",
+          "case_count": 2,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "corpus_verification",
+          "case_count": 5,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "routing_boundary",
+          "case_count": 4,
+          "strict_router_accuracy": 0.75,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.75,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        }
+      ]
+    },
+    {
+      "variant_id": "deepseek_v4_flash",
+      "model": "deepseek-v4-flash",
+      "case_count": 40,
+      "core_case_count": 37,
+      "label_sensitive_case_count": 3,
+      "planning_success_rate": 1.0,
+      "strict_router_accuracy": 0.95,
+      "acceptable_router_accuracy": 1.0,
+      "strict_task_count_accuracy": 0.95,
+      "acceptable_task_count_accuracy": 1.0,
+      "task_coverage": 0.9875,
+      "core_router_accuracy": 1.0,
+      "core_task_count_accuracy": 1.0,
+      "core_task_coverage": 1.0,
+      "boundary_strict_router_accuracy": 0.3333333333333333,
+      "boundary_acceptable_router_accuracy": 1.0,
+      "boundary_acceptable_task_count_accuracy": 1.0,
+      "boundary_task_coverage": 0.8333333333333334,
+      "title_leakage_rate": 0.0,
+      "schema_retry_rate": 0.05,
+      "p50_generation_latency_ms": 4960.87,
+      "p95_generation_latency_ms": 10754.08,
+      "known_input_tokens": 12657,
+      "known_output_tokens": 17471,
+      "model_call_count": 42,
+      "quality_gate_passed": false,
+      "failed_cases": [],
+      "strict_route_error_cases": [
+        "PR-032",
+        "PR-035"
+      ],
+      "unacceptable_route_cases": [],
+      "core_task_error_cases": [],
+      "low_coverage_cases": [
+        "PR-032"
+      ],
+      "leakage_cases": [],
+      "categories": [
+        {
+          "category": "single_lookup",
+          "case_count": 16,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "cross_comparison",
+          "case_count": 13,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "multi_method_synthesis",
+          "case_count": 2,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "corpus_verification",
+          "case_count": 5,
+          "strict_router_accuracy": 0.6,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.6,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 0.9
+        },
+        {
+          "category": "routing_boundary",
+          "case_count": 4,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        }
+      ]
+    }
+  ],
+  "recommended_model": null,
+  "recommendation_reason": "没有候选模型通过全部 v2 质量门槛，保留当前生产 Planner。"
+}

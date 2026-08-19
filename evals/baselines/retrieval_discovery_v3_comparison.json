@@ -1,0 +1,209 @@
+{
+  "dataset": "evals/datasets/retrieval_discovery_v3.jsonl",
+  "corpus": "agent-seed-v3",
+  "collection": "agent_seed_v3_bge_m3_chunking_v1",
+  "top_k": 10,
+  "strategies": {
+    "dense": {
+      "latency_p50_ms": 256.53,
+      "groups": {
+        "all": {
+          "case_count": 100,
+          "paper_recall": 0.92,
+          "complete_papers": 0.85,
+          "exact_page_recall": 0.8392,
+          "complete_pages": 0.74,
+          "paper_mrr": 0.8835,
+          "page_mrr": 0.7264,
+          "same_page_redundancy": 0.101,
+          "latency_p50_ms": 256.75
+        },
+        "legacy_v2": {
+          "case_count": 50,
+          "paper_recall": 0.935,
+          "complete_papers": 0.88,
+          "exact_page_recall": 0.8383,
+          "complete_pages": 0.76,
+          "paper_mrr": 0.8695,
+          "page_mrr": 0.6965,
+          "same_page_redundancy": 0.116,
+          "latency_p50_ms": 258.85
+        },
+        "new_v3": {
+          "case_count": 50,
+          "paper_recall": 0.905,
+          "complete_papers": 0.82,
+          "exact_page_recall": 0.84,
+          "complete_pages": 0.72,
+          "paper_mrr": 0.8975,
+          "page_mrr": 0.7564,
+          "same_page_redundancy": 0.086,
+          "latency_p50_ms": 252.99
+        },
+        "new_single": {
+          "case_count": 30,
+          "paper_recall": 0.9667,
+          "complete_papers": 0.9667,
+          "exact_page_recall": 0.9333,
+          "complete_pages": 0.9333,
+          "paper_mrr": 0.8792,
+          "page_mrr": 0.7881,
+          "same_page_redundancy": 0.1,
+          "latency_p50_ms": 252.63
+        },
+        "new_cross": {
+          "case_count": 20,
+          "paper_recall": 0.8125,
+          "complete_papers": 0.6,
+          "exact_page_recall": 0.7,
+          "complete_pages": 0.4,
+          "paper_mrr": 0.925,
+          "page_mrr": 0.7088,
+          "same_page_redundancy": 0.065,
+          "latency_p50_ms": 256.95
+        }
+      },
+      "legacy_v2_delta": {
+        "paper_recall": -0.02,
+        "complete_papers": -0.04,
+        "exact_page_recall": -0.04,
+        "paper_mrr": -0.0505,
+        "page_mrr": -0.0225
+      }
+    },
+    "bm25": {
+      "latency_p50_ms": 0.28,
+      "groups": {
+        "all": {
+          "case_count": 100,
+          "paper_recall": 0.6792,
+          "complete_papers": 0.58,
+          "exact_page_recall": 0.6567,
+          "complete_pages": 0.55,
+          "paper_mrr": 0.7078,
+          "page_mrr": 0.5579,
+          "same_page_redundancy": 0.1052,
+          "latency_p50_ms": 0.28
+        },
+        "legacy_v2": {
+          "case_count": 50,
+          "paper_recall": 0.8483,
+          "complete_papers": 0.76,
+          "exact_page_recall": 0.8033,
+          "complete_pages": 0.7,
+          "paper_mrr": 0.823,
+          "page_mrr": 0.6193,
+          "same_page_redundancy": 0.122,
+          "latency_p50_ms": 0.29
+        },
+        "new_v3": {
+          "case_count": 50,
+          "paper_recall": 0.51,
+          "complete_papers": 0.4,
+          "exact_page_recall": 0.51,
+          "complete_pages": 0.4,
+          "paper_mrr": 0.5925,
+          "page_mrr": 0.4965,
+          "same_page_redundancy": 0.0884,
+          "latency_p50_ms": 0.27
+        },
+        "new_single": {
+          "case_count": 30,
+          "paper_recall": 0.6333,
+          "complete_papers": 0.6333,
+          "exact_page_recall": 0.6333,
+          "complete_pages": 0.6333,
+          "paper_mrr": 0.5875,
+          "page_mrr": 0.4997,
+          "same_page_redundancy": 0.0933,
+          "latency_p50_ms": 0.27
+        },
+        "new_cross": {
+          "case_count": 20,
+          "paper_recall": 0.325,
+          "complete_papers": 0.05,
+          "exact_page_recall": 0.325,
+          "complete_pages": 0.05,
+          "paper_mrr": 0.6,
+          "page_mrr": 0.4917,
+          "same_page_redundancy": 0.0811,
+          "latency_p50_ms": 0.26
+        }
+      },
+      "legacy_v2_delta": {
+        "paper_recall": -0.02,
+        "complete_papers": -0.04,
+        "exact_page_recall": -0.01,
+        "paper_mrr": -0.039,
+        "page_mrr": -0.03
+      }
+    },
+    "hybrid_rrf": {
+      "latency_p50_ms": 231.12,
+      "groups": {
+        "all": {
+          "case_count": 100,
+          "paper_recall": 0.9217,
+          "complete_papers": 0.84,
+          "exact_page_recall": 0.8692,
+          "complete_pages": 0.75,
+          "paper_mrr": 0.9194,
+          "page_mrr": 0.7962,
+          "same_page_redundancy": 0.112,
+          "latency_p50_ms": 231.12
+        },
+        "legacy_v2": {
+          "case_count": 50,
+          "paper_recall": 0.9583,
+          "complete_papers": 0.9,
+          "exact_page_recall": 0.8983,
+          "complete_pages": 0.8,
+          "paper_mrr": 0.939,
+          "page_mrr": 0.8074,
+          "same_page_redundancy": 0.128,
+          "latency_p50_ms": 235.55
+        },
+        "new_v3": {
+          "case_count": 50,
+          "paper_recall": 0.885,
+          "complete_papers": 0.78,
+          "exact_page_recall": 0.84,
+          "complete_pages": 0.7,
+          "paper_mrr": 0.8998,
+          "page_mrr": 0.7851,
+          "same_page_redundancy": 0.096,
+          "latency_p50_ms": 229.74
+        },
+        "new_single": {
+          "case_count": 30,
+          "paper_recall": 0.9667,
+          "complete_papers": 0.9667,
+          "exact_page_recall": 0.9667,
+          "complete_pages": 0.9667,
+          "paper_mrr": 0.8886,
+          "page_mrr": 0.8192,
+          "same_page_redundancy": 0.1067,
+          "latency_p50_ms": 229.95
+        },
+        "new_cross": {
+          "case_count": 20,
+          "paper_recall": 0.7625,
+          "complete_papers": 0.5,
+          "exact_page_recall": 0.65,
+          "complete_pages": 0.3,
+          "paper_mrr": 0.9167,
+          "page_mrr": 0.7338,
+          "same_page_redundancy": 0.08,
+          "latency_p50_ms": 229.74
+        }
+      },
+      "legacy_v2_delta": {
+        "paper_recall": 0.0,
+        "complete_papers": 0.0,
+        "exact_page_recall": -0.02,
+        "paper_mrr": -0.025,
+        "page_mrr": -0.0025
+      }
+    }
+  }
+}

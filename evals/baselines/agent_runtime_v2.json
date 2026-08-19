@@ -1,0 +1,96 @@
+{
+  "config": {
+    "baseline_id": "agent_runtime_v2",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/agent_runtime_v2.jsonl",
+    "dataset_sha256": "7444a3fa0cdff2303723d2f0522921031782e72e92a1d1642aca0417b3b36b84",
+    "case_ids": [
+      "AE-001",
+      "AE-007",
+      "AE-016",
+      "AE-017",
+      "AE-019",
+      "AE-020",
+      "AE-021",
+      "AE-023",
+      "AE-025",
+      "AE-029",
+      "AE-031",
+      "AE-032"
+    ],
+    "collection_name": "agent_seed_v3_bge_m3_chunking_v1",
+    "top_k": 10,
+    "planner_model": "gpt-5.5",
+    "answer_model": "deepseek-v4-flash",
+    "judge_model": "gpt-5.5",
+    "frozen_sources": [
+      "evals/results/answer_hybrid_rrf_v2.jsonl",
+      "evals/results/answer_hybrid_rrf_gpt55_judge_v2.jsonl"
+    ],
+    "notes": [
+      "Fixed-RAG uses saved Answer and Judge results from the selected corpus version.",
+      "Agent workflow latency uses recorded generation latency even when Planner cache hits."
+    ]
+  },
+  "variants": [
+    {
+      "variant_id": "fixed_hybrid_rrf",
+      "case_count": 12,
+      "paper_recall_at_10": 0.8636363636363636,
+      "exact_page_recall_at_10": 0.7727272727272727,
+      "complete_papers_at_10": 0.7272727272727273,
+      "cross_paper_complete_papers_at_10": 0.4,
+      "answerability_accuracy": 0.75,
+      "unanswerable_refusal_rate": 1.0,
+      "correctness": 0.6875,
+      "faithfulness": 0.6666666666666666,
+      "citation_completeness": 0.6875,
+      "strict_run_pass_rate": 0.6666666666666666,
+      "p50_workflow_latency_ms": 7144.5,
+      "p95_workflow_latency_ms": 25168.23,
+      "known_planner_input_tokens": 0,
+      "known_planner_output_tokens": 0,
+      "known_answer_input_tokens": 84872,
+      "known_answer_output_tokens": 11924,
+      "judge_input_tokens": 26215,
+      "judge_output_tokens": 8762,
+      "model_call_count": 21,
+      "planning": null
+    },
+    {
+      "variant_id": "langgraph_agent",
+      "case_count": 12,
+      "paper_recall_at_10": 0.9545454545454546,
+      "exact_page_recall_at_10": 0.9090909090909091,
+      "complete_papers_at_10": 0.9090909090909091,
+      "cross_paper_complete_papers_at_10": 0.8,
+      "answerability_accuracy": 1.0,
+      "unanswerable_refusal_rate": 1.0,
+      "correctness": 0.9375,
+      "faithfulness": 0.8958333333333334,
+      "citation_completeness": 0.9583333333333334,
+      "strict_run_pass_rate": 0.9166666666666666,
+      "p50_workflow_latency_ms": 18663.2,
+      "p95_workflow_latency_ms": 32893.3,
+      "known_planner_input_tokens": 2473,
+      "known_planner_output_tokens": 3146,
+      "known_answer_input_tokens": 75131,
+      "known_answer_output_tokens": 9783,
+      "judge_input_tokens": 41327,
+      "judge_output_tokens": 12145,
+      "model_call_count": 35,
+      "planning": {
+        "router_accuracy": 0.9166666666666666,
+        "task_count_accuracy": 0.9166666666666666,
+        "task_coverage": 0.9583333333333334,
+        "title_leakage_rate": 0.0,
+        "retrieval_strategy_accuracy": 0.9166666666666666,
+        "unnecessary_revision_rate": 0.0,
+        "revision_recovery_rate": null,
+        "citation_validation_rate": 1.0,
+        "p50_planning_latency_ms": 10675.25,
+        "p95_planning_latency_ms": 12569.33
+      }
+    }
+  ]
+}

@@ -1,0 +1,382 @@
+{
+  "corpus_id": "agent-seed-v3",
+  "version": 3,
+  "created_on": "2026-08-18",
+  "description": "A 40-paper Agent corpus covering architecture, reflection, tool use, web and computer agents, software engineering agents, evaluation, and agentic RAG.",
+  "visual_check": {
+    "checked_on": "2026-08-18",
+    "tool": "Poppler pdftoppm",
+    "status": "passed",
+    "first_pages_checked": 20,
+    "suspicious_pages_checked": 10,
+    "notes": [
+      "v2 的 20 篇论文沿用固定 revision 和已完成的视觉核验结果。",
+      "v3 新增 20 篇论文的首页均与预期标题一致，页面完整且可读。",
+      "ExpeL 的空文本页 30、33 和短文本页主要由完整的轨迹图组成，当前 pypdf 文本层无法提取图中文字。",
+      "ExpeL p14、AgentBoard p5 和 tau-bench p5 均可正常渲染；警告来自公式或特殊符号的字符映射。",
+      "Evaluation Cases 避开没有可提取文本的图片型页面。"
+    ]
+  },
+  "papers": [
+    {
+      "paper_id": "arxiv:2210.03629",
+      "arxiv_id": "2210.03629",
+      "arxiv_version": "2210.03629v3",
+      "slug": "react",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "topics": ["reasoning", "acting", "tool-use"],
+      "source_url": "https://arxiv.org/pdf/2210.03629v3"
+    },
+    {
+      "paper_id": "arxiv:2302.04761",
+      "arxiv_id": "2302.04761",
+      "arxiv_version": "2302.04761v1",
+      "slug": "toolformer",
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "topics": ["tool-use", "self-supervision"],
+      "source_url": "https://arxiv.org/pdf/2302.04761v1"
+    },
+    {
+      "paper_id": "arxiv:2303.11366",
+      "arxiv_id": "2303.11366",
+      "arxiv_version": "2303.11366v4",
+      "slug": "reflexion",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "topics": ["reflection", "verbal-feedback", "learning"],
+      "source_url": "https://arxiv.org/pdf/2303.11366v4"
+    },
+    {
+      "paper_id": "arxiv:2310.04406",
+      "arxiv_id": "2310.04406",
+      "arxiv_version": "2310.04406v3",
+      "slug": "lats",
+      "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+      "topics": ["planning", "search", "reasoning"],
+      "source_url": "https://arxiv.org/pdf/2310.04406v3"
+    },
+    {
+      "paper_id": "arxiv:2310.08560",
+      "arxiv_id": "2310.08560",
+      "arxiv_version": "2310.08560v2",
+      "slug": "memgpt",
+      "title": "MemGPT: Towards LLMs as Operating Systems",
+      "topics": ["memory", "context-management", "runtime"],
+      "source_url": "https://arxiv.org/pdf/2310.08560v2"
+    },
+    {
+      "paper_id": "arxiv:2304.03442",
+      "arxiv_id": "2304.03442",
+      "arxiv_version": "2304.03442v2",
+      "slug": "generative-agents",
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "topics": ["memory", "reflection", "simulation"],
+      "source_url": "https://arxiv.org/pdf/2304.03442v2"
+    },
+    {
+      "paper_id": "arxiv:2305.16291",
+      "arxiv_id": "2305.16291",
+      "arxiv_version": "2305.16291v2",
+      "slug": "voyager",
+      "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "topics": ["embodied-agent", "skill-library", "planning"],
+      "source_url": "https://arxiv.org/pdf/2305.16291v2"
+    },
+    {
+      "paper_id": "arxiv:2303.17760",
+      "arxiv_id": "2303.17760",
+      "arxiv_version": "2303.17760v2",
+      "slug": "camel",
+      "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society",
+      "topics": ["multi-agent", "communication", "role-playing"],
+      "source_url": "https://arxiv.org/pdf/2303.17760v2"
+    },
+    {
+      "paper_id": "arxiv:2308.08155",
+      "arxiv_id": "2308.08155",
+      "arxiv_version": "2308.08155v2",
+      "slug": "autogen",
+      "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "topics": ["multi-agent", "framework", "conversation"],
+      "source_url": "https://arxiv.org/pdf/2308.08155v2"
+    },
+    {
+      "paper_id": "arxiv:2308.03688",
+      "arxiv_id": "2308.03688",
+      "arxiv_version": "2308.03688v3",
+      "slug": "agentbench",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "topics": ["evaluation", "benchmark", "agent"],
+      "source_url": "https://arxiv.org/pdf/2308.03688v3"
+    },
+    {
+      "paper_id": "arxiv:2205.00445",
+      "arxiv_id": "2205.00445",
+      "arxiv_version": "2205.00445v1",
+      "slug": "mrkl",
+      "title": "MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning",
+      "topics": ["tool-use", "routing", "neuro-symbolic"],
+      "source_url": "https://arxiv.org/pdf/2205.00445v1"
+    },
+    {
+      "paper_id": "arxiv:2303.17651",
+      "arxiv_id": "2303.17651",
+      "arxiv_version": "2303.17651v2",
+      "slug": "self-refine",
+      "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+      "topics": ["reflection", "self-feedback", "refinement"],
+      "source_url": "https://arxiv.org/pdf/2303.17651v2"
+    },
+    {
+      "paper_id": "arxiv:2305.10601",
+      "arxiv_id": "2305.10601",
+      "arxiv_version": "2305.10601v2",
+      "slug": "tree-of-thoughts",
+      "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+      "topics": ["reasoning", "search", "planning"],
+      "source_url": "https://arxiv.org/pdf/2305.10601v2"
+    },
+    {
+      "paper_id": "arxiv:2305.10250",
+      "arxiv_id": "2305.10250",
+      "arxiv_version": "2305.10250v3",
+      "slug": "memorybank",
+      "title": "MemoryBank: Enhancing Large Language Models with Long-Term Memory",
+      "topics": ["memory", "forgetting", "personalization"],
+      "source_url": "https://arxiv.org/pdf/2305.10250v3"
+    },
+    {
+      "paper_id": "arxiv:2303.17580",
+      "arxiv_id": "2303.17580",
+      "arxiv_version": "2303.17580v4",
+      "slug": "hugginggpt",
+      "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face",
+      "topics": ["tool-use", "planning", "model-orchestration"],
+      "source_url": "https://arxiv.org/pdf/2303.17580v4"
+    },
+    {
+      "paper_id": "arxiv:2305.15334",
+      "arxiv_id": "2305.15334",
+      "arxiv_version": "2305.15334v1",
+      "slug": "gorilla",
+      "title": "Gorilla: Large Language Model Connected with Massive APIs",
+      "topics": ["tool-use", "api-calling", "retrieval"],
+      "source_url": "https://arxiv.org/pdf/2305.15334v1"
+    },
+    {
+      "paper_id": "arxiv:2307.16789",
+      "arxiv_id": "2307.16789",
+      "arxiv_version": "2307.16789v2",
+      "slug": "toolllm",
+      "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs",
+      "topics": ["tool-use", "api-retrieval", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2307.16789v2"
+    },
+    {
+      "paper_id": "arxiv:2308.10848",
+      "arxiv_id": "2308.10848",
+      "arxiv_version": "2308.10848v3",
+      "slug": "agentverse",
+      "title": "AgentVerse: Facilitating Multi-Agent Collaboration and Exploring Emergent Behaviors",
+      "topics": ["multi-agent", "collaboration", "emergent-behavior"],
+      "source_url": "https://arxiv.org/pdf/2308.10848v3"
+    },
+    {
+      "paper_id": "arxiv:2308.00352",
+      "arxiv_id": "2308.00352",
+      "arxiv_version": "2308.00352v7",
+      "slug": "metagpt",
+      "title": "MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework",
+      "topics": ["multi-agent", "software-engineering", "sop"],
+      "source_url": "https://arxiv.org/pdf/2308.00352v7"
+    },
+    {
+      "paper_id": "arxiv:2307.13854",
+      "arxiv_id": "2307.13854",
+      "arxiv_version": "2307.13854v4",
+      "slug": "webarena",
+      "title": "WebArena: A Realistic Web Environment for Building Autonomous Agents",
+      "topics": ["evaluation", "web-agent", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2307.13854v4"
+    },
+    {
+      "paper_id": "arxiv:2305.11738",
+      "arxiv_id": "2305.11738",
+      "arxiv_version": "2305.11738v4",
+      "slug": "critic",
+      "title": "CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing",
+      "topics": ["reflection", "tool-use", "self-correction"],
+      "source_url": "https://arxiv.org/pdf/2305.11738v4"
+    },
+    {
+      "paper_id": "arxiv:2305.14992",
+      "arxiv_id": "2305.14992",
+      "arxiv_version": "2305.14992v2",
+      "slug": "rap",
+      "title": "Reasoning with Language Model is Planning with World Model",
+      "topics": ["planning", "world-model", "reasoning"],
+      "source_url": "https://arxiv.org/pdf/2305.14992v2"
+    },
+    {
+      "paper_id": "arxiv:2308.10144",
+      "arxiv_id": "2308.10144",
+      "arxiv_version": "2308.10144v3",
+      "slug": "expel",
+      "title": "ExpeL: LLM Agents Are Experiential Learners",
+      "topics": ["experience-learning", "reflection", "memory"],
+      "source_url": "https://arxiv.org/pdf/2308.10144v3"
+    },
+    {
+      "paper_id": "arxiv:2309.02427",
+      "arxiv_id": "2309.02427",
+      "arxiv_version": "2309.02427v3",
+      "slug": "coala",
+      "title": "Cognitive Architectures for Language Agents",
+      "topics": ["cognitive-architecture", "memory", "decision-making"],
+      "source_url": "https://arxiv.org/pdf/2309.02427v3"
+    },
+    {
+      "paper_id": "arxiv:2310.12823",
+      "arxiv_id": "2310.12823",
+      "arxiv_version": "2310.12823v2",
+      "slug": "agenttuning",
+      "title": "AgentTuning: Enabling Generalized Agent Abilities for LLMs",
+      "topics": ["agent-training", "tool-use", "generalization"],
+      "source_url": "https://arxiv.org/pdf/2310.12823v2"
+    },
+    {
+      "paper_id": "arxiv:2309.10691",
+      "arxiv_id": "2309.10691",
+      "arxiv_version": "2309.10691v3",
+      "slug": "mint",
+      "title": "MINT: Evaluating LLMs in Multi-turn Interaction with Tools and Language Feedback",
+      "topics": ["evaluation", "tool-use", "multi-turn"],
+      "source_url": "https://arxiv.org/pdf/2309.10691v3"
+    },
+    {
+      "paper_id": "arxiv:2309.15817",
+      "arxiv_id": "2309.15817",
+      "arxiv_version": "2309.15817v2",
+      "slug": "toolemu",
+      "title": "Identifying the Risks of LM Agents with an LM-Emulated Sandbox",
+      "topics": ["safety", "tool-use", "simulation"],
+      "source_url": "https://arxiv.org/pdf/2309.15817v2"
+    },
+    {
+      "paper_id": "arxiv:2306.06070",
+      "arxiv_id": "2306.06070",
+      "arxiv_version": "2306.06070v3",
+      "slug": "mind2web",
+      "title": "Mind2Web: Towards a Generalist Agent for the Web",
+      "topics": ["web-agent", "benchmark", "generalization"],
+      "source_url": "https://arxiv.org/pdf/2306.06070v3"
+    },
+    {
+      "paper_id": "arxiv:2401.13919",
+      "arxiv_id": "2401.13919",
+      "arxiv_version": "2401.13919v4",
+      "slug": "webvoyager",
+      "title": "WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models",
+      "topics": ["web-agent", "multimodal", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2401.13919v4"
+    },
+    {
+      "paper_id": "arxiv:2403.07718",
+      "arxiv_id": "2403.07718",
+      "arxiv_version": "2403.07718v5",
+      "slug": "workarena",
+      "title": "WorkArena: How Capable Are Web Agents at Solving Common Knowledge Work Tasks?",
+      "topics": ["web-agent", "benchmark", "knowledge-work"],
+      "source_url": "https://arxiv.org/pdf/2403.07718v5"
+    },
+    {
+      "paper_id": "arxiv:2404.07972",
+      "arxiv_id": "2404.07972",
+      "arxiv_version": "2404.07972v2",
+      "slug": "osworld",
+      "title": "OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments",
+      "topics": ["computer-use", "multimodal", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2404.07972v2"
+    },
+    {
+      "paper_id": "arxiv:2311.12983",
+      "arxiv_id": "2311.12983",
+      "arxiv_version": "2311.12983v1",
+      "slug": "gaia",
+      "title": "GAIA: a benchmark for General AI Assistants",
+      "topics": ["evaluation", "general-assistant", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2311.12983v1"
+    },
+    {
+      "paper_id": "arxiv:2401.13178",
+      "arxiv_id": "2401.13178",
+      "arxiv_version": "2401.13178v2",
+      "slug": "agentboard",
+      "title": "AgentBoard: An Analytical Evaluation Board of Multi-turn LLM Agents",
+      "topics": ["evaluation", "multi-turn", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2401.13178v2"
+    },
+    {
+      "paper_id": "arxiv:2406.12045",
+      "arxiv_id": "2406.12045",
+      "arxiv_version": "2406.12045v1",
+      "slug": "tau-bench",
+      "title": "tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "topics": ["evaluation", "tool-use", "user-interaction"],
+      "source_url": "https://arxiv.org/pdf/2406.12045v1"
+    },
+    {
+      "paper_id": "arxiv:2310.06770",
+      "arxiv_id": "2310.06770",
+      "arxiv_version": "2310.06770v3",
+      "slug": "swe-bench",
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "topics": ["software-engineering", "evaluation", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2310.06770v3"
+    },
+    {
+      "paper_id": "arxiv:2405.15793",
+      "arxiv_id": "2405.15793",
+      "arxiv_version": "2405.15793v3",
+      "slug": "swe-agent",
+      "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+      "topics": ["software-engineering", "agent-computer-interface", "tool-use"],
+      "source_url": "https://arxiv.org/pdf/2405.15793v3"
+    },
+    {
+      "paper_id": "arxiv:2307.07924",
+      "arxiv_id": "2307.07924",
+      "arxiv_version": "2307.07924v5",
+      "slug": "chatdev",
+      "title": "ChatDev: Communicative Agents for Software Development",
+      "topics": ["multi-agent", "software-engineering", "communication"],
+      "source_url": "https://arxiv.org/pdf/2307.07924v5"
+    },
+    {
+      "paper_id": "arxiv:2310.11511",
+      "arxiv_id": "2310.11511",
+      "arxiv_version": "2310.11511v1",
+      "slug": "self-rag",
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "topics": ["agentic-rag", "self-reflection", "retrieval"],
+      "source_url": "https://arxiv.org/pdf/2310.11511v1"
+    },
+    {
+      "paper_id": "arxiv:2401.15884",
+      "arxiv_id": "2401.15884",
+      "arxiv_version": "2401.15884v3",
+      "slug": "crag",
+      "title": "Corrective Retrieval Augmented Generation",
+      "topics": ["agentic-rag", "retrieval", "correction"],
+      "source_url": "https://arxiv.org/pdf/2401.15884v3"
+    },
+    {
+      "paper_id": "arxiv:2403.14403",
+      "arxiv_id": "2403.14403",
+      "arxiv_version": "2403.14403v2",
+      "slug": "adaptive-rag",
+      "title": "Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity",
+      "topics": ["agentic-rag", "query-complexity", "routing"],
+      "source_url": "https://arxiv.org/pdf/2403.14403v2"
+    }
+  ]
+}

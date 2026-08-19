@@ -1,0 +1,239 @@
+{
+  "config": {
+    "baseline_id": "planner_prompt_ablation_v2_stability",
+    "evaluated_on": "2026-08-18",
+    "dataset_path": "evals/datasets/planner_routing_v2.jsonl",
+    "dataset_sha256": "ea7ccb561522b4eedbb1955eb9d322bd2004bd7542bffe2d3694bfeb75695fe9",
+    "case_ids": [
+      "PR-016",
+      "PR-032",
+      "PR-033",
+      "PR-034",
+      "PR-035",
+      "PR-036",
+      "PR-037",
+      "PR-038",
+      "PR-039",
+      "PR-040"
+    ],
+    "label_sensitive_case_ids": [
+      "PR-032",
+      "PR-035",
+      "PR-039"
+    ],
+    "prompt_version": "research_planner_corpus_verification_v2",
+    "retry_attempts": 3,
+    "candidate_models": [
+      "deepseek-v4-flash@r1",
+      "deepseek-v4-flash@r2",
+      "deepseek-v4-flash@r3"
+    ],
+    "quality_gate": "success=100%; core_router=100%; core_task_count=100%; task_coverage=100%; acceptable_router=100%; acceptable_task_count=100%; title_leakage=0%",
+    "notes": [
+      "每次重复使用独立缓存；r1 复用同一次真实生成的全集结果。",
+      "定向集包含全部 corpus verification、全部 routing boundary 和过度拆分样本 PR-016。"
+    ]
+  },
+  "variants": [
+    {
+      "variant_id": "deepseek_prompt_v2_r1",
+      "model": "deepseek-v4-flash",
+      "case_count": 10,
+      "core_case_count": 7,
+      "label_sensitive_case_count": 3,
+      "planning_success_rate": 1.0,
+      "strict_router_accuracy": 0.9,
+      "acceptable_router_accuracy": 1.0,
+      "strict_task_count_accuracy": 0.7,
+      "acceptable_task_count_accuracy": 1.0,
+      "task_coverage": 1.0,
+      "core_router_accuracy": 1.0,
+      "core_task_count_accuracy": 0.7142857142857143,
+      "core_task_coverage": 1.0,
+      "boundary_strict_router_accuracy": 0.6666666666666666,
+      "boundary_acceptable_router_accuracy": 1.0,
+      "boundary_acceptable_task_count_accuracy": 1.0,
+      "boundary_task_coverage": 1.0,
+      "title_leakage_rate": 0.0,
+      "schema_retry_rate": 0.2,
+      "p50_generation_latency_ms": 7652.34,
+      "p95_generation_latency_ms": 26245.06,
+      "known_input_tokens": 5775,
+      "known_output_tokens": 7330,
+      "model_call_count": 12,
+      "quality_gate_passed": false,
+      "failed_cases": [],
+      "strict_route_error_cases": [
+        "PR-039"
+      ],
+      "unacceptable_route_cases": [],
+      "core_task_error_cases": [
+        "PR-034",
+        "PR-036"
+      ],
+      "low_coverage_cases": [],
+      "leakage_cases": [],
+      "categories": [
+        {
+          "category": "single_lookup",
+          "case_count": 1,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "corpus_verification",
+          "case_count": 5,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.6,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "routing_boundary",
+          "case_count": 4,
+          "strict_router_accuracy": 0.75,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.75,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        }
+      ]
+    },
+    {
+      "variant_id": "deepseek_prompt_v2_r2",
+      "model": "deepseek-v4-flash",
+      "case_count": 10,
+      "core_case_count": 7,
+      "label_sensitive_case_count": 3,
+      "planning_success_rate": 1.0,
+      "strict_router_accuracy": 1.0,
+      "acceptable_router_accuracy": 1.0,
+      "strict_task_count_accuracy": 0.9,
+      "acceptable_task_count_accuracy": 1.0,
+      "task_coverage": 1.0,
+      "core_router_accuracy": 1.0,
+      "core_task_count_accuracy": 0.8571428571428571,
+      "core_task_coverage": 1.0,
+      "boundary_strict_router_accuracy": 1.0,
+      "boundary_acceptable_router_accuracy": 1.0,
+      "boundary_acceptable_task_count_accuracy": 1.0,
+      "boundary_task_coverage": 1.0,
+      "title_leakage_rate": 0.0,
+      "schema_retry_rate": 0.0,
+      "p50_generation_latency_ms": 5164.55,
+      "p95_generation_latency_ms": 8285.23,
+      "known_input_tokens": 5775,
+      "known_output_tokens": 5694,
+      "model_call_count": 10,
+      "quality_gate_passed": false,
+      "failed_cases": [],
+      "strict_route_error_cases": [],
+      "unacceptable_route_cases": [],
+      "core_task_error_cases": [
+        "PR-036"
+      ],
+      "low_coverage_cases": [],
+      "leakage_cases": [],
+      "categories": [
+        {
+          "category": "single_lookup",
+          "case_count": 1,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "corpus_verification",
+          "case_count": 5,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.8,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "routing_boundary",
+          "case_count": 4,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        }
+      ]
+    },
+    {
+      "variant_id": "deepseek_prompt_v2_r3",
+      "model": "deepseek-v4-flash",
+      "case_count": 10,
+      "core_case_count": 7,
+      "label_sensitive_case_count": 3,
+      "planning_success_rate": 1.0,
+      "strict_router_accuracy": 0.9,
+      "acceptable_router_accuracy": 1.0,
+      "strict_task_count_accuracy": 0.9,
+      "acceptable_task_count_accuracy": 1.0,
+      "task_coverage": 1.0,
+      "core_router_accuracy": 1.0,
+      "core_task_count_accuracy": 1.0,
+      "core_task_coverage": 1.0,
+      "boundary_strict_router_accuracy": 0.6666666666666666,
+      "boundary_acceptable_router_accuracy": 1.0,
+      "boundary_acceptable_task_count_accuracy": 1.0,
+      "boundary_task_coverage": 1.0,
+      "title_leakage_rate": 0.0,
+      "schema_retry_rate": 0.1,
+      "p50_generation_latency_ms": 5550.49,
+      "p95_generation_latency_ms": 20136.31,
+      "known_input_tokens": 5775,
+      "known_output_tokens": 5567,
+      "model_call_count": 11,
+      "quality_gate_passed": true,
+      "failed_cases": [],
+      "strict_route_error_cases": [
+        "PR-039"
+      ],
+      "unacceptable_route_cases": [],
+      "core_task_error_cases": [],
+      "low_coverage_cases": [],
+      "leakage_cases": [],
+      "categories": [
+        {
+          "category": "single_lookup",
+          "case_count": 1,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "corpus_verification",
+          "case_count": 5,
+          "strict_router_accuracy": 1.0,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 1.0,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        },
+        {
+          "category": "routing_boundary",
+          "case_count": 4,
+          "strict_router_accuracy": 0.75,
+          "acceptable_router_accuracy": 1.0,
+          "strict_task_count_accuracy": 0.75,
+          "acceptable_task_count_accuracy": 1.0,
+          "task_coverage": 1.0
+        }
+      ]
+    }
+  ],
+  "recommended_model": "deepseek-v4-flash",
+  "recommendation_reason": "deepseek-v4-flash 通过全部 v2 质量门槛，并且在通过门槛的候选模型中 P50 最低（5550 ms）。"
+}

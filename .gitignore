@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+.env
+dist/
+build/
+frontend/node_modules/
+frontend/*.tsbuildinfo
+
+# Runtime and evaluation artifacts
+data/
+artifacts/
+tmp/
+evals/results/*
+!evals/results/.gitkeep
+evals/stability/*
+!evals/stability/.gitkeep
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

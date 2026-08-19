@@ -1,0 +1,43 @@
+{
+  "config": {
+    "baseline_id": "answer_hybrid_rrf_v1",
+    "evaluated_on": "2026-08-17",
+    "dataset_path": "evals/datasets/answer_generation_v1.jsonl",
+    "dataset_sha256": "97bd4526459f3f2f721b0690f576f449ec767817d9766efe3e67051fa110ddf8",
+    "corpus_id": "agent-seed-v2",
+    "corpus_version": 2,
+    "collection_name": "agent_seed_v2_bge_m3_chunking_v1",
+    "retrieval_strategy": "hybrid_rrf",
+    "retrieval_parameters": {
+      "candidate_pool_size": 50,
+      "rrf_k": 60
+    },
+    "answer_model": "deepseek-v4-flash",
+    "answer_prompt_version": "answer_v1",
+    "answer_retry_attempts": 2,
+    "top_k": 10
+  },
+  "case_count": 20,
+  "answerable_count": 18,
+  "unanswerable_count": 2,
+  "generation_success_rate": 0.9,
+  "answerability_accuracy": 0.85,
+  "key_point_recall": 0.8055555555555556,
+  "citation_paper_precision": 0.8333333333333334,
+  "citation_paper_recall": 0.8333333333333334,
+  "strict_page_precision": 0.6666666666666666,
+  "strict_page_recall": 0.8333333333333334,
+  "sentence_citation_coverage": 0.6164021164021164,
+  "mean_total_latency_ms": 6342.92,
+  "p50_total_latency_ms": 4318.95,
+  "p95_total_latency_ms": 23938.27,
+  "failed_cases": [
+    "AE-016",
+    "AE-017"
+  ],
+  "answerability_errors": [
+    "AE-016",
+    "AE-017",
+    "AE-018"
+  ]
+}

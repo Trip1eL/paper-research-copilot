@@ -1,0 +1,37 @@
+{
+  "baseline_id": "planner_retry_diagnostics_v1",
+  "evaluated_on": "2026-08-18",
+  "model": "deepseek-v4-flash",
+  "prompt_version": "research_planner_corpus_verification_v2",
+  "dataset_path": "evals/datasets/planner_routing_v2.jsonl",
+  "case_ids": [
+    "PR-030",
+    "PR-033",
+    "PR-039"
+  ],
+  "repetitions": 3,
+  "run_count": 9,
+  "retry_attempts": 3,
+  "planner_max_tokens": 1800,
+  "success_rate": 1.0,
+  "retry_rate": 0.3333333333333333,
+  "retry_recovery_rate": 1.0,
+  "outcome_counts": {
+    "accepted": 9,
+    "truncated": 4
+  },
+  "failure_outcome_counts": {
+    "truncated": 4
+  },
+  "finish_reason_counts": {
+    "stop": 9,
+    "length": 4
+  },
+  "output_token_limit_hit_count": 4,
+  "empty_truncated_response_count": 3,
+  "p50_generation_latency_ms": 13092.27,
+  "p95_generation_latency_ms": 49836.59,
+  "raw_trace_path": "data/agent/planner_retry_diagnostics_v1_raw.jsonl",
+  "raw_trace_versioned": false,
+  "diagnosis": "观察到的 Planner 重试触发类型：truncated=4。其中 4/4 个截断 attempt 的 output_tokens 达到配置上限 1800，3 个返回空 content。"
+}

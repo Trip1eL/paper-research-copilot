@@ -1,0 +1,1 @@
+"""Academic search provider adapters."""

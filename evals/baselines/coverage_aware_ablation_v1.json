@@ -1,0 +1,1628 @@
+{
+  "stability": {
+    "config": {
+      "baseline_id": "coverage_aware_ablation_v1",
+      "evaluated_on": "2026-08-17",
+      "dataset_path": "evals/datasets/answer_generation_v1.jsonl",
+      "dataset_sha256": "97bd4526459f3f2f721b0690f576f449ec767817d9766efe3e67051fa110ddf8",
+      "case_ids": [
+        "AE-016",
+        "AE-017",
+        "AE-018"
+      ],
+      "repetitions": 3,
+      "answer_model": "deepseek-v4-flash",
+      "answer_prompt_version": "answer_v2",
+      "judge_model": "gpt-5.5",
+      "judge_prompt_version": "answer_judge_v1",
+      "evidence_policy": "frozen_top10_per_variant; coverage variants use two leaked-name-audited sub-queries with round-robin merge"
+    },
+    "variants": [
+      {
+        "baseline_id": "answer_hybrid_rrf_v1",
+        "case_count": 3,
+        "sample_count": 9,
+        "generation_success_rate": 0.8888888888888888,
+        "answerability_accuracy": 0.2222222222222222,
+        "correctness_mean": 0.16666666666666666,
+        "mean_case_correctness_stddev": 0.11785113019775793,
+        "faithfulness_mean": 0.1111111111111111,
+        "mean_case_faithfulness_stddev": 0.07856742013183861,
+        "citation_completeness_mean": 0.1111111111111111,
+        "mean_case_citation_completeness_stddev": 0.07856742013183861,
+        "strict_run_pass_rate": 0.0,
+        "fully_stable_case_rate": 0.0,
+        "status_consistency_rate": 0.6666666666666666,
+        "citation_consistency_rate": 0.6666666666666666,
+        "empty_response_case_rate": 0.0,
+        "truncation_case_rate": 0.2222222222222222,
+        "retry_trigger_rate": 0.2222222222222222,
+        "retry_recovery_rate": 0.5,
+        "finish_reason_counts": {
+          "length": 3,
+          "stop": 8
+        },
+        "p50_generation_latency_ms": 14612.55,
+        "p95_generation_latency_ms": 50847.07,
+        "cases": [
+          {
+            "case_id": "AE-016",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 0.6666666666666666,
+            "answerability_accuracy": 0.6666666666666666,
+            "status_consistent": false,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 2,
+            "correctness_mean": 0.5,
+            "correctness_min": 0.0,
+            "faithfulness_mean": 0.3333333333333333,
+            "faithfulness_min": 0.0,
+            "citation_completeness_mean": 0.3333333333333333,
+            "citation_completeness_min": 0.0,
+            "strict_pass_rate": 0.0
+          },
+          {
+            "case_id": "AE-017",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 0.0,
+            "status_consistent": true,
+            "unique_answer_count": 1,
+            "unique_citation_signature_count": 1,
+            "correctness_mean": 0.0,
+            "correctness_min": 0.0,
+            "faithfulness_mean": 0.0,
+            "faithfulness_min": 0.0,
+            "citation_completeness_mean": 0.0,
+            "citation_completeness_min": 0.0,
+            "strict_pass_rate": 0.0
+          },
+          {
+            "case_id": "AE-018",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 0.0,
+            "status_consistent": true,
+            "unique_answer_count": 1,
+            "unique_citation_signature_count": 1,
+            "correctness_mean": 0.0,
+            "correctness_min": 0.0,
+            "faithfulness_mean": 0.0,
+            "faithfulness_min": 0.0,
+            "citation_completeness_mean": 0.0,
+            "citation_completeness_min": 0.0,
+            "strict_pass_rate": 0.0
+          }
+        ]
+      },
+      {
+        "baseline_id": "answer_hybrid_rrf_rerank_v1",
+        "case_count": 3,
+        "sample_count": 9,
+        "generation_success_rate": 1.0,
+        "answerability_accuracy": 1.0,
+        "correctness_mean": 0.9722222222222222,
+        "mean_case_correctness_stddev": 0.039283710065919304,
+        "faithfulness_mean": 0.8333333333333334,
+        "mean_case_faithfulness_stddev": 0.07856742013183861,
+        "citation_completeness_mean": 0.9444444444444444,
+        "mean_case_citation_completeness_stddev": 0.039283710065919304,
+        "strict_run_pass_rate": 1.0,
+        "fully_stable_case_rate": 1.0,
+        "status_consistency_rate": 1.0,
+        "citation_consistency_rate": 0.3333333333333333,
+        "empty_response_case_rate": 0.0,
+        "truncation_case_rate": 0.1111111111111111,
+        "retry_trigger_rate": 0.1111111111111111,
+        "retry_recovery_rate": 1.0,
+        "finish_reason_counts": {
+          "stop": 9,
+          "length": 1
+        },
+        "p50_generation_latency_ms": 16941.03,
+        "p95_generation_latency_ms": 46570.95,
+        "cases": [
+          {
+            "case_id": "AE-016",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 2,
+            "correctness_mean": 0.9166666666666666,
+            "correctness_min": 0.75,
+            "faithfulness_mean": 0.75,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 0.8333333333333334,
+            "citation_completeness_min": 0.75,
+            "strict_pass_rate": 1.0
+          },
+          {
+            "case_id": "AE-017",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 3,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 0.9166666666666666,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 1.0,
+            "citation_completeness_min": 1.0,
+            "strict_pass_rate": 1.0
+          },
+          {
+            "case_id": "AE-018",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 1,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 0.8333333333333334,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 1.0,
+            "citation_completeness_min": 1.0,
+            "strict_pass_rate": 1.0
+          }
+        ]
+      },
+      {
+        "baseline_id": "answer_coverage_hybrid_v1",
+        "case_count": 3,
+        "sample_count": 9,
+        "generation_success_rate": 1.0,
+        "answerability_accuracy": 1.0,
+        "correctness_mean": 1.0,
+        "mean_case_correctness_stddev": 0.0,
+        "faithfulness_mean": 0.9166666666666666,
+        "mean_case_faithfulness_stddev": 0.07856742013183861,
+        "citation_completeness_mean": 0.9444444444444444,
+        "mean_case_citation_completeness_stddev": 0.07856742013183861,
+        "strict_run_pass_rate": 1.0,
+        "fully_stable_case_rate": 1.0,
+        "status_consistency_rate": 1.0,
+        "citation_consistency_rate": 0.3333333333333333,
+        "empty_response_case_rate": 0.0,
+        "truncation_case_rate": 0.1111111111111111,
+        "retry_trigger_rate": 0.1111111111111111,
+        "retry_recovery_rate": 1.0,
+        "finish_reason_counts": {
+          "stop": 9,
+          "length": 1
+        },
+        "p50_generation_latency_ms": 17413.43,
+        "p95_generation_latency_ms": 41413.21,
+        "cases": [
+          {
+            "case_id": "AE-016",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 2,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 0.8333333333333334,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 0.9166666666666666,
+            "citation_completeness_min": 0.75,
+            "strict_pass_rate": 1.0
+          },
+          {
+            "case_id": "AE-017",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 1,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 1.0,
+            "faithfulness_min": 1.0,
+            "citation_completeness_mean": 0.9166666666666666,
+            "citation_completeness_min": 0.75,
+            "strict_pass_rate": 1.0
+          },
+          {
+            "case_id": "AE-018",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 2,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 0.9166666666666666,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 1.0,
+            "citation_completeness_min": 1.0,
+            "strict_pass_rate": 1.0
+          }
+        ]
+      },
+      {
+        "baseline_id": "answer_coverage_hybrid_rerank_v1",
+        "case_count": 3,
+        "sample_count": 9,
+        "generation_success_rate": 1.0,
+        "answerability_accuracy": 1.0,
+        "correctness_mean": 1.0,
+        "mean_case_correctness_stddev": 0.0,
+        "faithfulness_mean": 0.8888888888888888,
+        "mean_case_faithfulness_stddev": 0.039283710065919304,
+        "citation_completeness_mean": 0.9166666666666666,
+        "mean_case_citation_completeness_stddev": 0.0,
+        "strict_run_pass_rate": 1.0,
+        "fully_stable_case_rate": 1.0,
+        "status_consistency_rate": 1.0,
+        "citation_consistency_rate": 0.0,
+        "empty_response_case_rate": 0.0,
+        "truncation_case_rate": 0.2222222222222222,
+        "retry_trigger_rate": 0.2222222222222222,
+        "retry_recovery_rate": 1.0,
+        "finish_reason_counts": {
+          "stop": 9,
+          "length": 2
+        },
+        "p50_generation_latency_ms": 13633.28,
+        "p95_generation_latency_ms": 36346.66,
+        "cases": [
+          {
+            "case_id": "AE-016",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 2,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 1.0,
+            "faithfulness_min": 1.0,
+            "citation_completeness_mean": 1.0,
+            "citation_completeness_min": 1.0,
+            "strict_pass_rate": 1.0
+          },
+          {
+            "case_id": "AE-017",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 3,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 0.9166666666666666,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 1.0,
+            "citation_completeness_min": 1.0,
+            "strict_pass_rate": 1.0
+          },
+          {
+            "case_id": "AE-018",
+            "question_type": "cross_paper",
+            "run_count": 3,
+            "generation_success_rate": 1.0,
+            "answerability_accuracy": 1.0,
+            "status_consistent": true,
+            "unique_answer_count": 3,
+            "unique_citation_signature_count": 3,
+            "correctness_mean": 1.0,
+            "correctness_min": 1.0,
+            "faithfulness_mean": 0.75,
+            "faithfulness_min": 0.75,
+            "citation_completeness_mean": 0.75,
+            "citation_completeness_min": 0.75,
+            "strict_pass_rate": 1.0
+          }
+        ]
+      }
+    ]
+  },
+  "retrieval": {
+    "top_k": 10,
+    "query_decomposition_prompt_version": "query_decomposition_v1",
+    "alias_leaks": [],
+    "decompositions": [
+      {
+        "question": "交错生成 Thought、Action、Observation 的提示方法，与通过采样和 loss 过滤来学习 API calls 的方法，在工具使用机制上有何差异？",
+        "sub_queries": [
+          "交错生成 Thought、Action、Observation 的提示方法，在工具使用上的机制是什么？",
+          "通过采样和 loss 过滤来学习 API calls 的方法，在工具使用上的机制是什么？"
+        ],
+        "model": "deepseek-v4-flash",
+        "prompt_version": "query_decomposition_v1",
+        "generation_latency_ms": 3113.75
+      },
+      {
+        "question": "把环境评价转为 episodic verbal memory 的智能体反思方法，与让同一个模型直接批评并改写当前输出的方法，在反馈来源、记忆和迭代对象上有何区别？",
+        "sub_queries": [
+          "把环境评价转为 episodic verbal memory 的智能体反思方法 反馈来源 记忆 迭代对象",
+          "让同一个模型直接批评并改写当前输出的方法 反馈来源 记忆 迭代对象"
+        ],
+        "model": "deepseek-v4-flash",
+        "prompt_version": "query_decomposition_v1",
+        "generation_latency_ms": 6787.25
+      },
+      {
+        "question": "依靠自动课程和可复用技能库持续探索开放世界的智能体，与把语言模型作为控制器选择多个现成 AI 模型完成多模态请求的系统，如何分别积累能力和编排任务？",
+        "sub_queries": [
+          "依靠自动课程和可复用技能库持续探索开放世界的智能体，如何积累能力和编排任务？",
+          "把语言模型作为控制器选择多个现成 AI 模型完成多模态请求的系统，如何积累能力和编排任务？"
+        ],
+        "model": "deepseek-v4-flash",
+        "prompt_version": "query_decomposition_v1",
+        "generation_latency_ms": 4792.69
+      }
+    ],
+    "variants": {
+      "answer_hybrid_rrf_v1": {
+        "paper_recall_at_10": 0.5,
+        "exact_page_recall_at_10": 0.5,
+        "complete_papers_at_10": 0.0,
+        "cases": {
+          "AE-016": {
+            "paper_recall_at_10": 0.5,
+            "exact_page_recall_at_10": 0.5,
+            "complete_papers_at_10": false,
+            "target_hits": {
+              "arxiv:2210.03629": {
+                "paper": false,
+                "exact_page": false
+              },
+              "arxiv:2302.04761": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "78e62a00-9612-5242-91e6-5b6755f61842",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 3,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "f49ffcd3-a6c4-5b9c-9c0b-afabe248463e",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 15,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "fce9bff1-cc02-594f-baae-f06a5202da71",
+                "paper_id": "arxiv:2307.16789",
+                "page_number": 6,
+                "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "7462a7dd-8ce6-5e1a-8011-c3881d73851a",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 5,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "092a7cfc-2456-5ae8-8387-86161d04d893",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 4,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "3d4b81e1-479d-580d-a913-9c0bc0cf9804",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 5,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "8d50b74f-c321-543b-84e9-a69ebf22bed0",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 16,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "58b6dba6-915e-5ece-81b0-6bd1be5c1fce",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 9,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "f3f8480b-cdb0-5d74-823b-89afe3c4f946",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 2,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "35ccfd4e-604b-53ff-8915-c3a924a9e2a8",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 4,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              }
+            ],
+            "trace": {
+              "total_latency_ms": 287.92
+            }
+          },
+          "AE-017": {
+            "paper_recall_at_10": 0.5,
+            "exact_page_recall_at_10": 0.5,
+            "complete_papers_at_10": false,
+            "target_hits": {
+              "arxiv:2303.11366": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17651": {
+                "paper": false,
+                "exact_page": false
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "8f311bc9-4d8c-51ef-ad0b-baa0187c2457",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 2,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "7b39a9d3-94af-541f-bb74-fed84b56cd7c",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "67439f5a-6d74-594a-9cce-dc2283488bf3",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 5,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "58b9455d-6d7a-5e80-8155-fb8d4d6e0acb",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "403451e3-f555-5839-b7cf-6c08d6cc5a97",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 7,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "ba979dc5-eaed-5610-bc91-f12117cef092",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 9,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "f2081958-0da4-5ffd-b388-c2e239c4c469",
+                "paper_id": "arxiv:2305.10250",
+                "page_number": 7,
+                "title": "MemoryBank: Enhancing Large Language Models with Long-Term Memory"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "3265a671-6e1d-5557-8bc8-dcf2b3b6b8ba",
+                "paper_id": "arxiv:2304.03442",
+                "page_number": 9,
+                "title": "Generative Agents: Interactive Simulacra of Human Behavior"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "205c46ec-b668-58ed-89e7-c77b3f994035",
+                "paper_id": "arxiv:2305.10250",
+                "page_number": 1,
+                "title": "MemoryBank: Enhancing Large Language Models with Long-Term Memory"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "78c8785f-3e56-55be-9902-2ec64d207c6e",
+                "paper_id": "arxiv:2310.08560",
+                "page_number": 3,
+                "title": "MemGPT: Towards LLMs as Operating Systems"
+              }
+            ],
+            "trace": {
+              "total_latency_ms": 346.78
+            }
+          },
+          "AE-018": {
+            "paper_recall_at_10": 0.5,
+            "exact_page_recall_at_10": 0.5,
+            "complete_papers_at_10": false,
+            "target_hits": {
+              "arxiv:2305.16291": {
+                "paper": false,
+                "exact_page": false
+              },
+              "arxiv:2303.17580": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "d5b0b434-13bd-53cd-9f73-a4f578fd3cf7",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 3,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "347b9ca3-431f-5a2b-aef7-eb1eeefed698",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 10,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "52b05aa4-0309-5b7d-94a5-efefc8835803",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 2,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "27b04715-9f89-544c-af9c-0274a8cfbba7",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 2,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "32e0fa15-8152-50d0-9ced-541525ca346f",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 7,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "00a51f85-5ee6-55d4-9dea-d16fadf46568",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "98206fe4-5b77-5541-9818-ae7e532f585b",
+                "paper_id": "arxiv:2308.08155",
+                "page_number": 14,
+                "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "c6e87a01-c9f6-5f78-95ae-59dc4c2b20e6",
+                "paper_id": "arxiv:2308.03688",
+                "page_number": 1,
+                "title": "AgentBench: Evaluating LLMs as Agents"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "15cae5b0-ef3c-5780-9a52-870a74e9c4c2",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 4,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "43df5a5f-f2b1-5c7a-b90c-a269ab353138",
+                "paper_id": "arxiv:2308.08155",
+                "page_number": 11,
+                "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation"
+              }
+            ],
+            "trace": {
+              "total_latency_ms": 830.81
+            }
+          }
+        }
+      },
+      "answer_hybrid_rrf_rerank_v1": {
+        "paper_recall_at_10": 0.8333333333333334,
+        "exact_page_recall_at_10": 0.8333333333333334,
+        "complete_papers_at_10": 0.6666666666666666,
+        "cases": {
+          "AE-016": {
+            "paper_recall_at_10": 0.5,
+            "exact_page_recall_at_10": 0.5,
+            "complete_papers_at_10": false,
+            "target_hits": {
+              "arxiv:2210.03629": {
+                "paper": false,
+                "exact_page": false
+              },
+              "arxiv:2302.04761": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "0e3dd369-1af8-533a-bce6-bc048728543b",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 2,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "628981c7-a956-5d82-bacf-f095a111cab0",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 3,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "3ad63b16-2aa2-51cb-8517-deb1b8e723a6",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 11,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "43d50d83-8827-5e05-b22e-cfd8114837cf",
+                "paper_id": "arxiv:2307.16789",
+                "page_number": 5,
+                "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "f49ffcd3-a6c4-5b9c-9c0b-afabe248463e",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 15,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "fe0c27bc-06a2-5cb3-97f3-6ef72bbc4388",
+                "paper_id": "arxiv:2310.04406",
+                "page_number": 6,
+                "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "58b6dba6-915e-5ece-81b0-6bd1be5c1fce",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 9,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "18af7480-d7c9-5c9d-88e8-5aa6f1c6ead2",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 10,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "d30eb079-fc70-5005-aadc-13a02654e464",
+                "paper_id": "arxiv:2307.16789",
+                "page_number": 16,
+                "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "69d596bd-cd77-5b7b-9ff9-9d9b403d32db",
+                "paper_id": "arxiv:2307.16789",
+                "page_number": 9,
+                "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs"
+              }
+            ],
+            "trace": {
+              "total_latency_ms": 1599.61
+            }
+          },
+          "AE-017": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2303.11366": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17651": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "8f311bc9-4d8c-51ef-ad0b-baa0187c2457",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 2,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "58b9455d-6d7a-5e80-8155-fb8d4d6e0acb",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "2ea8c20a-dc1a-57ce-87cc-0d5037664d9f",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 1,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "7b39a9d3-94af-541f-bb74-fed84b56cd7c",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "60f0f2fc-e83f-5efa-b61d-54a0479ff3cd",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 15,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "403451e3-f555-5839-b7cf-6c08d6cc5a97",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 7,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "67439f5a-6d74-594a-9cce-dc2283488bf3",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 5,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "99706a14-5b55-5471-9580-2b9b8c0d1127",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 9,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "174751cf-c901-5502-87d0-0ea581958d9b",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 3,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "7ec190a9-b2fb-5854-a19e-efb70d04a4b7",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 4,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              }
+            ],
+            "trace": {
+              "total_latency_ms": 1948.47
+            }
+          },
+          "AE-018": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2305.16291": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17580": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "a9d4fd8f-9882-530a-bdc1-f35c1e8fbfc1",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "25043822-f01a-5d55-81b7-f4e9d5680c69",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 1,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "4268f9f7-f848-5b01-b391-553acec22250",
+                "paper_id": "arxiv:2205.00445",
+                "page_number": 3,
+                "title": "MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "d153e763-37cd-5050-8b13-083ceef6f733",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 3,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "347b9ca3-431f-5a2b-aef7-eb1eeefed698",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 10,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "15cae5b0-ef3c-5780-9a52-870a74e9c4c2",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 4,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "00a51f85-5ee6-55d4-9dea-d16fadf46568",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "43df5a5f-f2b1-5c7a-b90c-a269ab353138",
+                "paper_id": "arxiv:2308.08155",
+                "page_number": 11,
+                "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "7537257b-9d35-5449-8528-ff8f8b1ac660",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 3,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "90a5816a-6be8-5e9d-966f-89892ee98e45",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 1,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              }
+            ],
+            "trace": {
+              "total_latency_ms": 1699.37
+            }
+          }
+        }
+      },
+      "answer_coverage_hybrid_v1": {
+        "paper_recall_at_10": 1.0,
+        "exact_page_recall_at_10": 1.0,
+        "complete_papers_at_10": 1.0,
+        "cases": {
+          "AE-016": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2210.03629": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2302.04761": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "325b4e14-5a62-512c-b28c-f34184f514e7",
+                "paper_id": "arxiv:2310.04406",
+                "page_number": 19,
+                "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "78e62a00-9612-5242-91e6-5b6755f61842",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 3,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "311f7fcb-7ff0-5007-bcd6-09637df8786d",
+                "paper_id": "arxiv:2210.03629",
+                "page_number": 3,
+                "title": "ReAct: Synergizing Reasoning and Acting in Language Models"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "f49ffcd3-a6c4-5b9c-9c0b-afabe248463e",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 15,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "be5a5985-0672-5ba5-978d-bf57c36f9f56",
+                "paper_id": "arxiv:2308.03688",
+                "page_number": 40,
+                "title": "AgentBench: Evaluating LLMs as Agents"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "092a7cfc-2456-5ae8-8387-86161d04d893",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 4,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "1341b238-e26d-5bde-bb18-ad73e8696cad",
+                "paper_id": "arxiv:2308.10848",
+                "page_number": 17,
+                "title": "AgentVerse: Facilitating Multi-Agent Collaboration and Exploring Emergent Behaviors"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "0e3dd369-1af8-533a-bce6-bc048728543b",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 2,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "a441a1dd-de42-5028-8c34-3412f4bb50d1",
+                "paper_id": "arxiv:2310.04406",
+                "page_number": 18,
+                "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "32140984-902f-5e23-a9d8-3fdd3fd69b77",
+                "paper_id": "arxiv:2305.15334",
+                "page_number": 6,
+                "title": "Gorilla: Large Language Model Connected with Massive APIs"
+              }
+            ],
+            "trace": {
+              "sub_queries": [
+                "交错生成 Thought、Action、Observation 的提示方法，在工具使用上的机制是什么？",
+                "通过采样和 loss 过滤来学习 API calls 的方法，在工具使用上的机制是什么？"
+              ],
+              "candidate_counts": [
+                30,
+                30
+              ],
+              "selected_counts": [
+                5,
+                5
+              ],
+              "reranker_model": null,
+              "decomposition_latency_ms": 0.0,
+              "decomposition_generation_latency_ms": 3113.75,
+              "hybrid_latency_ms": [
+                237.77,
+                243.06
+              ],
+              "reranker_latency_ms": [
+                0.0,
+                0.0
+              ],
+              "total_latency_ms": 480.98
+            }
+          },
+          "AE-017": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2303.11366": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17651": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "8f311bc9-4d8c-51ef-ad0b-baa0187c2457",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 2,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "7ec190a9-b2fb-5854-a19e-efb70d04a4b7",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 4,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "7b39a9d3-94af-541f-bb74-fed84b56cd7c",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "5cca537a-5e7b-5cbc-8a95-9f6da527c492",
+                "paper_id": "arxiv:2308.00352",
+                "page_number": 6,
+                "title": "MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "67439f5a-6d74-594a-9cce-dc2283488bf3",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 5,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "c1556363-82ef-5284-9597-863338c9b768",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 9,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "58b9455d-6d7a-5e80-8155-fb8d4d6e0acb",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "4172befa-3da3-5060-98e9-5fb35c009a3d",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 31,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "3265a671-6e1d-5557-8bc8-dcf2b3b6b8ba",
+                "paper_id": "arxiv:2304.03442",
+                "page_number": 9,
+                "title": "Generative Agents: Interactive Simulacra of Human Behavior"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "63fbc374-b7ad-5f60-9c86-096b3d1a9052",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 2,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              }
+            ],
+            "trace": {
+              "sub_queries": [
+                "把环境评价转为 episodic verbal memory 的智能体反思方法 反馈来源 记忆 迭代对象",
+                "让同一个模型直接批评并改写当前输出的方法 反馈来源 记忆 迭代对象"
+              ],
+              "candidate_counts": [
+                30,
+                30
+              ],
+              "selected_counts": [
+                5,
+                5
+              ],
+              "reranker_model": null,
+              "decomposition_latency_ms": 0.0,
+              "decomposition_generation_latency_ms": 6787.25,
+              "hybrid_latency_ms": [
+                267.52,
+                190.41
+              ],
+              "reranker_latency_ms": [
+                0.0,
+                0.0
+              ],
+              "total_latency_ms": 458.0
+            }
+          },
+          "AE-018": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2305.16291": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17580": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "d153e763-37cd-5050-8b13-083ceef6f733",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 3,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "d5b0b434-13bd-53cd-9f73-a4f578fd3cf7",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 3,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "65c891d2-79b6-5ca8-877b-db98c07953e1",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 21,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "347b9ca3-431f-5a2b-aef7-eb1eeefed698",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 10,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "8832e335-a3e1-584e-bf68-7d664cebeb5f",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 2,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "00a51f85-5ee6-55d4-9dea-d16fadf46568",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "8c09fe10-5d80-5415-8bcc-3fa5d179df05",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 2,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "9a0e57d0-ba2f-5e62-b927-efa57d99f3f2",
+                "paper_id": "arxiv:2303.17760",
+                "page_number": 5,
+                "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "ca67e171-f75e-5b1b-91b1-ebeb20b6f11b",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 4,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "a9d4fd8f-9882-530a-bdc1-f35c1e8fbfc1",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              }
+            ],
+            "trace": {
+              "sub_queries": [
+                "依靠自动课程和可复用技能库持续探索开放世界的智能体，如何积累能力和编排任务？",
+                "把语言模型作为控制器选择多个现成 AI 模型完成多模态请求的系统，如何积累能力和编排任务？"
+              ],
+              "candidate_counts": [
+                30,
+                30
+              ],
+              "selected_counts": [
+                5,
+                5
+              ],
+              "reranker_model": null,
+              "decomposition_latency_ms": 0.0,
+              "decomposition_generation_latency_ms": 4792.69,
+              "hybrid_latency_ms": [
+                246.36,
+                208.53
+              ],
+              "reranker_latency_ms": [
+                0.0,
+                0.0
+              ],
+              "total_latency_ms": 454.95
+            }
+          }
+        }
+      },
+      "answer_coverage_hybrid_rerank_v1": {
+        "paper_recall_at_10": 1.0,
+        "exact_page_recall_at_10": 1.0,
+        "complete_papers_at_10": 1.0,
+        "cases": {
+          "AE-016": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2210.03629": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2302.04761": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "b1d17797-b176-5f6f-8844-7e4bd38da72f",
+                "paper_id": "arxiv:2210.03629",
+                "page_number": 4,
+                "title": "ReAct: Synergizing Reasoning and Acting in Language Models"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "0e3dd369-1af8-533a-bce6-bc048728543b",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 2,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "311f7fcb-7ff0-5007-bcd6-09637df8786d",
+                "paper_id": "arxiv:2210.03629",
+                "page_number": 3,
+                "title": "ReAct: Synergizing Reasoning and Acting in Language Models"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "628981c7-a956-5d82-bacf-f095a111cab0",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 3,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "325b4e14-5a62-512c-b28c-f34184f514e7",
+                "paper_id": "arxiv:2310.04406",
+                "page_number": 19,
+                "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "f49ffcd3-a6c4-5b9c-9c0b-afabe248463e",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 15,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "fc901ea6-c42d-534f-bfdd-7b282689ace1",
+                "paper_id": "arxiv:2210.03629",
+                "page_number": 21,
+                "title": "ReAct: Synergizing Reasoning and Acting in Language Models"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "3ad63b16-2aa2-51cb-8517-deb1b8e723a6",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 11,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "a441a1dd-de42-5028-8c34-3412f4bb50d1",
+                "paper_id": "arxiv:2310.04406",
+                "page_number": 18,
+                "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "78e62a00-9612-5242-91e6-5b6755f61842",
+                "paper_id": "arxiv:2302.04761",
+                "page_number": 3,
+                "title": "Toolformer: Language Models Can Teach Themselves to Use Tools"
+              }
+            ],
+            "trace": {
+              "sub_queries": [
+                "交错生成 Thought、Action、Observation 的提示方法，在工具使用上的机制是什么？",
+                "通过采样和 loss 过滤来学习 API calls 的方法，在工具使用上的机制是什么？"
+              ],
+              "candidate_counts": [
+                30,
+                30
+              ],
+              "selected_counts": [
+                5,
+                5
+              ],
+              "reranker_model": "BAAI/bge-reranker-v2-m3",
+              "decomposition_latency_ms": 0.0,
+              "decomposition_generation_latency_ms": 3113.75,
+              "hybrid_latency_ms": [
+                232.06,
+                250.52
+              ],
+              "reranker_latency_ms": [
+                813.4,
+                737.61
+              ],
+              "total_latency_ms": 2033.97
+            }
+          },
+          "AE-017": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2303.11366": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17651": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "8f311bc9-4d8c-51ef-ad0b-baa0187c2457",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 2,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "85d0e2fb-0314-51eb-8e3e-cf9c4dc64e5d",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 2,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "58b9455d-6d7a-5e80-8155-fb8d4d6e0acb",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "99706a14-5b55-5471-9580-2b9b8c0d1127",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 9,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "2ea8c20a-dc1a-57ce-87cc-0d5037664d9f",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 1,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "174751cf-c901-5502-87d0-0ea581958d9b",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 3,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "7b39a9d3-94af-541f-bb74-fed84b56cd7c",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 4,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "7ec190a9-b2fb-5854-a19e-efb70d04a4b7",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 4,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "403451e3-f555-5839-b7cf-6c08d6cc5a97",
+                "paper_id": "arxiv:2303.11366",
+                "page_number": 7,
+                "title": "Reflexion: Language Agents with Verbal Reinforcement Learning"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "63fbc374-b7ad-5f60-9c86-096b3d1a9052",
+                "paper_id": "arxiv:2303.17651",
+                "page_number": 2,
+                "title": "Self-Refine: Iterative Refinement with Self-Feedback"
+              }
+            ],
+            "trace": {
+              "sub_queries": [
+                "把环境评价转为 episodic verbal memory 的智能体反思方法 反馈来源 记忆 迭代对象",
+                "让同一个模型直接批评并改写当前输出的方法 反馈来源 记忆 迭代对象"
+              ],
+              "candidate_counts": [
+                30,
+                30
+              ],
+              "selected_counts": [
+                5,
+                5
+              ],
+              "reranker_model": "BAAI/bge-reranker-v2-m3",
+              "decomposition_latency_ms": 0.0,
+              "decomposition_generation_latency_ms": 6787.25,
+              "hybrid_latency_ms": [
+                342.37,
+                222.91
+              ],
+              "reranker_latency_ms": [
+                738.12,
+                687.09
+              ],
+              "total_latency_ms": 1990.81
+            }
+          },
+          "AE-018": {
+            "paper_recall_at_10": 1.0,
+            "exact_page_recall_at_10": 1.0,
+            "complete_papers_at_10": true,
+            "target_hits": {
+              "arxiv:2305.16291": {
+                "paper": true,
+                "exact_page": true
+              },
+              "arxiv:2303.17580": {
+                "paper": true,
+                "exact_page": true
+              }
+            },
+            "evidence": [
+              {
+                "rank": 1,
+                "chunk_id": "8c09fe10-5d80-5415-8bcc-3fa5d179df05",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 2,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 2,
+                "chunk_id": "a9d4fd8f-9882-530a-bdc1-f35c1e8fbfc1",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 3,
+                "chunk_id": "8832e335-a3e1-584e-bf68-7d664cebeb5f",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 2,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 4,
+                "chunk_id": "25043822-f01a-5d55-81b7-f4e9d5680c69",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 1,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 5,
+                "chunk_id": "d153e763-37cd-5050-8b13-083ceef6f733",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 3,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 6,
+                "chunk_id": "04d9498c-3a81-522a-8b48-c2104254c616",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 4,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 7,
+                "chunk_id": "ca67e171-f75e-5b1b-91b1-ebeb20b6f11b",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 4,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 8,
+                "chunk_id": "347b9ca3-431f-5a2b-aef7-eb1eeefed698",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 10,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              },
+              {
+                "rank": 9,
+                "chunk_id": "30a647b5-2ab2-5235-ab2e-6da66a5c17c6",
+                "paper_id": "arxiv:2305.16291",
+                "page_number": 1,
+                "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models"
+              },
+              {
+                "rank": 10,
+                "chunk_id": "00a51f85-5ee6-55d4-9dea-d16fadf46568",
+                "paper_id": "arxiv:2303.17580",
+                "page_number": 2,
+                "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face"
+              }
+            ],
+            "trace": {
+              "sub_queries": [
+                "依靠自动课程和可复用技能库持续探索开放世界的智能体，如何积累能力和编排任务？",
+                "把语言模型作为控制器选择多个现成 AI 模型完成多模态请求的系统，如何积累能力和编排任务？"
+              ],
+              "candidate_counts": [
+                30,
+                30
+              ],
+              "selected_counts": [
+                5,
+                5
+              ],
+              "reranker_model": "BAAI/bge-reranker-v2-m3",
+              "decomposition_latency_ms": 0.0,
+              "decomposition_generation_latency_ms": 4792.69,
+              "hybrid_latency_ms": [
+                226.72,
+                234.36
+              ],
+              "reranker_latency_ms": [
+                711.67,
+                823.68
+              ],
+              "total_latency_ms": 1996.94
+            }
+          }
+        }
+      }
+    }
+  }
+}

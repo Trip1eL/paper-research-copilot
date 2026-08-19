@@ -1,0 +1,310 @@
+{
+  "evaluated_on": "2026-08-17",
+  "dataset": "evals/datasets/retrieval_discovery_v2.jsonl",
+  "collection": "agent_seed_v2_bge_m3_chunking_v1",
+  "embedding_model": "BAAI/bge-m3",
+  "rewrite_model": "deepseek-v4-flash",
+  "rewrite_prompt_version": "query_rewrite_v1",
+  "rewrite_cache": "evals/query_rewrites/retrieval_discovery_v2_deepseek-v4-flash_query_rewrite_v1.jsonl",
+  "candidate_pool": 50,
+  "rrf_k": 60,
+  "cases": [
+    {
+      "case_id": "DS-021",
+      "question": "交错生成 Thought、Action、Observation 的提示方法，与通过采样和 loss 过滤来学习 API calls 的方法，在工具使用机制上有何差异？",
+      "queries": [
+        "交错生成 Thought、Action、Observation 的提示方法，与通过采样和 loss 过滤来学习 API calls 的方法，在工具使用机制上有何差异？",
+        "interleaved thought action observation prompting mechanism for tool use in language models",
+        "sampling and filtering API call candidates using loss to train language model tool use",
+        "comparison of prompting with explicit reasoning traces versus filtered loss-based API call training for tool use"
+      ],
+      "targets": [
+        {
+          "paper_id": "arxiv:2210.03629",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "original_fused_paper_rank": 17,
+          "original_fused_exact_page_rank": 33,
+          "rewritten_fused_paper_rank": 31,
+          "rewritten_fused_exact_page_rank": 39,
+          "classification": "rerankable_11_50",
+          "branch_ranks": [
+            {
+              "query_index": 0,
+              "dense_paper_rank": null,
+              "dense_exact_page_rank": null,
+              "bm25_paper_rank": 5,
+              "bm25_exact_page_rank": 15
+            },
+            {
+              "query_index": 1,
+              "dense_paper_rank": 3,
+              "dense_exact_page_rank": 3,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 2,
+              "dense_paper_rank": null,
+              "dense_exact_page_rank": null,
+              "bm25_paper_rank": null,
+              "bm25_exact_page_rank": null
+            },
+            {
+              "query_index": 3,
+              "dense_paper_rank": 47,
+              "dense_exact_page_rank": 47,
+              "bm25_paper_rank": 9,
+              "bm25_exact_page_rank": 9
+            }
+          ]
+        },
+        {
+          "paper_id": "arxiv:2302.04761",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "original_fused_paper_rank": 1,
+          "original_fused_exact_page_rank": 1,
+          "rewritten_fused_paper_rank": 1,
+          "rewritten_fused_exact_page_rank": 1,
+          "classification": "top_10",
+          "branch_ranks": [
+            {
+              "query_index": 0,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 1,
+              "dense_paper_rank": 15,
+              "dense_exact_page_rank": null,
+              "bm25_paper_rank": 24,
+              "bm25_exact_page_rank": 24
+            },
+            {
+              "query_index": 2,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 3,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "DS-025",
+      "question": "基于 Monte Carlo Tree Search 的规划方法，与依靠 automatic curriculum 和可复用 skill library 的开放世界探索方法，分别如何组织搜索和持续学习？",
+      "queries": [
+        "基于 Monte Carlo Tree Search 的规划方法，与依靠 automatic curriculum 和可复用 skill library 的开放世界探索方法，分别如何组织搜索和持续学习？",
+        "How do Monte Carlo Tree Search based planning methods organize search and support continuous learning in open-world environments?",
+        "What mechanisms do automatic curriculum and reusable skill libraries use to drive exploration and sustained learning in open worlds?",
+        "Comparing search-based planning with curriculum-driven skill reuse: how do they structure exploration and lifelong learning in open tasks?"
+      ],
+      "targets": [
+        {
+          "paper_id": "arxiv:2310.04406",
+          "relevant_pages": [
+            1,
+            2,
+            4
+          ],
+          "original_fused_paper_rank": 4,
+          "original_fused_exact_page_rank": 4,
+          "rewritten_fused_paper_rank": 14,
+          "rewritten_fused_exact_page_rank": 14,
+          "classification": "rerankable_11_50",
+          "branch_ranks": [
+            {
+              "query_index": 0,
+              "dense_paper_rank": 2,
+              "dense_exact_page_rank": 2,
+              "bm25_paper_rank": 7,
+              "bm25_exact_page_rank": 7
+            },
+            {
+              "query_index": 1,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 2,
+              "dense_paper_rank": 33,
+              "dense_exact_page_rank": 33,
+              "bm25_paper_rank": null,
+              "bm25_exact_page_rank": null
+            },
+            {
+              "query_index": 3,
+              "dense_paper_rank": 3,
+              "dense_exact_page_rank": 3,
+              "bm25_paper_rank": 24,
+              "bm25_exact_page_rank": 24
+            }
+          ]
+        },
+        {
+          "paper_id": "arxiv:2305.16291",
+          "relevant_pages": [
+            1,
+            2,
+            3
+          ],
+          "original_fused_paper_rank": 1,
+          "original_fused_exact_page_rank": 1,
+          "rewritten_fused_paper_rank": 1,
+          "rewritten_fused_exact_page_rank": 1,
+          "classification": "top_10",
+          "branch_ranks": [
+            {
+              "query_index": 0,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 1,
+              "dense_paper_rank": 21,
+              "dense_exact_page_rank": 27,
+              "bm25_paper_rank": 24,
+              "bm25_exact_page_rank": 25
+            },
+            {
+              "query_index": 2,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 3,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 2,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "DS-041",
+      "question": "把环境评价转为 episodic verbal memory 的智能体反思方法，与让同一个模型直接批评并改写当前输出的方法，在反馈来源、记忆和迭代对象上有何区别？",
+      "queries": [
+        "把环境评价转为 episodic verbal memory 的智能体反思方法，与让同一个模型直接批评并改写当前输出的方法，在反馈来源、记忆和迭代对象上有何区别？",
+        "agent reflection: comparing feedback source from external environment evaluation vs self-critique of current output",
+        "episodic verbal memory vs direct output rewriting in agent reflection: how memory type influences iterative correction",
+        "in reflection-based agents, what is the iterative object: accumulated experience memory or the immediate current response"
+      ],
+      "targets": [
+        {
+          "paper_id": "arxiv:2303.11366",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "original_fused_paper_rank": 1,
+          "original_fused_exact_page_rank": 1,
+          "rewritten_fused_paper_rank": 1,
+          "rewritten_fused_exact_page_rank": 1,
+          "classification": "top_10",
+          "branch_ranks": [
+            {
+              "query_index": 0,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 1,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 2,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 1,
+              "bm25_exact_page_rank": 1
+            },
+            {
+              "query_index": 3,
+              "dense_paper_rank": 1,
+              "dense_exact_page_rank": 1,
+              "bm25_paper_rank": 4,
+              "bm25_exact_page_rank": 8
+            }
+          ]
+        },
+        {
+          "paper_id": "arxiv:2303.17651",
+          "relevant_pages": [
+            1,
+            2,
+            3,
+            4,
+            15
+          ],
+          "original_fused_paper_rank": 15,
+          "original_fused_exact_page_rank": 20,
+          "rewritten_fused_paper_rank": 18,
+          "rewritten_fused_exact_page_rank": 18,
+          "classification": "rerankable_11_50",
+          "branch_ranks": [
+            {
+              "query_index": 0,
+              "dense_paper_rank": 2,
+              "dense_exact_page_rank": 5,
+              "bm25_paper_rank": null,
+              "bm25_exact_page_rank": null
+            },
+            {
+              "query_index": 1,
+              "dense_paper_rank": 6,
+              "dense_exact_page_rank": 6,
+              "bm25_paper_rank": 7,
+              "bm25_exact_page_rank": 14
+            },
+            {
+              "query_index": 2,
+              "dense_paper_rank": 7,
+              "dense_exact_page_rank": 7,
+              "bm25_paper_rank": 28,
+              "bm25_exact_page_rank": 28
+            },
+            {
+              "query_index": 3,
+              "dense_paper_rank": 30,
+              "dense_exact_page_rank": 33,
+              "bm25_paper_rank": 50,
+              "bm25_exact_page_rank": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

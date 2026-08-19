@@ -1,0 +1,32 @@
+{
+  "config": {
+    "baseline_id": "answer_hybrid_rrf_rerank_gpt55_judge_v1",
+    "evaluated_on": "2026-08-17",
+    "dataset_path": "evals/datasets/answer_generation_v1.jsonl",
+    "dataset_sha256": "97bd4526459f3f2f721b0690f576f449ec767817d9766efe3e67051fa110ddf8",
+    "answer_baseline_id": "answer_hybrid_rrf_rerank_v1",
+    "answer_results_path": "evals/results/answer_hybrid_rrf_rerank_v1.jsonl",
+    "judge_model": "gpt-5.5",
+    "judge_prompt_version": "answer_judge_v1",
+    "retry_attempts": 3
+  },
+  "case_count": 20,
+  "llm_judged_count": 17,
+  "deterministic_count": 3,
+  "cache_hit_count": 0,
+  "judge_failure_count": 0,
+  "correctness": 0.95,
+  "faithfulness": 0.9375,
+  "citation_completeness": 0.95,
+  "overall_score": 0.9458333333333333,
+  "human_review_rate": 0.0,
+  "mean_model_latency_ms": 20637.94,
+  "p50_model_latency_ms": 21001.59,
+  "p95_model_latency_ms": 27195.25,
+  "total_input_tokens": 51071,
+  "total_output_tokens": 14337,
+  "failed_cases": [
+    "AE-016"
+  ],
+  "human_review_cases": []
+}

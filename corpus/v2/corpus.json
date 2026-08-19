@@ -1,0 +1,201 @@
+{
+  "corpus_id": "agent-seed-v2",
+  "version": 2,
+  "created_on": "2026-08-16",
+  "description": "A 20-paper Agent research corpus with same-topic distractors for harder retrieval evaluation.",
+  "visual_check": {
+    "checked_on": "2026-08-16",
+    "tool": "Poppler pdftoppm",
+    "status": "passed",
+    "first_pages_checked": 20,
+    "suspicious_pages_checked": 10,
+    "notes": [
+      "v1 的 10 篇首页和 6 个异常页沿用已完成的 Poppler 视觉核验结果。",
+      "v2 新增 10 篇论文的首页均与预期标题一致，页面完整且可读。",
+      "Tree of Thoughts 的第 2、5、7、8 页均可正常渲染；警告来自文本层字符映射。",
+      "20 篇论文均无空页，当前 pypdf 基线可以提取全部页面文本。"
+    ]
+  },
+  "papers": [
+    {
+      "paper_id": "arxiv:2210.03629",
+      "arxiv_id": "2210.03629",
+      "arxiv_version": "2210.03629v3",
+      "slug": "react",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "topics": ["reasoning", "acting", "tool-use"],
+      "source_url": "https://arxiv.org/pdf/2210.03629v3"
+    },
+    {
+      "paper_id": "arxiv:2302.04761",
+      "arxiv_id": "2302.04761",
+      "arxiv_version": "2302.04761v1",
+      "slug": "toolformer",
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "topics": ["tool-use", "self-supervision"],
+      "source_url": "https://arxiv.org/pdf/2302.04761v1"
+    },
+    {
+      "paper_id": "arxiv:2303.11366",
+      "arxiv_id": "2303.11366",
+      "arxiv_version": "2303.11366v4",
+      "slug": "reflexion",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "topics": ["reflection", "verbal-feedback", "learning"],
+      "source_url": "https://arxiv.org/pdf/2303.11366v4"
+    },
+    {
+      "paper_id": "arxiv:2310.04406",
+      "arxiv_id": "2310.04406",
+      "arxiv_version": "2310.04406v3",
+      "slug": "lats",
+      "title": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models",
+      "topics": ["planning", "search", "reasoning"],
+      "source_url": "https://arxiv.org/pdf/2310.04406v3"
+    },
+    {
+      "paper_id": "arxiv:2310.08560",
+      "arxiv_id": "2310.08560",
+      "arxiv_version": "2310.08560v2",
+      "slug": "memgpt",
+      "title": "MemGPT: Towards LLMs as Operating Systems",
+      "topics": ["memory", "context-management", "runtime"],
+      "source_url": "https://arxiv.org/pdf/2310.08560v2"
+    },
+    {
+      "paper_id": "arxiv:2304.03442",
+      "arxiv_id": "2304.03442",
+      "arxiv_version": "2304.03442v2",
+      "slug": "generative-agents",
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "topics": ["memory", "reflection", "simulation"],
+      "source_url": "https://arxiv.org/pdf/2304.03442v2"
+    },
+    {
+      "paper_id": "arxiv:2305.16291",
+      "arxiv_id": "2305.16291",
+      "arxiv_version": "2305.16291v2",
+      "slug": "voyager",
+      "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "topics": ["embodied-agent", "skill-library", "planning"],
+      "source_url": "https://arxiv.org/pdf/2305.16291v2"
+    },
+    {
+      "paper_id": "arxiv:2303.17760",
+      "arxiv_id": "2303.17760",
+      "arxiv_version": "2303.17760v2",
+      "slug": "camel",
+      "title": "CAMEL: Communicative Agents for Mind Exploration of Large Scale Language Model Society",
+      "topics": ["multi-agent", "communication", "role-playing"],
+      "source_url": "https://arxiv.org/pdf/2303.17760v2"
+    },
+    {
+      "paper_id": "arxiv:2308.08155",
+      "arxiv_id": "2308.08155",
+      "arxiv_version": "2308.08155v2",
+      "slug": "autogen",
+      "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "topics": ["multi-agent", "framework", "conversation"],
+      "source_url": "https://arxiv.org/pdf/2308.08155v2"
+    },
+    {
+      "paper_id": "arxiv:2308.03688",
+      "arxiv_id": "2308.03688",
+      "arxiv_version": "2308.03688v3",
+      "slug": "agentbench",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "topics": ["evaluation", "benchmark", "agent"],
+      "source_url": "https://arxiv.org/pdf/2308.03688v3"
+    },
+    {
+      "paper_id": "arxiv:2205.00445",
+      "arxiv_id": "2205.00445",
+      "arxiv_version": "2205.00445v1",
+      "slug": "mrkl",
+      "title": "MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning",
+      "topics": ["tool-use", "routing", "neuro-symbolic"],
+      "source_url": "https://arxiv.org/pdf/2205.00445v1"
+    },
+    {
+      "paper_id": "arxiv:2303.17651",
+      "arxiv_id": "2303.17651",
+      "arxiv_version": "2303.17651v2",
+      "slug": "self-refine",
+      "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+      "topics": ["reflection", "self-feedback", "refinement"],
+      "source_url": "https://arxiv.org/pdf/2303.17651v2"
+    },
+    {
+      "paper_id": "arxiv:2305.10601",
+      "arxiv_id": "2305.10601",
+      "arxiv_version": "2305.10601v2",
+      "slug": "tree-of-thoughts",
+      "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+      "topics": ["reasoning", "search", "planning"],
+      "source_url": "https://arxiv.org/pdf/2305.10601v2"
+    },
+    {
+      "paper_id": "arxiv:2305.10250",
+      "arxiv_id": "2305.10250",
+      "arxiv_version": "2305.10250v3",
+      "slug": "memorybank",
+      "title": "MemoryBank: Enhancing Large Language Models with Long-Term Memory",
+      "topics": ["memory", "forgetting", "personalization"],
+      "source_url": "https://arxiv.org/pdf/2305.10250v3"
+    },
+    {
+      "paper_id": "arxiv:2303.17580",
+      "arxiv_id": "2303.17580",
+      "arxiv_version": "2303.17580v4",
+      "slug": "hugginggpt",
+      "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face",
+      "topics": ["tool-use", "planning", "model-orchestration"],
+      "source_url": "https://arxiv.org/pdf/2303.17580v4"
+    },
+    {
+      "paper_id": "arxiv:2305.15334",
+      "arxiv_id": "2305.15334",
+      "arxiv_version": "2305.15334v1",
+      "slug": "gorilla",
+      "title": "Gorilla: Large Language Model Connected with Massive APIs",
+      "topics": ["tool-use", "api-calling", "retrieval"],
+      "source_url": "https://arxiv.org/pdf/2305.15334v1"
+    },
+    {
+      "paper_id": "arxiv:2307.16789",
+      "arxiv_id": "2307.16789",
+      "arxiv_version": "2307.16789v2",
+      "slug": "toolllm",
+      "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs",
+      "topics": ["tool-use", "api-retrieval", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2307.16789v2"
+    },
+    {
+      "paper_id": "arxiv:2308.10848",
+      "arxiv_id": "2308.10848",
+      "arxiv_version": "2308.10848v3",
+      "slug": "agentverse",
+      "title": "AgentVerse: Facilitating Multi-Agent Collaboration and Exploring Emergent Behaviors",
+      "topics": ["multi-agent", "collaboration", "emergent-behavior"],
+      "source_url": "https://arxiv.org/pdf/2308.10848v3"
+    },
+    {
+      "paper_id": "arxiv:2308.00352",
+      "arxiv_id": "2308.00352",
+      "arxiv_version": "2308.00352v7",
+      "slug": "metagpt",
+      "title": "MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework",
+      "topics": ["multi-agent", "software-engineering", "sop"],
+      "source_url": "https://arxiv.org/pdf/2308.00352v7"
+    },
+    {
+      "paper_id": "arxiv:2307.13854",
+      "arxiv_id": "2307.13854",
+      "arxiv_version": "2307.13854v4",
+      "slug": "webarena",
+      "title": "WebArena: A Realistic Web Environment for Building Autonomous Agents",
+      "topics": ["evaluation", "web-agent", "benchmark"],
+      "source_url": "https://arxiv.org/pdf/2307.13854v4"
+    }
+  ]
+}

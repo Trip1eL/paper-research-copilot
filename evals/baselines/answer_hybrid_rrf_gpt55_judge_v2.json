@@ -1,0 +1,38 @@
+{
+  "config": {
+    "baseline_id": "answer_hybrid_rrf_gpt55_judge_v2",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/answer_generation_v2.jsonl",
+    "dataset_sha256": "133927aa39e4abf585666db1032be114d95920c1b5cf0940dd6c424a607b0c69",
+    "answer_baseline_id": "answer_hybrid_rrf_v2",
+    "answer_results_path": "evals/results/answer_hybrid_rrf_v2.jsonl",
+    "judge_model": "gpt-5.5",
+    "judge_prompt_version": "answer_judge_v1",
+    "retry_attempts": 3
+  },
+  "case_count": 32,
+  "llm_judged_count": 24,
+  "deterministic_count": 8,
+  "cache_hit_count": 0,
+  "judge_failure_count": 0,
+  "correctness": 0.7421875,
+  "faithfulness": 0.734375,
+  "citation_completeness": 0.75,
+  "overall_score": 0.7421875,
+  "human_review_rate": 0.0,
+  "mean_model_latency_ms": 22739.0,
+  "p50_model_latency_ms": 22001.61,
+  "p95_model_latency_ms": 33129.73,
+  "total_input_tokens": 71792,
+  "total_output_tokens": 22912,
+  "failed_cases": [
+    "AE-015",
+    "AE-017",
+    "AE-018",
+    "AE-027",
+    "AE-030",
+    "AE-031",
+    "AE-032"
+  ],
+  "human_review_cases": []
+}
