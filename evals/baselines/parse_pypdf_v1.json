@@ -1,0 +1,420 @@
+{
+  "config": {
+    "baseline_id": "parse_pypdf_v1",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/parse_benchmark_v1.jsonl",
+    "dataset_sha256": "0bdc23fb9e8ce1be6e98fd3cef9e2086642014b5c7e288c4b20975e702637016",
+    "parser": "pypdf",
+    "parser_version": "6.10.2",
+    "normalization_version": "pdf_text_v1",
+    "short_page_char_threshold": 200,
+    "control_ratio_threshold": 0.002,
+    "replacement_ratio_threshold": 0.001
+  },
+  "case_count": 10,
+  "empty_rate": 0.1,
+  "short_page_rate": 0.1,
+  "suspicious_char_case_rate": 0.4,
+  "text_layer_expectation_pass_rate": 1.0,
+  "expected_anchor_pass_rate": 1.0,
+  "table_question_pass_rate": 1.0,
+  "p50_latency_ms": 70.5,
+  "p95_latency_ms": 163.22,
+  "by_category": [
+    {
+      "category": "formula_dense",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 1.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    },
+    {
+      "category": "garbled_text",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 1.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    },
+    {
+      "category": "image_only",
+      "case_count": 1,
+      "empty_rate": 1.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 0.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    },
+    {
+      "category": "mixed_text_and_garbled_figure",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 1.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    },
+    {
+      "category": "native_table_complex",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 0.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": 1.0
+    },
+    {
+      "category": "native_table_multicolumn",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 0.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": 1.0
+    },
+    {
+      "category": "native_table_simple",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 1.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": 1.0
+    },
+    {
+      "category": "normal_text",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 0.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    },
+    {
+      "category": "short_visual_page",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 1.0,
+      "suspicious_rate": 0.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    },
+    {
+      "category": "two_column_text",
+      "case_count": 1,
+      "empty_rate": 0.0,
+      "short_rate": 0.0,
+      "suspicious_rate": 0.0,
+      "expected_anchor_pass_rate": 1.0,
+      "table_question_pass_rate": null
+    }
+  ],
+  "results": [
+    {
+      "case_id": "PB-001",
+      "paper_id": "arxiv:2310.08560",
+      "page_number": 2,
+      "category": "normal_text",
+      "status": "ok",
+      "extract_latency_ms": 95.55,
+      "metrics": {
+        "char_count": 5810,
+        "line_count": 126,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 0,
+        "non_printable_char_ratio": 0.0
+      },
+      "quality_flags": [],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "c12a24a4bcf4986e7e9af865fb946cced3ea3d527224b0dcff52ca1a2f5b4d9d",
+      "preview": "MemGPT: Towards LLMs as Operating Systems working_context.replace( “Boyfriend named James”, “Ex-boyfriend named James” ) Sorry to hear that - hope you’re OK 💔 actually james and i broke up How’s James doing? Any special plans today? work..."
+    },
+    {
+      "case_id": "PB-002",
+      "paper_id": "arxiv:2310.04406",
+      "page_number": 3,
+      "category": "two_column_text",
+      "status": "ok",
+      "extract_latency_ms": 72.3,
+      "metrics": {
+        "char_count": 4913,
+        "line_count": 92,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 0,
+        "non_printable_char_ratio": 0.0
+      },
+      "quality_flags": [],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "babb5f40d6459ecab4aafdde829c650657ce05fa5fd89f51cfe477a1546ddc25",
+      "preview": "Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models Approach Reasoning Acting Planning Self- External Reflection Memory CoT (Wei et al., 2022) ✓ × × × × ReAct (Yao et al., 2023b) ✓ ✓ × × × ToT (Yao et al..."
+    },
+    {
+      "case_id": "PB-003",
+      "paper_id": "arxiv:2210.03629",
+      "page_number": 2,
+      "category": "garbled_text",
+      "status": "suspicious",
+      "extract_latency_ms": 163.22,
+      "metrics": {
+        "char_count": 5759,
+        "line_count": 215,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 849,
+        "control_char_ratio": 0.147421,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 849,
+        "non_printable_char_ratio": 0.147421
+      },
+      "quality_flags": [
+        "control_chars"
+      ],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "a3d3c61ef044ff5c4c74678a8549f735f820274608ffd2016be105d7ca2a1027",
+      "preview": "Published as a conference paper at ICLR 2023 $FW\u0003\u0014 \u00037KLQN>)LUVW\u0003,\u0003QHHG\u0003WR\u0003ILQG\u0003D\u0003SHSSHU\u0003VKDNHU\u0011\u0011\u0011PRUH\u0003 OLNHO\\\u0003WR\u0003DSSHDU\u0003LQ\u0003FDELQHWV\u0003 \u0014\u0010\u0019 \u000f\u0003FRXQWHUWRSV\u0003 \u0014\u0010\u0016 \u000f\u0003\u0011\u0011\u0011\u0003@ $FW\u0003\u0015 \u0003*R\u0003WR\u0003FDELQHW\u0003\u0014\u0003 2EV\u0003\u0015 \u00032Q\u0003WKH\u0003FDELQHW\u0003\u0014\u000f\u0003\\RX\u0003VHH\u0003D\u0003YDVH\u0003\u0015\u0011\u0003 +HUH\u0003..."
+    },
+    {
+      "case_id": "PB-004",
+      "paper_id": "arxiv:2305.10601",
+      "page_number": 5,
+      "category": "mixed_text_and_garbled_figure",
+      "status": "suspicious",
+      "extract_latency_ms": 70.83,
+      "metrics": {
+        "char_count": 4602,
+        "line_count": 122,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 27,
+        "control_char_ratio": 0.005867,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 27,
+        "non_printable_char_ratio": 0.005867
+      },
+      "quality_flags": [
+        "control_chars"
+      ],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "dd2fd8df112cd9c36e7c62ef5062181a83f776b40171bfaf3b340b47e2d8e906",
+      "preview": "Game of 24 Creative Writing 5x5 Crosswords Input 4 numbers (4 9 10 13) 4 random sentences 10 clues (h1. presented;..) Output An equation to reach 24 (13-9)*(10-4)=24 A passage of 4 paragraphs ending in the 4 sentences 5x5 letters: SHOWN;..."
+    },
+    {
+      "case_id": "PB-005",
+      "paper_id": "arxiv:2401.13178",
+      "page_number": 5,
+      "category": "formula_dense",
+      "status": "suspicious",
+      "extract_latency_ms": 70.5,
+      "metrics": {
+        "char_count": 5134,
+        "line_count": 73,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 9,
+        "private_use_char_ratio": 0.001753,
+        "non_printable_char_count": 9,
+        "non_printable_char_ratio": 0.001753
+      },
+      "quality_flags": [
+        "replacement_or_private_use_chars"
+      ],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "2b8c52f550343a93eb7d31ce52b748439b9ea6bba407c8e366fe2c4511019ddb",
+      "preview": "In each round of interaction, a progress rate, denoted as rt, is assigned to evaluate the agent’s advancement towards the goal state g. As the agent moves through the states st = [s0, . . . , st], we assess its progress using a matching ..."
+    },
+    {
+      "case_id": "PB-006",
+      "paper_id": "arxiv:2406.12045",
+      "page_number": 5,
+      "category": "native_table_simple",
+      "status": "suspicious",
+      "extract_latency_ms": 49.3,
+      "metrics": {
+        "char_count": 4138,
+        "line_count": 62,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 14,
+        "control_char_ratio": 0.003383,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 14,
+        "non_printable_char_ratio": 0.003383
+      },
+      "quality_flags": [
+        "control_chars"
+      ],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": true,
+      "table_question_results": [
+        {
+          "question": "tau-retail 包含多少个任务？",
+          "expected_answer": "115",
+          "answer_present": true,
+          "context_anchors_pass": true
+        }
+      ],
+      "text_sha256": "f33470f0b8aa9b4a6bc35868cd29e80ba748a088685aa806239d46b599bd5afc",
+      "preview": "τ -retail τ -airline Databases 500 users, 50 products, 1,000 orders 500 users, 300 flights, 2,000 reservations API tools 7 write, 8 non-write 6 write, 7 non-write Tasks 115 50 Table 1: Key statistics from τ-retail and τ-airline. those tr..."
+    },
+    {
+      "case_id": "PB-007",
+      "paper_id": "arxiv:2310.06770",
+      "page_number": 6,
+      "category": "native_table_multicolumn",
+      "status": "ok",
+      "extract_latency_ms": 78.08,
+      "metrics": {
+        "char_count": 3522,
+        "line_count": 52,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 0,
+        "non_printable_char_ratio": 0.0
+      },
+      "quality_flags": [],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": true,
+      "table_question_results": [
+        {
+          "question": "Claude 3 Opus 在 SWE-bench Lite 上的 Resolved 百分比是多少？",
+          "expected_answer": "4.33",
+          "answer_present": true,
+          "context_anchors_pass": true
+        }
+      ],
+      "text_sha256": "f9ae8dc630df0259182ab8b224b0870114cd0008907cb90cbd53a16e6399526e",
+      "preview": "Published as a conference paper at ICLR 2024 Table 5: We compare models against each other using the BM25 retriever as described in Section 4. SWE-bench SWE-bench Lite Model % Resolved % Apply % Resolved % Apply Claude 3 Opus 3.79 46.56 ..."
+    },
+    {
+      "case_id": "PB-008",
+      "paper_id": "arxiv:2404.07972",
+      "page_number": 10,
+      "category": "native_table_complex",
+      "status": "ok",
+      "extract_latency_ms": 60.01,
+      "metrics": {
+        "char_count": 4043,
+        "line_count": 58,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 0,
+        "non_printable_char_ratio": 0.0
+      },
+      "quality_flags": [],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": true,
+      "table_question_results": [
+        {
+          "question": "OSWorld 表 5 中 Human Performance 的 Overall success rate 是多少？",
+          "expected_answer": "72.36%",
+          "answer_present": true,
+          "context_anchors_pass": true
+        }
+      ],
+      "text_sha256": "1bb82932bdb5b64db682691bc9ee99ffd1a7d7fe70139c3a5fc5b5142cf6b585",
+      "preview": "Table 5: Success rates of baseline LLM and VLM agents on OSW ORLD , grouped by task categories: OS, Office (LibreOffice Calc, Impress, Writer), Daily (Chrome, VLC Player, Thunderbird), Profes- sional (VS Code and GIMP) and Workflow (task..."
+    },
+    {
+      "case_id": "PB-009",
+      "paper_id": "arxiv:2308.10144",
+      "page_number": 16,
+      "category": "short_visual_page",
+      "status": "short",
+      "extract_latency_ms": 20.05,
+      "metrics": {
+        "char_count": 83,
+        "line_count": 2,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 0,
+        "non_printable_char_ratio": 0.0
+      },
+      "quality_flags": [
+        "short_page"
+      ],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "97a11f4c91751495b3429a6413ce0765761ac7d06d13d4688beade440fb5ceb3",
+      "preview": "Figure 7: ExpeL HotpotQA Acting Template. Figure 8: ExpeL ALFWorld Acting Template."
+    },
+    {
+      "case_id": "PB-010",
+      "paper_id": "arxiv:2308.10144",
+      "page_number": 30,
+      "category": "image_only",
+      "status": "empty",
+      "extract_latency_ms": 14.19,
+      "metrics": {
+        "char_count": 0,
+        "line_count": 0,
+        "replacement_char_count": 0,
+        "replacement_char_ratio": 0.0,
+        "control_char_count": 0,
+        "control_char_ratio": 0.0,
+        "private_use_char_count": 0,
+        "private_use_char_ratio": 0.0,
+        "non_printable_char_count": 0,
+        "non_printable_char_ratio": 0.0
+      },
+      "quality_flags": [
+        "empty_page"
+      ],
+      "text_layer_expectation_pass": true,
+      "expected_contains_pass": true,
+      "table_questions_pass": null,
+      "table_question_results": [],
+      "text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "preview": ""
+    }
+  ]
+}

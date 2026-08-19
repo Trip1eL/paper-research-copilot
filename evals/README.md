@@ -8,6 +8,27 @@
 相关论文、相关页码和证据提示。它用于下一阶段建立 Recall@K Baseline，目前不包含模型输出、
 检索结果或评分，因此不是完整的 Golden Dataset。
 
+## PDF Parse Benchmark v1
+
+`datasets/parse_benchmark_v1.jsonl` 冻结了 Corpus v3 的 10 个视觉复核页面，覆盖正常正文、双栏、
+公式、三种原生表格、乱码图、短视觉页和无文本层图片页。每个 Case 固定 arXiv revision、PDF
+SHA-256、页码、类别和确定性文本锚点；Loader 会拒绝重复 ID、路径越界、Hash 不一致和越界页码。
+
+运行 `pypdf` v1 Baseline：
+
+```powershell
+conda run --no-capture-output -n paper-research-copilot `
+  python scripts/run_parse_benchmark.py
+```
+
+产物为 `baselines/parse_pypdf_v1.json|md`。该 Runner 只读取本地 PDF，不调用 Embedding、LLM 或
+Qdrant，也不保存完整页面文本。当前结果为：Empty `10%`、Short `10%`、Suspicious chars `40%`，
+Text/Table anchors 均为 `100%`。Table anchors 只证明答案和上下文字串仍存在，不代表行列结构已恢复。
+
+字符阈值同时标记了两个真实乱码页和公式/tau-bench 页，因此它只能作为 Quality Router 的输入
+特征，不能直接等同于 OCR 路由。当前 Corpus 没有合适的扫描表格金标；MinerU Spike 前需补充一个
+固定来源与答案的扫描表格 Case，不能用 ExpeL 的图片轨迹页代替。
+
 校验数据结构及论文 ID：
 
 ```powershell

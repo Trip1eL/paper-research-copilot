@@ -433,6 +433,10 @@ api/
 
 ### Phase 0：冻结 Baseline 与建立问题样本
 
+状态：已于 2026-08-19 完成。正式 Dataset 为 `evals/datasets/parse_benchmark_v1.jsonl`，可复现
+报告为 `evals/baselines/parse_pypdf_v1.json|md`。当前 Corpus 不包含合适的扫描表格金标，该样本
+作为 MinerU Spike 的前置补充项保留，不以普通图片页替代。
+
 模块：`evaluation`、`scripts`、`tests/fixtures`。
 
 - 从现有 Corpus 和用户遇到的 PDF 中建立 Parse Benchmark Manifest。
@@ -526,5 +530,5 @@ quarantine；动态 Collection 与 Corpus v3 完全分离。
 | `evaluation` | Parse、Open-world、Persistence 指标和 Harness | 修改生产行为 |
 | `frontend` | Acquisition/Resume 可观察性 | 保存 Agent 私有 State |
 
-执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。当前第一个编码任务是
-Phase 0：建立 Parse Benchmark Manifest 和 v1 Baseline Runner；完成后再进入 Phase 1 的双 Parser。
+执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0 已完成；下一步
+进入 Phase 1，先定义 Parse provenance 与 Quality Result，再实现双 Parser 和 shadow Router。
