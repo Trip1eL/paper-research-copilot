@@ -2,8 +2,11 @@
 
 import time
 from collections.abc import Callable, Sequence
-from typing import Literal, Protocol, runtime_checkable
+from contextvars import ContextVar
+from typing import Any, Literal, Protocol, cast, runtime_checkable
 
+from langchain_core.runnables import RunnableConfig
+from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
@@ -18,6 +21,11 @@ from paper_research_copilot.agent.state import ResearchState
 from paper_research_copilot.domain import Answer, RetrievedChunk
 from paper_research_copilot.reporting import AnswerGenerationTrace
 from paper_research_copilot.retrieval import CandidateRetriever, coverage_round_robin
+
+_EVENT_CALLBACK: ContextVar[Callable[[AgentEvent], None] | None] = ContextVar(
+    "research_agent_event_callback",
+    default=None,
+)
 
 
 class AnswerWriter(Protocol):
@@ -43,12 +51,14 @@ class ResearchAgentRuntime:
         answer_writer: AnswerWriter,
         *,
         config: AgentRuntimeConfig | None = None,
+        checkpointer: BaseCheckpointSaver[Any] | None = None,
         close_callback: Callable[[], None] | None = None,
     ) -> None:
         self._planner = planner
         self._retriever = retriever
         self._answer_writer = answer_writer
         self.config = config or AgentRuntimeConfig()
+        self._checkpointer = checkpointer
         self._close_callback = close_callback
         self._closed = False
         self._graph = self._build_graph()
@@ -58,6 +68,7 @@ class ResearchAgentRuntime:
         question: str,
         *,
         event_callback: Callable[[AgentEvent], None] | None = None,
+        task_id: str | None = None,
     ) -> AgentResult:
         normalized_question = question.strip()
         if not normalized_question:
@@ -72,11 +83,42 @@ class ResearchAgentRuntime:
             rankings_by_task={},
             task_candidate_counts={},
             task_selected_counts={},
-            event_callback=event_callback,
         )
-        final_state = self._graph.invoke(initial, config={"recursion_limit": 12})
+        config = self._graph_config(task_id)
+        token = _EVENT_CALLBACK.set(event_callback)
+        try:
+            final_state = self._graph.invoke(initial, config=config)
+        finally:
+            _EVENT_CALLBACK.reset(token)
+        return self._result(normalized_question, cast(ResearchState, final_state))
+
+    def can_resume(self, task_id: str) -> bool:
+        if self._checkpointer is None:
+            return False
+        return self._checkpointer.get_tuple(self._graph_config(task_id)) is not None
+
+    def resume(
+        self,
+        task_id: str,
+        *,
+        event_callback: Callable[[AgentEvent], None] | None = None,
+    ) -> AgentResult:
+        if self._closed:
+            raise RuntimeError("Research Agent Runtime is closed")
+        if not self.can_resume(task_id):
+            raise LookupError(f"No LangGraph checkpoint exists for task: {task_id}")
+        token = _EVENT_CALLBACK.set(event_callback)
+        try:
+            final_state = self._graph.invoke(None, config=self._graph_config(task_id))
+        finally:
+            _EVENT_CALLBACK.reset(token)
+        typed_state = cast(ResearchState, final_state)
+        question = typed_state["question"]
+        return self._result(question, typed_state)
+
+    def _result(self, question: str, final_state: ResearchState) -> AgentResult:
         return AgentResult(
-            question=normalized_question,
+            question=question,
             plan=final_state["plan"],
             evidence=final_state["evidence"],
             assessment=final_state["assessment"],
@@ -111,7 +153,18 @@ class ResearchAgentRuntime:
         graph.add_edge("revise_queries", "retrieve_evidence")
         graph.add_edge("write_report", "validate_citations")
         graph.add_edge("validate_citations", END)
-        return graph.compile(name="paper-research-agent-v1")
+        return graph.compile(
+            checkpointer=self._checkpointer,
+            name="paper-research-agent-v2",
+        )
+
+    def _graph_config(self, task_id: str | None) -> RunnableConfig:
+        config: RunnableConfig = {"recursion_limit": 12}
+        if self._checkpointer is not None:
+            if not task_id:
+                raise ValueError("task_id is required when checkpointing is enabled")
+            config["configurable"] = {"thread_id": task_id}
+        return config
 
     def _plan_research(self, state: ResearchState) -> ResearchState:
         started = time.perf_counter()
@@ -348,7 +401,7 @@ def _append_event(
         latency_ms=latency_ms,
         details=details,
     )
-    callback = state.get("event_callback")
+    callback = _EVENT_CALLBACK.get()
     if callback is not None:
         callback(event)
     return (*trace, event)

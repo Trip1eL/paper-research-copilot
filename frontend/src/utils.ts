@@ -3,6 +3,8 @@ import type { ResearchStreamEvent, TaskStatus } from "./types";
 const EVENT_LABELS: Record<string, string> = {
   task_queued: "任务已进入队列",
   task_started: "开始研究",
+  task_interrupted: "任务已中断",
+  task_resumed: "任务已恢复",
   plan_research: "规划研究任务",
   retrieve_evidence: "检索论文证据",
   assess_evidence: "评估证据充分性",
@@ -17,6 +19,7 @@ export const statusLabel = (status: TaskStatus): string =>
   ({
     queued: "排队中",
     running: "研究中",
+    interrupted: "已中断",
     succeeded: "已完成",
     failed: "失败",
   })[status];

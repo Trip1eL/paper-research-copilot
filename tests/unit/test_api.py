@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -13,6 +14,10 @@ from paper_research_copilot.agent import (
 from paper_research_copilot.api import ResearchTaskService, create_app
 from paper_research_copilot.config import Settings
 from paper_research_copilot.domain import Answer
+from paper_research_copilot.storage import (
+    InMemoryResearchRepository,
+    SqliteResearchRepository,
+)
 
 QUESTION = "How does episodic memory improve later attempts?"
 
@@ -78,6 +83,7 @@ class _FakeRuntime:
         question: str,
         *,
         event_callback: Callable[[AgentEvent], None] | None = None,
+        task_id: str | None = None,
     ) -> AgentResult:
         assert question == QUESTION
         if self.error is not None:
@@ -87,6 +93,37 @@ class _FakeRuntime:
             for event in result.trace:
                 event_callback(event)
         return result
+
+    def can_resume(self, task_id: str) -> bool:
+        return True
+
+    def resume(
+        self,
+        task_id: str,
+        *,
+        event_callback: Callable[[AgentEvent], None] | None = None,
+    ) -> AgentResult:
+        result = _result()
+        if event_callback is not None:
+            for event in result.trace:
+                event_callback(event)
+        return result
+
+    def close(self) -> None:
+        self.closed = True
+
+
+class _FakeCheckpointStore:
+    storage_name = "sqlite"
+
+    def __init__(self) -> None:
+        self.closed = False
+
+    def has_checkpoint(self, thread_id: str) -> bool:
+        return True
+
+    def probe(self) -> tuple[bool, str | None]:
+        return True, None
 
     def close(self) -> None:
         self.closed = True
@@ -164,6 +201,67 @@ def test_request_contract_rejects_short_or_unknown_fields() -> None:
 
         assert short.status_code == 422
         assert extra.status_code == 422
+
+
+def test_interrupted_task_can_be_explicitly_resumed() -> None:
+    runtime = _FakeRuntime()
+    repository = InMemoryResearchRepository()
+    created_at = datetime.now(UTC)
+    repository.create_task(task_id="resume-task", question=QUESTION, created_at=created_at)
+    repository.start_task("resume-task", started_at=created_at)
+    checkpoint_store = _FakeCheckpointStore()
+    service = ResearchTaskService(
+        lambda: runtime,
+        repository=repository,
+        checkpoint_store=checkpoint_store,
+    )
+
+    with TestClient(
+        create_app(task_service=service, settings=Settings(), frontend_dir=None)
+    ) as client:
+        before = client.get("/api/v1/research/resume-task").json()
+        accepted = client.post("/api/v1/research/resume-task/resume")
+        stream = client.get("/api/v1/research/resume-task/events?after=3")
+        after = client.get("/api/v1/research/resume-task").json()
+
+        assert before["status"] == "interrupted"
+        assert accepted.status_code == 202
+        assert accepted.json()["status"] == "queued"
+        assert "event: task_resumed" in stream.text
+        assert "event: task_succeeded" in stream.text
+        assert after["status"] == "succeeded"
+    assert checkpoint_store.closed
+
+
+def test_task_result_and_sse_cursor_survive_service_recreation(tmp_path: Path) -> None:
+    database_path = tmp_path / "app.db"
+    first_service = ResearchTaskService(
+        lambda: _FakeRuntime(),
+        repository=SqliteResearchRepository(database_path),
+    )
+    with TestClient(
+        create_app(task_service=first_service, settings=Settings(), frontend_dir=None)
+    ) as client:
+        accepted = client.post("/api/v1/research", json={"question": QUESTION}).json()
+        task_id = accepted["task_id"]
+        client.get(f"/api/v1/research/{task_id}/events")
+        original = client.get(f"/api/v1/research/{task_id}").json()
+
+    second_service = ResearchTaskService(
+        lambda: _FakeRuntime(),
+        repository=SqliteResearchRepository(database_path),
+    )
+    with TestClient(
+        create_app(task_service=second_service, settings=Settings(), frontend_dir=None)
+    ) as client:
+        restored = client.get(f"/api/v1/research/{task_id}")
+        tail = client.get(
+            f"/api/v1/research/{task_id}/events?after={original['event_count'] - 1}"
+        )
+
+        assert restored.status_code == 200
+        assert restored.json()["result"] == original["result"]
+        assert tail.text.count("event: task_succeeded") == 1
 
 
 def test_built_frontend_is_served_with_spa_fallback(tmp_path: Path) -> None:

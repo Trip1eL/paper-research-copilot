@@ -15,6 +15,7 @@ interface ResearchSidebarProps {
   onQuestionChange: (question: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   submitting: boolean;
+  resuming: boolean;
   active: boolean;
   taskMeta: ResearchTaskAccepted | null;
   task: ResearchTaskView | null;
@@ -22,6 +23,7 @@ interface ResearchSidebarProps {
   connection: "idle" | "sse" | "polling" | "closed";
   error: string | null;
   onReset: () => void;
+  onResume: () => void;
 }
 
 export function ResearchSidebar({
@@ -29,6 +31,7 @@ export function ResearchSidebar({
   onQuestionChange,
   onSubmit,
   submitting,
+  resuming,
   active,
   taskMeta,
   task,
@@ -36,6 +39,7 @@ export function ResearchSidebar({
   connection,
   error,
   onReset,
+  onResume,
 }: ResearchSidebarProps) {
   const result = task?.result;
   return (
@@ -129,6 +133,17 @@ export function ResearchSidebar({
         )}
 
         {error ? <div className="error-message">{error}</div> : null}
+        {status === "interrupted" ? (
+          <button
+            className="primary-button"
+            type="button"
+            onClick={onResume}
+            disabled={resuming}
+          >
+            <Play size={17} fill="currentColor" aria-hidden="true" />
+            <span>{resuming ? "正在恢复" : "继续任务"}</span>
+          </button>
+        ) : null}
       </div>
 
       {result ? (

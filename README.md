@@ -44,9 +44,10 @@ LangGraph Agent Runtime
 
 FastAPI Task Layer
   -> POST asynchronous research task
-  -> in-memory single-worker execution
+  -> SQLite persistent single-worker execution
+  -> LangGraph SQLite checkpoint + explicit Resume
   -> live LangGraph node events over SSE
-  -> task status + complete AgentResult
+  -> durable task status + Event + complete AgentResult
 
 React Research Workspace
   -> research question + task status
@@ -68,6 +69,11 @@ v2 Phase 2 已完成 MinerU 3.4.5 Structured Parser Technical Spike。原生与�
 达到 `100%`，但当前 Windows CPU Demo 环境的 OCR recovery、连续运行稳定性和 Formula 内存均未
 通过生产 Gate，因此 MinerU 只保留为隔离实验能力，尚未替换生产 `PdfParser`。完整结论见
 `docs/mineru-spike.md`。
+
+v2 Phase 3 已完成 Persistent Store Foundation：`data/app.db` 通过 SQLAlchemy 2 + Alembic 保存
+Task、Event 和 Result，`data/checkpoints.db` 由 LangGraph SQLite Checkpointer 保存 Graph State。
+服务重启后 running Task 转为 interrupted，可通过显式 Resume 从最近已提交 node 继续；SSE
+`after=N` 和最终 Result 在重启后仍可查询。当前仍保持单机、单 Worker，不宣称水平扩容能力。
 
 当前版本已将评测后的 Dense 与 Hybrid RRF 接入主链路，并实现可观测的 Cross-Encoder
 Reranker 实验层，是后续 Answer Evaluation 和 Agent Runtime 的基础。
@@ -552,8 +558,8 @@ Smoke Test 验证。
   固定 RAG 仍由实验脚本显式调用，Agent Runtime 则根据结构化 Plan 自动选择 Coverage。
 - Citation 契约负责引用存在性与定位；LLM Judge 已补充 Claim-Evidence entailment 评估，
   但单 Judge 仍可能有偏差，需要人工抽查。
-- 当前提供 CLI、LangGraph Agent Runtime、单机 FastAPI/SSE Task Layer 和 React Research
-  Workspace；持久化 Task Store、LangGraph Checkpointer、认证与长期 Memory 尚未实现。
+- 当前提供 CLI、LangGraph Agent Runtime、SQLite 持久 FastAPI/SSE Task Layer 和 React Research
+  Workspace；认证、长期用户 Memory、动态学术搜索与多实例 Worker 尚未实现。
 
 设计文档见 [docs/architecture.md](docs/architecture.md)、
 [docs/retrieval.md](docs/retrieval.md)、[docs/evaluation.md](docs/evaluation.md) 和

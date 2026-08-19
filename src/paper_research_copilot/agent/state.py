@@ -1,6 +1,5 @@
 """LangGraph state shared by all first-version Agent nodes."""
 
-from collections.abc import Callable
 from typing import TypedDict
 
 from paper_research_copilot.agent.models import (
@@ -22,4 +21,3 @@ class ResearchState(TypedDict, total=False):
     retry_count: int
     answer: Answer
     trace: tuple[AgentEvent, ...]
-    event_callback: Callable[[AgentEvent], None] | None

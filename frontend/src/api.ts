@@ -34,9 +34,16 @@ export const createResearchTask = async (
 export const getResearchTask = async (taskUrl: string): Promise<ResearchTaskView> =>
   parseResponse<ResearchTaskView>(await fetch(taskUrl));
 
+export const resumeResearchTask = async (taskUrl: string): Promise<ResearchTaskAccepted> =>
+  parseResponse<ResearchTaskAccepted>(
+    await fetch(`${taskUrl}/resume`, { method: "POST" }),
+  );
+
 const EVENT_TYPES = [
   "task_queued",
   "task_started",
+  "task_interrupted",
+  "task_resumed",
   "agent_node",
   "task_succeeded",
   "task_failed",
@@ -46,8 +53,10 @@ export const subscribeToResearchEvents = (
   eventsUrl: string,
   onEvent: (event: ResearchStreamEvent) => void,
   onConnectionError: () => void,
+  after = 0,
 ): EventSource => {
-  const source = new EventSource(eventsUrl);
+  const separator = eventsUrl.includes("?") ? "&" : "?";
+  const source = new EventSource(`${eventsUrl}${separator}after=${after}`);
   for (const eventType of EVENT_TYPES) {
     source.addEventListener(eventType, (message) => {
       onEvent(JSON.parse((message as MessageEvent<string>).data) as ResearchStreamEvent);

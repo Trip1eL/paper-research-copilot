@@ -7,10 +7,18 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from paper_research_copilot.agent import AgentEvent, AgentResult
 
-ResearchTaskStatus = Literal["queued", "running", "succeeded", "failed"]
+ResearchTaskStatus = Literal[
+    "queued",
+    "running",
+    "interrupted",
+    "succeeded",
+    "failed",
+]
 ResearchEventType = Literal[
     "task_queued",
     "task_started",
+    "task_interrupted",
+    "task_resumed",
     "agent_node",
     "task_succeeded",
     "task_failed",
@@ -76,7 +84,9 @@ class HealthResponse(BaseModel):
     runtime_error: str | None = None
     corpus_version: int
     qdrant_collection: str
-    task_store: Literal["memory"] = "memory"
+    task_store: Literal["memory", "sqlite"]
+    checkpoint_ready: bool
+    checkpoint_error: str | None = None
     queued_tasks: int = Field(ge=0)
     running_tasks: int = Field(ge=0)
     completed_tasks: int = Field(ge=0)

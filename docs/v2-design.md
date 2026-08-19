@@ -492,14 +492,20 @@ fallback。完整证据见 `docs/mineru-spike.md`、ADR 006 和
 
 ### Phase 3：Persistent Store Foundation
 
+状态：已于 2026-08-19 完成 Task Runtime Foundation。Paper Asset 与 Acquisition Run 的 Schema
+随 Phase 4 领域模型实现，避免为尚未稳定的动态扩库字段提前固化空表。
+
 模块：`storage`、`api`、`agent`、`tests/integration`。
 
 - 建立 SQLAlchemy Model、Alembic Migration 和 Repository Protocol。
-- 持久化 Task、Event、Result、Paper Asset 和 Acquisition Run。
+- 持久化 Task、Event、Result；状态与对应 SSE Event 在同一事务中提交。
 - 替换进程内 Task/Event Store，保持现有 HTTP/SSE 契约兼容。
 - 接入独立 LangGraph SQLite Checkpointer，增加 interrupted 与 Resume 语义。
 
 完成条件：重启后 Task/Event/Result 可查询；SSE sequence 可续读；node-boundary Resume 不重复事件。
+
+验证结果：SQLite/Alembic 重开和幂等 Migration 通过；真实 LangGraph 故障恢复没有重复执行 Planner；
+API Resume 状态机与跨 Service 重建的 Result/SSE cursor 均通过自动化测试。
 
 ### Phase 4：Academic Search 与 Dynamic Ingestion
 
@@ -551,5 +557,5 @@ quarantine；动态 Collection 与 Corpus v3 完全分离。
 | `evaluation` | Parse、Open-world、Persistence 指标和 Harness | 修改生产行为 |
 | `frontend` | Acquisition/Resume 可观察性 | 保存 Agent 私有 State |
 
-执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0 已完成；下一步
-进入 Phase 1，先定义 Parse provenance 与 Quality Result，再实现双 Parser 和 shadow Router。
+执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0-3 已完成；
+下一步进入 Phase 4，先实现 arXiv Metadata Search 与 Candidate Model，再增加受控下载和动态摄取。

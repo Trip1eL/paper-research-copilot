@@ -1,7 +1,11 @@
 """Production builder for the bounded LangGraph research runtime."""
 
 import re
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
+
+from langgraph.checkpoint.base import BaseCheckpointSaver
 
 from paper_research_copilot.agent.models import AgentRuntimeConfig
 from paper_research_copilot.agent.planner import CachedResearchPlanner
@@ -21,6 +25,8 @@ def build_agent_runtime(
     collection_name: str = "agent_seed_v3_bge_m3_chunking_v1",
     planner_cache_path: Path | None = None,
     config: AgentRuntimeConfig | None = None,
+    checkpointer: BaseCheckpointSaver[Any] | None = None,
+    close_callback: Callable[[], None] | None = None,
 ) -> ResearchAgentRuntime:
     relay_url, relay_key = settings.require_relay_credentials()
     llm_url, llm_key = settings.require_llm_credentials()
@@ -65,6 +71,11 @@ def build_agent_runtime(
                 max_tokens=settings.answer_max_tokens,
             )
         )
+        def close_runtime_resources() -> None:
+            retrieval_runtime.close()
+            if close_callback is not None:
+                close_callback()
+
         return ResearchAgentRuntime(
             planner,
             retrieval_runtime.retriever_for(RetrievalMode.DISCOVERY),
@@ -76,7 +87,8 @@ def build_agent_runtime(
                 max_retries=settings.agent_max_retries,
                 min_chunks_per_task=settings.agent_min_chunks_per_task,
             ),
-            close_callback=retrieval_runtime.close,
+            checkpointer=checkpointer,
+            close_callback=close_runtime_resources,
         )
     except Exception:
         retrieval_runtime.close()

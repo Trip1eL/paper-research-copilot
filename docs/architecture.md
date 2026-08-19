@@ -14,7 +14,10 @@ SSE sequence 和选中结果 Tab，不拥有 Agent 决策状态。
 ```mermaid
 flowchart TD
     UI["React Research Workspace"] -->|"HTTP + SSE"| API["FastAPI Task Layer"]
-    API --> LG["LangGraph Agent Runtime"]
+    API --> TS["Persistent ResearchTaskService"]
+    TS --> APPDB["SQLite app.db: Task / Event / Result"]
+    TS --> LG["LangGraph Agent Runtime"]
+    LG --> CP["SQLite checkpoints.db"]
     LG --> P["gpt-5.5 Research Planner"]
     P --> R{"Question Route"}
     R -->|"single_paper"| H["Hybrid RRF"]
@@ -40,11 +43,16 @@ flowchart TD
 ```text
 POST /api/v1/research
   -> ResearchTaskService
-       in-memory Task Store
+       SQLite Repository (Task / Event / Result)
        single-worker Executor
-  -> ResearchAgentRuntime.run(event_callback)
+  -> ResearchAgentRuntime.run(task_id, event_callback)
+  -> LangGraph SQLite Checkpoint (thread_id = task_id)
   -> SSE agent_node events
   -> GET task status / AgentResult
+
+POST /api/v1/research/{task_id}/resume
+  -> interrupted -> queued -> running
+  -> continue from last committed LangGraph node
 ```
 
 API 通过回调接收 Runtime 已有的 `AgentEvent`，不读取 LangGraph 私有 State，也不重复实现节点
@@ -118,7 +126,8 @@ model、Prompt version 和精确输出建立 JSONL 缓存；缓存命中不会�
 | `ingestion` | PDF Parse、Chunk 和版本化 Corpus 导入 |
 | `retrieval` | Dense、BM25、RRF、MMR、Rewrite、Reranker 与 Coverage Merge |
 | `evaluation` | Dataset、指标、实验执行、缓存与对照报告 |
-| `api` | FastAPI 契约、内存任务生命周期与 SSE，不承载研究逻辑 |
+| `storage` | Repository Protocol、SQLAlchemy/Alembic 业务库与 LangGraph Checkpoint 生命周期 |
+| `api` | FastAPI 契约、持久任务生命周期、Resume 与 SSE，不承载研究逻辑 |
 | `frontend` | React 工作台、SSE 消费与 Report/Evidence/Plan 展示 |
 
 依赖规则：
@@ -134,9 +143,9 @@ model、Prompt version 和精确输出建立 JSONL 缓存；缓存命中不会�
 模型路由见 `docs/adr/001-model-routing.md`，Corpus 与存储决策见
 `docs/adr/002-retrieval-storage.md`。
 
-v2.0 的 Parser Quality Router、Dynamic Corpus 与 Durable Runtime 仍处于设计阶段，目标架构、
-数据模型、实施顺序和验收标准见 `docs/v2-design.md`。该设计不会静默改变本页记录的 v1.0.0
-生产行为或 Corpus v3 Baseline。
+v2.0 的 Parser Quality Router Shadow、MinerU Spike 与 Durable Runtime Foundation 已实现；
+Dynamic Corpus 仍处于下一阶段。实施顺序和验收标准见 `docs/v2-design.md`，Corpus v3 Baseline
+保持冻结。
 
 ## 当前约束
 
@@ -144,6 +153,7 @@ v2.0 的 Parser Quality Router、Dynamic Corpus 与 Durable Runtime 仍处于设
   延迟。
 - `max_retries` 被 Schema 限制为 0 或 1，不存在开放式自主循环。
 - Evidence Gate 是可解释启发式，不等价于语义 Claim-Evidence Verification。
-- 当前未启用 LangGraph Checkpointer、长期 Memory、Interrupt、Web Search 或多 Agent。
-- API Task Store 仅在当前进程内存中保存，服务重启后不恢复；当前不支持多 Uvicorn Worker。
+- 当前启用 LangGraph SQLite Checkpointer，但它只提供 node-boundary Resume，不是长期用户 Memory。
+- API 使用单机 SQLite 和单 Worker；不支持多 Uvicorn Worker 或水平扩容。
+- 动态学术搜索与扩库尚未接入，Corpus 外问题仍会结构化拒答。
 - API 仅绑定本机且没有认证，不应直接暴露到公网。

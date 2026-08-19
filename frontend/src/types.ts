@@ -1,8 +1,10 @@
-export type TaskStatus = "queued" | "running" | "succeeded" | "failed";
+export type TaskStatus = "queued" | "running" | "interrupted" | "succeeded" | "failed";
 
 export type EventType =
   | "task_queued"
   | "task_started"
+  | "task_interrupted"
+  | "task_resumed"
   | "agent_node"
   | "task_succeeded"
   | "task_failed";
@@ -118,7 +120,9 @@ export interface HealthResponse {
   runtime_error: string | null;
   corpus_version: number;
   qdrant_collection: string;
-  task_store: "memory";
+  task_store: "memory" | "sqlite";
+  checkpoint_ready: boolean;
+  checkpoint_error: string | null;
   queued_tasks: number;
   running_tasks: number;
   completed_tasks: number;

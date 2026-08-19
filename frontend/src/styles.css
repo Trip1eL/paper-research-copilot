@@ -372,6 +372,11 @@ p {
   background: var(--blue-soft);
 }
 
+.status-badge.interrupted {
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
 .status-badge.succeeded {
   color: var(--green);
   background: var(--green-soft);

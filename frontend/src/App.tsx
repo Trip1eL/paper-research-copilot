@@ -5,6 +5,7 @@ import {
   createResearchTask,
   getHealth,
   getResearchTask,
+  resumeResearchTask,
   subscribeToResearchEvents,
 } from "./api";
 import { AgentTimeline } from "./components/AgentTimeline";
@@ -31,6 +32,7 @@ export default function App() {
   const [events, setEvents] = useState<ResearchStreamEvent[]>([]);
   const [status, setStatus] = useState<TaskStatus | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [resuming, setResuming] = useState(false);
   const [connection, setConnection] = useState<ConnectionState>("idle");
   const [error, setError] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -70,7 +72,11 @@ export default function App() {
       const snapshot = await getResearchTask(taskUrl);
       setTask(snapshot);
       setStatus(snapshot.status);
-      if (snapshot.status === "succeeded" || snapshot.status === "failed") {
+      if (
+        snapshot.status === "interrupted" ||
+        snapshot.status === "succeeded" ||
+        snapshot.status === "failed"
+      ) {
         stopConnections();
         setConnection("closed");
       }
@@ -97,7 +103,7 @@ export default function App() {
   );
 
   const connectEvents = useCallback(
-    (accepted: ResearchTaskAccepted) => {
+    (accepted: ResearchTaskAccepted, after = 0) => {
       let terminalReached = false;
       setConnection("sse");
       const source = subscribeToResearchEvents(
@@ -105,7 +111,11 @@ export default function App() {
         (incoming) => {
           setEvents((current) => mergeEvents(current, incoming));
           setStatus(incoming.status);
-          if (incoming.event_type === "task_succeeded" || incoming.event_type === "task_failed") {
+          if (
+            incoming.event_type === "task_interrupted" ||
+            incoming.event_type === "task_succeeded" ||
+            incoming.event_type === "task_failed"
+          ) {
             terminalReached = true;
             source.close();
             eventSourceRef.current = null;
@@ -117,6 +127,7 @@ export default function App() {
           eventSourceRef.current = null;
           if (!terminalReached) startPolling(accepted.task_url);
         },
+        after,
       );
       eventSourceRef.current = source;
     },
@@ -145,6 +156,23 @@ export default function App() {
     }
   };
 
+  const resume = async () => {
+    if (!task || task.status !== "interrupted") return;
+    stopConnections();
+    setResuming(true);
+    setError(null);
+    try {
+      const accepted = await resumeResearchTask(`/api/v1/research/${task.task_id}`);
+      setTaskMeta(accepted);
+      setStatus(accepted.status);
+      connectEvents(accepted, Math.max(0, ...events.map((item) => item.sequence)));
+    } catch (resumeError) {
+      setError(resumeError instanceof Error ? resumeError.message : "任务恢复失败");
+    } finally {
+      setResuming(false);
+    }
+  };
+
   const reset = () => {
     stopConnections();
     setQuestion("");
@@ -167,6 +195,7 @@ export default function App() {
           onQuestionChange={setQuestion}
           onSubmit={(event) => void submit(event)}
           submitting={submitting}
+          resuming={resuming}
           active={active}
           taskMeta={taskMeta}
           task={task}
@@ -174,6 +203,7 @@ export default function App() {
           connection={connection}
           error={error ?? task?.error ?? null}
           onReset={reset}
+          onResume={() => void resume()}
         />
         <AgentTimeline events={events} />
         <ResearchResult task={task} active={active} />

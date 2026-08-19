@@ -18,8 +18,12 @@ from paper_research_copilot.api.models import (
     ResearchTaskAccepted,
     ResearchTaskView,
 )
-from paper_research_copilot.api.service import ResearchTaskService
+from paper_research_copilot.api.service import ResearchTaskService, TaskResumeError
 from paper_research_copilot.config import PROJECT_ROOT, Settings, get_settings
+from paper_research_copilot.storage import (
+    SqliteCheckpointStore,
+    SqliteResearchRepository,
+)
 
 API_PREFIX = "/api/v1"
 CORPUS_VERSION = 3
@@ -35,13 +39,25 @@ def create_app(
     frontend_dir: Path | None = DEFAULT_FRONTEND_DIR,
 ) -> FastAPI:
     resolved_settings = settings or get_settings()
-    service = task_service or ResearchTaskService(
-        lambda: build_agent_runtime(
-            resolved_settings,
-            version=CORPUS_VERSION,
-            collection_name=DEFAULT_COLLECTION,
+    if task_service is None:
+        repository = SqliteResearchRepository(
+            resolved_settings.resolved_app_database_path()
         )
-    )
+        checkpoint_store = SqliteCheckpointStore(
+            resolved_settings.resolved_checkpoint_database_path()
+        )
+        service = ResearchTaskService(
+            lambda: build_agent_runtime(
+                resolved_settings,
+                version=CORPUS_VERSION,
+                collection_name=DEFAULT_COLLECTION,
+                checkpointer=checkpoint_store.saver,
+            ),
+            repository=repository,
+            checkpoint_store=checkpoint_store,
+        )
+    else:
+        service = task_service
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -58,13 +74,22 @@ def create_app(
     @application.get("/health", response_model=HealthResponse)
     async def health() -> HealthResponse:
         runtime_ready, runtime_error = await asyncio.to_thread(service.probe_runtime)
+        checkpoint_ready, checkpoint_error = service.probe_checkpoint()
         queued, running, completed = service.task_counts()
         return HealthResponse(
-            status="ok" if runtime_ready else "degraded",
+            status=(
+                "ok"
+                if runtime_ready
+                and (service.task_store_name == "memory" or checkpoint_ready)
+                else "degraded"
+            ),
             runtime_ready=runtime_ready,
             runtime_error=runtime_error,
             corpus_version=CORPUS_VERSION,
             qdrant_collection=DEFAULT_COLLECTION,
+            task_store=service.task_store_name,
+            checkpoint_ready=checkpoint_ready,
+            checkpoint_error=checkpoint_error,
             queued_tasks=queued,
             running_tasks=running,
             completed_tasks=completed,
@@ -95,6 +120,28 @@ def create_app(
     )
     async def get_research_task(task_id: str) -> ResearchTaskView:
         return _get_task_or_404(service, task_id)
+
+    @application.post(
+        f"{API_PREFIX}/research/{{task_id}}/resume",
+        response_model=ResearchTaskAccepted,
+        status_code=status.HTTP_202_ACCEPTED,
+    )
+    async def resume_research_task(task_id: str) -> ResearchTaskAccepted:
+        _get_task_or_404(service, task_id)
+        try:
+            task = service.resume(task_id)
+        except TaskResumeError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        task_url = f"{API_PREFIX}/research/{task.task_id}"
+        return ResearchTaskAccepted(
+            task_id=task.task_id,
+            status=task.status,
+            created_at=task.created_at,
+            task_url=task_url,
+            events_url=f"{task_url}/events",
+        )
 
     @application.get(f"{API_PREFIX}/research/{{task_id}}/events")
     async def stream_research_events(

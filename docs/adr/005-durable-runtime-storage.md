@@ -1,6 +1,6 @@
 # ADR 005: Durable Single-node Runtime Storage
 
-- Status: Accepted for v2.0
+- Status: Implemented in v2.0 Phase 3
 - Date: 2026-08-19
 
 ## Context
@@ -12,8 +12,8 @@ SSE 事件和结果全部丢失，LangGraph 也没有 Checkpointer。动态下�
 ## Decision
 
 - v2.0 保持单机、单 Worker 运行模型，不引入 Redis/Celery。
-- 使用 SQLAlchemy 2 + Alembic 管理 `data/app.db`，保存 Task、Event、Result、Paper Registry 和
-  Acquisition Run。
+- 使用 SQLAlchemy 2 + Alembic 管理 `data/app.db`。Phase 3 先保存 Task、Event、Result；Paper
+  Registry 和 Acquisition Run 随 Phase 4 的稳定领域模型增加后续 Migration。
 - 使用 `langgraph-checkpoint-sqlite` 管理独立的 `data/checkpoints.db`。
 - API/Agent 通过 Repository Protocol 访问业务数据，不依赖 ORM Model。
 - Graph `thread_id` 固定为 API `task_id`，只保证已提交 node 边界的恢复。
@@ -34,3 +34,10 @@ SSE 事件和结果全部丢失，LangGraph 也没有 Checkpointer。动态下�
 
 v2.0 能证明重启恢复和副作用幂等，但不宣称支持水平扩容或多 Uvicorn Worker。Repository 边界允许
 未来把 Application Store 切换到 PostgreSQL，而不修改 API/Agent 契约。
+
+## Verification
+
+- SQLite Repository 重开后 Task、Event、Result 与 `after=N` cursor 保持有效。
+- Alembic `upgrade head` 可重复执行，事件使用 `(task_id, sequence)` 唯一约束。
+- 真实 LangGraph 在 Retrieval 节点故障后关闭并重开 `checkpoints.db`，Resume 不重复 Planner 节点。
+- API 显式执行 `interrupted -> queued -> running -> succeeded`，重复或无 checkpoint Resume 返回冲突。

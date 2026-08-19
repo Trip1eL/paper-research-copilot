@@ -19,6 +19,8 @@ import { eventLabel, formatClock, formatDuration } from "../utils";
 const NODE_ICONS: Record<string, ComponentType<{ size?: number; strokeWidth?: number }>> = {
   task_queued: Clock3,
   task_started: LoaderCircle,
+  task_interrupted: TriangleAlert,
+  task_resumed: RefreshCw,
   plan_research: Route,
   retrieve_evidence: Search,
   assess_evidence: ShieldCheck,
@@ -68,7 +70,8 @@ export function AgentTimeline({ events }: { events: ResearchStreamEvent[] }) {
             const node = event.agent_event?.node ?? event.event_type;
             const Icon = NODE_ICONS[node] ?? BadgeCheck;
             const details = visibleDetails(event);
-            const failed = event.event_type === "task_failed";
+            const failed =
+              event.event_type === "task_failed" || event.event_type === "task_interrupted";
             const complete = event.status === "succeeded" || event.event_type === "task_succeeded";
             return (
               <li

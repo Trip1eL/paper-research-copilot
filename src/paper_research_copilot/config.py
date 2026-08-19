@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     qdrant_api_key: SecretStr | None = None
     qdrant_path: Path = Path("data/qdrant")
     qdrant_collection: str = "agent_seed_v3_bge_m3_chunking_v1"
+    app_database_path: Path = Path("data/app.db")
+    checkpoint_database_path: Path = Path("data/checkpoints.db")
 
     chunking_version: str = "chunking_v1"
     chunk_size_chars: int = Field(default=3200, ge=200)
@@ -79,6 +81,16 @@ class Settings(BaseSettings):
         if self.qdrant_path.is_absolute():
             return self.qdrant_path
         return PROJECT_ROOT / self.qdrant_path
+
+    def resolved_app_database_path(self) -> Path:
+        return self._resolve_project_path(self.app_database_path)
+
+    def resolved_checkpoint_database_path(self) -> Path:
+        return self._resolve_project_path(self.checkpoint_database_path)
+
+    @staticmethod
+    def _resolve_project_path(path: Path) -> Path:
+        return path if path.is_absolute() else PROJECT_ROOT / path
 
 
 @lru_cache

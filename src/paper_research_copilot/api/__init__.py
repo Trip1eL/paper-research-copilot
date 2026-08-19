@@ -9,7 +9,11 @@ from paper_research_copilot.api.models import (
     ResearchTaskStatus,
     ResearchTaskView,
 )
-from paper_research_copilot.api.service import AgentRuntimeProtocol, ResearchTaskService
+from paper_research_copilot.api.service import (
+    AgentRuntimeProtocol,
+    ResearchTaskService,
+    TaskResumeError,
+)
 
 __all__ = [
     "AgentRuntimeProtocol",
@@ -20,6 +24,7 @@ __all__ = [
     "ResearchTaskService",
     "ResearchTaskStatus",
     "ResearchTaskView",
+    "TaskResumeError",
     "app",
     "create_app",
 ]
