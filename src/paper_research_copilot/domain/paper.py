@@ -1,5 +1,7 @@
 """Paper parsing and chunking domain models."""
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -18,6 +20,12 @@ class ParsedPage(BaseModel):
 
     page_number: int = Field(ge=1)
     text: str
+    parser_name: str = "pypdf"
+    parser_version: str = "unversioned"
+    parse_quality_score: float | None = Field(default=None, ge=0, le=1)
+    parse_quality_status: Literal["unassessed", "accepted", "warning", "quarantined"] = "unassessed"
+    ocr_used: bool = False
+    parse_warnings: tuple[str, ...] = ()
 
 
 class ParsedDocument(BaseModel):
@@ -56,6 +64,12 @@ class PaperChunk(BaseModel):
     title: str
     source_path: str
     page_number: int = Field(ge=1)
+    parser_name: str = "pypdf"
+    parser_version: str = "unversioned"
+    parse_quality_score: float | None = Field(default=None, ge=0, le=1)
+    parse_quality_status: Literal["unassessed", "accepted", "warning", "quarantined"] = "unassessed"
+    ocr_used: bool = False
+    parse_warnings: tuple[str, ...] = ()
     section_title: str | None = None
     char_start: int = Field(ge=0)
     char_end: int = Field(gt=0)

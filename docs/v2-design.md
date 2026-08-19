@@ -107,12 +107,11 @@ Corpus。
 
 `PageQualityScorer` 使用确定性特征，不调用 LLM：
 
-- 非空文本长度与有效字母/数字比例；
-- Unicode replacement character、控制字符、Private Use Area 比例；
-- 单字符异常重复和不可打印字符比例；
-- 单词或中文字符覆盖率；
-- 行长度异常、断词和空白密度；
-- 与其他 Parser 结果的长度差异。
+- 非空文本长度、行数与有效字母/数字比例；
+- Unicode replacement character、控制字符、Private Use Area 和不可打印字符比例；
+- 大写 ASCII 单词与无元音单词分布，用于识别 Caesar-like 字体映射；
+- 非 ASCII Latin 字母比例，用于识别异常字体映射，同时避免把中文或希腊公式误判为乱码；
+- 页面图片数量，用于标记空文本图片页。
 
 初始阈值只作为可配置起点：
 
@@ -447,6 +446,9 @@ api/
 
 ### Phase 1：Fast Parser Quality Router
 
+状态：已于 2026-08-19 完成 Shadow 实现与 Corpus v3 验证。生产 `PdfParser`、Corpus v3 Chunk、
+Embedding 和 Qdrant Collection 均未修改。
+
 模块：`domain`、`ingestion`、`cli`、`tests/unit`、`evaluation`。
 
 - 定义 Page Parse provenance 和 Quality Result。
@@ -457,6 +459,12 @@ api/
 
 完成条件：现有 Parser/Chunker 测试不回退；问题页检出率达到门槛；quarantined 页面无法进入
 Chunking；每页选择原因可观察。
+
+正式结果：Parse Benchmark 的已知问题检出率、Clean Primary 保留率和 Text/Table anchors 均为
+`100%`。Corpus v3 共 40 篇、1,387 页，全部成功打开；22 页触发 Primary 对照，8 页选择
+Secondary，0 页真正恢复为 accepted，7 页 warning，15 页 quarantined，隔离率 `1.0815%`。
+PyMuPDF 没有修复已知 Caesar/font mapping 乱码，因此 Fast Router 的当前价值是检出、provenance、
+路由和索引阻断，而非宣称修复。该结果满足进入 Phase 2 的条件，不再继续做细小阈值微调。
 
 ### Phase 2：MinerU Structured Parser Spike
 

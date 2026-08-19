@@ -17,6 +17,7 @@ dependencies = [
   "PyStemmer>=2.2,<3",
   "pydantic>=2.10,<3",
   "pydantic-settings>=2.7,<3",
+  "PyMuPDF>=1.26,<2",
   "pypdf>=6.10,<7",
   "python-dotenv>=1.2,<2",
   "qdrant-client>=1.14,<2",

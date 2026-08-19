@@ -29,6 +29,29 @@ Text/Table anchors 均为 `100%`。Table anchors 只证明答案和上下文字�
 特征，不能直接等同于 OCR 路由。当前 Corpus 没有合适的扫描表格金标；MinerU Spike 前需补充一个
 固定来源与答案的扫描表格 Case，不能用 ExpeL 的图片轨迹页代替。
 
+运行 Fast Parser Router Shadow 对照：
+
+```powershell
+conda run --no-capture-output -n paper-research-copilot `
+  python scripts/run_parse_shadow_benchmark.py
+
+conda run --no-capture-output -n paper-research-copilot `
+  python -u scripts/run_corpus_parse_shadow.py --version 3
+```
+
+正式产物为 `baselines/parse_router_shadow_v1.json|md` 和
+`../corpus/v3/parse_shadow_v1.json|md`。10 个 Benchmark Case 的已知问题检出率、Clean Primary
+保留率、Text anchors 和 Table anchors 均为 `100%`；6 个页面被接受，4 个页面进入 Structured
+Fallback。Corpus v3 的 40 篇、1,387 页全部成功打开，22 页触发 Primary 对照，8 页选择
+PyMuPDF 候选，最终 `0` 页恢复为 accepted、7 页 warning、15 页 quarantined，隔离率为
+`1.0815%`。
+
+PyMuPDF 能减少部分控制字符，但 ReAct、Tree of Thoughts 等页面仍存在 Caesar-like 或异常 Latin
+字体映射，不能把可打印字符增加解释为语义恢复。Fast Router 当前通过确定性字符分布特征检出并
+隔离这些页面；`quarantined` 页面由 Quality Gate 阻止进入 Chunking。Shadow 模式没有修改 Corpus
+v3 Manifest、Chunk、Embedding 或 Qdrant Collection。下一步使用同一 Benchmark 验证 MinerU
+Structured Parser，Fast Path recovery 当前应如实记为 `N/A/0`，不能虚构提升。
+
 校验数据结构及论文 ID：
 
 ```powershell

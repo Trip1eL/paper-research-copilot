@@ -17,6 +17,17 @@ from paper_research_copilot.domain.paper import (
     ParsedDocument,
     ParsedPage,
 )
+from paper_research_copilot.domain.parse import (
+    DocumentParseResult,
+    PageParseCandidate,
+    PageParseResult,
+    PageQualityFeatures,
+    PageQualityResult,
+    PageTextExtraction,
+    ParseQualityStatus,
+    ParserName,
+    ParseRouteAction,
+)
 
 __all__ = [
     "Answer",
@@ -28,9 +39,18 @@ __all__ = [
     "CorpusPaperSpec",
     "CorpusSpec",
     "IngestionSummary",
+    "DocumentParseResult",
+    "PageParseCandidate",
+    "PageParseResult",
+    "PageQualityFeatures",
+    "PageQualityResult",
+    "PageTextExtraction",
     "PaperChunk",
     "PaperMetadata",
     "ParsedDocument",
     "ParsedPage",
+    "ParseQualityStatus",
+    "ParseRouteAction",
+    "ParserName",
     "RetrievedChunk",
 ]

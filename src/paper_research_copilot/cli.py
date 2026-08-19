@@ -12,7 +12,13 @@ from paper_research_copilot.agent import (
     build_agent_runtime,
 )
 from paper_research_copilot.config import PROJECT_ROOT, Settings, get_settings
-from paper_research_copilot.domain import Answer, PaperChunk, ParsedDocument, RetrievedChunk
+from paper_research_copilot.domain import (
+    Answer,
+    DocumentParseResult,
+    PaperChunk,
+    ParsedDocument,
+    RetrievedChunk,
+)
 from paper_research_copilot.evaluation import (
     AnswerCaseResult,
     AnswerEvaluationCase,
@@ -40,6 +46,7 @@ from paper_research_copilot.evaluation import (
 from paper_research_copilot.ingestion import (
     CorpusCatalogLoader,
     CorpusPreparer,
+    FastParserRouter,
     PageAwareChunker,
     PdfParser,
     PreparedCorpus,
@@ -230,6 +237,15 @@ def build_parser() -> argparse.ArgumentParser:
     inspect_chunks_parser.add_argument("--page", type=_positive_int, default=None)
     inspect_chunks_parser.add_argument("--full-text", action="store_true")
 
+    inspect_quality_parser = subparsers.add_parser(
+        "inspect-parse-quality",
+        help="Compare pypdf and PyMuPDF page quality without indexing",
+    )
+    inspect_quality_parser.add_argument("pdf", type=Path)
+    inspect_quality_parser.add_argument("--page", type=_positive_int, default=None)
+    inspect_quality_parser.add_argument("--preview-chars", type=_positive_int, default=160)
+    inspect_quality_parser.add_argument("--full-text", action="store_true")
+
     search_parser = subparsers.add_parser(
         "search", help="Show retrieval results without calling the LLM"
     )
@@ -249,6 +265,19 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     settings = get_settings()
+
+    if args.command == "inspect-parse-quality":
+        parse_result = FastParserRouter().parse(
+            _resolve_pdf_paths((args.pdf,))[0],
+            shadow_mode=True,
+        )
+        _print_parse_quality(
+            parse_result,
+            page=args.page,
+            preview_chars=args.preview_chars,
+            full_text=args.full_text,
+        )
+        return 0
 
     if args.command in {"inspect-pdf", "inspect-chunks"}:
         document = PdfParser().parse(_resolve_pdf_paths((args.pdf,))[0])
@@ -764,6 +793,47 @@ def _print_document(document: ParsedDocument, preview_chars: int) -> None:
         preview = _preview(page.text, preview_chars) if page.text else "(no extractable text)"
         print(f"  Page {page.page_number}: chars={len(page.text)}")
         print(f"    {preview}")
+
+
+def _print_parse_quality(
+    document: DocumentParseResult,
+    *,
+    page: int | None,
+    preview_chars: int,
+    full_text: bool,
+) -> None:
+    if page is not None and page > document.page_count:
+        raise ValueError(f"Requested page {page} exceeds PDF page count {document.page_count}")
+    visible = [result for result in document.pages if page is None or result.page_number == page]
+    print("Parse Quality Shadow")
+    print(f"  Source: {document.source_path}")
+    print(f"  SHA-256: {document.document_sha256}")
+    print(f"  Pages: {document.page_count}")
+    print(
+        "  Selected status: "
+        f"accepted={document.accepted_pages}, warning={document.warning_pages}, "
+        f"quarantined={document.quarantined_pages}"
+    )
+    print(f"  Secondary selected: {document.secondary_selected_pages}")
+    for result in visible:
+        print(
+            f"\nPage {result.page_number}: selected={result.parser_name} "
+            f"score={result.quality_score:.4f} status={result.quality_status}"
+        )
+        print(f"  Route: {result.route_action}")
+        print(f"  Reason: {result.selection_reason}")
+        for candidate in result.candidates:
+            extraction = candidate.extraction
+            quality = candidate.quality
+            print(
+                f"  {extraction.parser_name}=={extraction.parser_version}: "
+                f"score={quality.score:.4f}, status={quality.status}, "
+                f"chars={quality.features.char_count}, images={extraction.image_count}, "
+                f"latency={extraction.latency_ms:.2f}ms"
+            )
+            print(f"    Signals: {', '.join(quality.signals) if quality.signals else '(none)'}")
+        text = result.text if full_text else _preview(result.text, preview_chars)
+        print(f"  Selected text:\n{text or '(no extractable text)'}")
 
 
 def _print_chunks(

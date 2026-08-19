@@ -1,0 +1,401 @@
+{
+  "config": {
+    "baseline_id": "parse_router_shadow_v1",
+    "evaluated_on": "2026-08-19",
+    "dataset_path": "evals/datasets/parse_benchmark_v1.jsonl",
+    "dataset_sha256": "0bdc23fb9e8ce1be6e98fd3cef9e2086642014b5c7e288c4b20975e702637016",
+    "router_version": "fast_parser_router_v1",
+    "primary_parser": "pypdf==6.10.2",
+    "secondary_parser": "pymupdf==1.28.2",
+    "shadow_mode": true
+  },
+  "case_count": 10,
+  "known_issue_count": 4,
+  "primary_issue_detection_rate": 1.0,
+  "known_issue_recovery_rate": null,
+  "clean_primary_retention_rate": 1.0,
+  "secondary_selection_rate": 0.2,
+  "selected_accepted_rate": 0.6,
+  "selected_warning_rate": 0.0,
+  "structured_fallback_rate": 0.4,
+  "selected_text_anchor_pass_rate": 1.0,
+  "selected_table_anchor_pass_rate": 1.0,
+  "p50_case_latency_ms": 86.29,
+  "p95_case_latency_ms": 173.62,
+  "results": [
+    {
+      "case_id": "PB-001",
+      "category": "normal_text",
+      "paper_id": "arxiv:2310.08560",
+      "page_number": 2,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 5810,
+        "latency_ms": 99.43,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": []
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 6737,
+        "latency_ms": 70.35,
+        "text_anchor_pass": false,
+        "table_anchor_pass": null,
+        "signals": []
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "accepted",
+      "selected_score": 1.0,
+      "route_action": "primary_accepted",
+      "selection_reason": "Primary pypdf extraction passed the quality gate.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    },
+    {
+      "case_id": "PB-002",
+      "category": "two_column_text",
+      "paper_id": "arxiv:2310.04406",
+      "page_number": 3,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 4913,
+        "latency_ms": 65.99,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": []
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 6180,
+        "latency_ms": 70.05,
+        "text_anchor_pass": false,
+        "table_anchor_pass": null,
+        "signals": []
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "accepted",
+      "selected_score": 1.0,
+      "route_action": "primary_accepted",
+      "selection_reason": "Primary pypdf extraction passed the quality gate.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    },
+    {
+      "case_id": "PB-003",
+      "category": "garbled_text",
+      "paper_id": "arxiv:2210.03629",
+      "page_number": 2,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "quarantined",
+        "score": 0.0,
+        "char_count": 5759,
+        "latency_ms": 104.58,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "severe_control_characters",
+          "cipher_like_word_distribution"
+        ]
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "quarantined",
+        "score": 0.35,
+        "char_count": 7329,
+        "latency_ms": 69.04,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "cipher_like_word_distribution"
+        ]
+      },
+      "selected_parser": "pymupdf",
+      "selected_status": "quarantined",
+      "selected_score": 0.35,
+      "route_action": "structured_fallback_required",
+      "selection_reason": "Primary extraction did not pass; PyMuPDF improved the quality score from 0.0000 to 0.3500. The selected text remains quarantined pending structured fallback.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    },
+    {
+      "case_id": "PB-004",
+      "category": "mixed_text_and_garbled_figure",
+      "paper_id": "arxiv:2305.10601",
+      "page_number": 5,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "quarantined",
+        "score": 0.0,
+        "char_count": 4602,
+        "latency_ms": 77.76,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "control_characters",
+          "abnormal_extended_latin_distribution"
+        ]
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "quarantined",
+        "score": 0.35,
+        "char_count": 5533,
+        "latency_ms": 86.82,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "abnormal_extended_latin_distribution"
+        ]
+      },
+      "selected_parser": "pymupdf",
+      "selected_status": "quarantined",
+      "selected_score": 0.35,
+      "route_action": "structured_fallback_required",
+      "selection_reason": "Primary extraction did not pass; PyMuPDF improved the quality score from 0.0000 to 0.3500. The selected text remains quarantined pending structured fallback.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    },
+    {
+      "case_id": "PB-005",
+      "category": "formula_dense",
+      "paper_id": "arxiv:2401.13178",
+      "page_number": 5,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "accepted",
+        "score": 0.8,
+        "char_count": 5134,
+        "latency_ms": 58.19,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "character_mapping_risk"
+        ]
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "accepted",
+        "score": 0.8,
+        "char_count": 5547,
+        "latency_ms": 58.97,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "character_mapping_risk"
+        ]
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "accepted",
+      "selected_score": 0.8,
+      "route_action": "primary_accepted",
+      "selection_reason": "Primary pypdf extraction passed the quality gate.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    },
+    {
+      "case_id": "PB-006",
+      "category": "native_table_simple",
+      "paper_id": "arxiv:2406.12045",
+      "page_number": 5,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 4138,
+        "latency_ms": 36.32,
+        "text_anchor_pass": true,
+        "table_anchor_pass": true,
+        "signals": []
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 4458,
+        "latency_ms": 45.81,
+        "text_anchor_pass": true,
+        "table_anchor_pass": false,
+        "signals": []
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "accepted",
+      "selected_score": 1.0,
+      "route_action": "primary_accepted",
+      "selection_reason": "Primary pypdf extraction passed the quality gate.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": true
+    },
+    {
+      "case_id": "PB-007",
+      "category": "native_table_multicolumn",
+      "paper_id": "arxiv:2310.06770",
+      "page_number": 6,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 3522,
+        "latency_ms": 43.51,
+        "text_anchor_pass": true,
+        "table_anchor_pass": true,
+        "signals": []
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 4108,
+        "latency_ms": 42.78,
+        "text_anchor_pass": true,
+        "table_anchor_pass": true,
+        "signals": []
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "accepted",
+      "selected_score": 1.0,
+      "route_action": "primary_accepted",
+      "selection_reason": "Primary pypdf extraction passed the quality gate.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": true
+    },
+    {
+      "case_id": "PB-008",
+      "category": "native_table_complex",
+      "paper_id": "arxiv:2404.07972",
+      "page_number": 10,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 4043,
+        "latency_ms": 30.86,
+        "text_anchor_pass": true,
+        "table_anchor_pass": true,
+        "signals": []
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "accepted",
+        "score": 1.0,
+        "char_count": 5331,
+        "latency_ms": 44.33,
+        "text_anchor_pass": false,
+        "table_anchor_pass": false,
+        "signals": []
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "accepted",
+      "selected_score": 1.0,
+      "route_action": "primary_accepted",
+      "selection_reason": "Primary pypdf extraction passed the quality gate.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": true
+    },
+    {
+      "case_id": "PB-009",
+      "category": "short_visual_page",
+      "paper_id": "arxiv:2308.10144",
+      "page_number": 16,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "quarantined",
+        "score": 0.4,
+        "char_count": 83,
+        "latency_ms": 3.98,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "very_short_text"
+        ]
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "quarantined",
+        "score": 0.4,
+        "char_count": 84,
+        "latency_ms": 2.71,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "very_short_text"
+        ]
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "quarantined",
+      "selected_score": 0.4,
+      "route_action": "structured_fallback_required",
+      "selection_reason": "Secondary extraction did not provide a material quality improvement. The selected text remains quarantined pending structured fallback.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    },
+    {
+      "case_id": "PB-010",
+      "category": "image_only",
+      "paper_id": "arxiv:2308.10144",
+      "page_number": 30,
+      "primary": {
+        "parser_name": "pypdf",
+        "parser_version": "6.10.2",
+        "status": "quarantined",
+        "score": 0.0,
+        "char_count": 0,
+        "latency_ms": 0.57,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "empty_text",
+          "image_only_candidate"
+        ]
+      },
+      "secondary": {
+        "parser_name": "pymupdf",
+        "parser_version": "1.28.2",
+        "status": "quarantined",
+        "score": 0.0,
+        "char_count": 0,
+        "latency_ms": 0.78,
+        "text_anchor_pass": true,
+        "table_anchor_pass": null,
+        "signals": [
+          "empty_text",
+          "image_only_candidate"
+        ]
+      },
+      "selected_parser": "pypdf",
+      "selected_status": "quarantined",
+      "selected_score": 0.0,
+      "route_action": "structured_fallback_required",
+      "selection_reason": "Secondary extraction did not provide a material quality improvement. The selected text remains quarantined pending structured fallback.",
+      "selected_text_anchor_pass": true,
+      "selected_table_anchor_pass": null
+    }
+  ]
+}
