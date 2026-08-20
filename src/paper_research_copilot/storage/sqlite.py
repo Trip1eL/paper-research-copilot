@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 from datetime import UTC, datetime
+from hashlib import sha256
 from pathlib import Path
 from threading import RLock
 from typing import Literal, cast
@@ -25,6 +26,7 @@ from paper_research_copilot.storage.models import (
     AcquisitionRunRow,
     PaperAssetRow,
     ResearchEventRow,
+    ResearchTaskClarificationRow,
     ResearchTaskRow,
 )
 from paper_research_copilot.storage.repositories import (
@@ -81,6 +83,64 @@ class SqliteResearchRepository:
             )
             session.flush()
             return self._snapshot(session, row)
+
+    def create_clarified_task(
+        self,
+        *,
+        parent_task_id: str,
+        task_id: str,
+        question: str,
+        clarification_response: str,
+        created_at: datetime,
+    ) -> tuple[ResearchTaskRecord, bool]:
+        response_hash = sha256(
+            clarification_response.casefold().encode("utf-8")
+        ).hexdigest()
+        with self._write_lock, self._sessions.begin() as session:
+            parent = self._require_in_status(session, parent_task_id, "succeeded")
+            existing = session.scalar(
+                select(ResearchTaskClarificationRow).where(
+                    ResearchTaskClarificationRow.parent_task_id == parent.task_id,
+                    ResearchTaskClarificationRow.response_hash == response_hash,
+                )
+            )
+            if existing is not None:
+                return (
+                    self._snapshot(
+                        session,
+                        self._require(session, existing.child_task_id),
+                    ),
+                    False,
+                )
+            if session.get(ResearchTaskRow, task_id) is not None:
+                raise TaskStateConflictError(f"Research task already exists: {task_id}")
+            row = ResearchTaskRow(
+                task_id=task_id,
+                question=question,
+                status="queued",
+                created_at=_serialize_datetime(created_at),
+                attempt=0,
+            )
+            session.add(row)
+            session.flush()
+            session.add(
+                ResearchTaskClarificationRow(
+                    parent_task_id=parent.task_id,
+                    child_task_id=task_id,
+                    response=clarification_response,
+                    response_hash=response_hash,
+                    created_at=_serialize_datetime(created_at),
+                )
+            )
+            self._append_event(
+                session,
+                row,
+                "task_queued",
+                created_at,
+                "Clarified research task queued",
+            )
+            session.flush()
+            return self._snapshot(session, row), True
 
     def get_task(self, task_id: str) -> ResearchTaskRecord:
         with self._sessions() as session:
@@ -582,6 +642,16 @@ class SqliteResearchRepository:
             .select_from(ResearchEventRow)
             .where(ResearchEventRow.task_id == row.task_id)
         )
+        clarification = session.scalar(
+            select(ResearchTaskClarificationRow).where(
+                ResearchTaskClarificationRow.child_task_id == row.task_id
+            )
+        )
+        parent = (
+            session.get(ResearchTaskRow, clarification.parent_task_id)
+            if clarification is not None
+            else None
+        )
         return ResearchTaskRecord(
             task_id=row.task_id,
             question=row.question,
@@ -594,6 +664,9 @@ class SqliteResearchRepository:
             current_node=row.current_node,
             attempt=row.attempt,
             event_count=event_count or 0,
+            parent_task_id=(clarification.parent_task_id if clarification else None),
+            parent_question=(parent.question if parent is not None else None),
+            clarification_response=(clarification.response if clarification else None),
         )
 
     def _ensure_open(self) -> None:

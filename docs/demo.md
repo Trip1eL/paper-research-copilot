@@ -34,8 +34,10 @@ conda activate paper-research-copilot
    允许一次 Query Revision。
 5. 打开 Report，说明回答中的 `[C1]` 等标记不是事后拼接，而是 AnswerGenerator 只允许引用
    当前 Evidence ID。
-6. 点击任意 Citation Source，页面会切换到 Evidence Tab，并定位对应论文、页码和 Chunk。
-7. 打开 Plan Tab，展示 Route、Rationale、Queries、Goals 和 Evidence Assessment。
+6. 展示 Claim Verification：Verifier 只读取实际引用的 Evidence，逐 Claim 判断支持关系；发现问题时
+   最多修订一次，不进入无限 Reflection。
+7. 点击任意 Claim 或 Citation Source，页面会切换到 Evidence Tab，并定位对应论文、页码和 Chunk。
+8. 打开 Plan Tab，展示 Route、Rationale、Queries、Goals 和 Evidence Assessment。
 
 ## 预期 Trace
 
@@ -45,12 +47,13 @@ queued
   -> retrieve_evidence: coverage_hybrid_rrf / 10 chunks
   -> assess_evidence: sufficient
   -> write_report: answered
+  -> verify_claims: passed / revised
   -> validate_citations: valid
   -> succeeded
 ```
 
-实际冷启动延迟通常由 Planner 主导，Planner P50 约 10.7 秒。演示时应主动说明这是当前成本，
-而不是将 Cache 命中时间当作真实线上延迟。
+Planner P50 约 10.7 秒；Claim Verifier 的 4 条 Smoke 为 14.1–27.7 秒。演示时应主动说明高质量模式
+增加一次模型调用，也可通过环境变量关闭；不能把 Cache 命中时间当作真实线上延迟。
 
 ## 指标页讲法
 
@@ -66,8 +69,8 @@ queued
 
 - `AE-025` 被 Planner 错分为 cross-paper，Router Accuracy 不是 100%。
 - `AE-032` 只覆盖一半目标论文，且一次运行发生 Answer 截断。
-- Evidence Gate 是确定性覆盖检查，不等价于完整的 Claim-Evidence entailment。
-- 当前 Task Store 在内存中，服务重启后任务不会恢复。
+- 生产 Claim Verifier 只有 4 条 Smoke，不能外推为开放域 100% 正确，也存在单模型偏差。
+- 当前 Task/Event/Result 和 Checkpoint 可持久恢复，但仍是单机、单 Worker，没有生产队列或认证。
 
 面试时应主动展示这些边界。项目价值来自可测量的设计取舍，不来自宣称 Agent 对所有问题都优于
 固定 RAG。
@@ -82,4 +85,4 @@ npm run build
 ```
 
 `/health` 应返回 `runtime_ready=true`、`corpus_version=3` 和
-`agent_seed_v3_bge_m3_chunking_v1`。
+`agent_seed_v3_bge_m3_chunking_v1`，并确认 `claim_verification_enabled=true`。

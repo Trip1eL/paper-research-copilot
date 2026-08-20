@@ -39,6 +39,18 @@ export const resumeResearchTask = async (taskUrl: string): Promise<ResearchTaskA
     await fetch(`${taskUrl}/resume`, { method: "POST" }),
   );
 
+export const clarifyResearchTask = async (
+  taskUrl: string,
+  response: string,
+): Promise<ResearchTaskAccepted> =>
+  parseResponse<ResearchTaskAccepted>(
+    await fetch(`${taskUrl}/clarify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ response }),
+    }),
+  );
+
 const EVENT_TYPES = [
   "task_queued",
   "task_started",

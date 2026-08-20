@@ -1144,6 +1144,22 @@ def _print_agent_trace(result: AgentResult) -> None:
             print(f"  - {title}")
         if acquisition.error:
             print(f"  Error: {acquisition.error}")
+    if result.verification is not None:
+        verification = result.verification
+        print("\nClaim Verification:")
+        print(
+            f"  Status: {verification.status} | Claims: {len(verification.claims)} | "
+            f"Human review: {verification.needs_human_review}"
+        )
+        print(f"  Reason: {verification.rationale}")
+        for claim in verification.claims:
+            citation_ids = ", ".join(claim.citation_ids) or "none"
+            print(
+                f"  {claim.claim_id}: {claim.verdict} | Citations: {citation_ids}\n"
+                f"    {claim.claim}"
+            )
+        if verification.error:
+            print(f"  Error: {verification.error}")
     print("\nAgent Trace:")
     for event in result.trace:
         details = ", ".join(f"{key}={value}" for key, value in event.details.items())

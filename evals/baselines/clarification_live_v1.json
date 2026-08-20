@@ -1,0 +1,226 @@
+{
+  "config": {
+    "baseline_id": "clarification_live_v1",
+    "dataset_path": "evals/datasets/clarification_v1.jsonl",
+    "dataset_sha256": "d6c7557e60b9921ece80b8a8fdafba1cf23b74392a7498d45c6352a959240832",
+    "case_ids": [
+      "CL-001",
+      "CL-002",
+      "CL-003"
+    ],
+    "corpus_version": 3,
+    "curated_collection": "agent_seed_v3_bge_m3_chunking_v1",
+    "dynamic_state_policy": "isolated_empty_per_case",
+    "planner_model": "gpt-5.5",
+    "answer_model": "deepseek-v4-flash",
+    "embedding_model": "BAAI/bge-m3",
+    "max_retries": 1,
+    "max_acquisition_rounds": 1
+  },
+  "summary": {
+    "case_count": 3,
+    "run_success_rate": 1.0,
+    "live_strict_pass_rate": 1.0,
+    "parent_no_write_rate": 1.0,
+    "citation_validation_rate": 1.0,
+    "semantic_judge_executed": false,
+    "total_parent_elapsed_ms": 55354.97,
+    "total_child_elapsed_ms": 152007.06
+  },
+  "protocol": {
+    "case_count": 3,
+    "strict_pass_rate": 1.0,
+    "ambiguity_detection_rate": 1.0,
+    "prompt_presence_rate": 1.0,
+    "side_effect_free_rate": 1.0,
+    "child_reentry_rate": 1.0,
+    "child_answer_behavior_accuracy": 1.0,
+    "provenance_rate": 1.0,
+    "cases": [
+      {
+        "case_id": "CL-001",
+        "ambiguity_detected": true,
+        "rule_matched": true,
+        "prompt_present": true,
+        "pre_clarification_side_effect_free": true,
+        "child_reentered_research": true,
+        "child_answer_behavior_correct": true,
+        "provenance_valid": true,
+        "strict_pass": true
+      },
+      {
+        "case_id": "CL-002",
+        "ambiguity_detected": true,
+        "rule_matched": true,
+        "prompt_present": true,
+        "pre_clarification_side_effect_free": true,
+        "child_reentered_research": true,
+        "child_answer_behavior_correct": true,
+        "provenance_valid": true,
+        "strict_pass": true
+      },
+      {
+        "case_id": "CL-003",
+        "ambiguity_detected": true,
+        "rule_matched": true,
+        "prompt_present": true,
+        "pre_clarification_side_effect_free": true,
+        "child_reentered_research": true,
+        "child_answer_behavior_correct": true,
+        "provenance_valid": true,
+        "strict_pass": true
+      }
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "CL-001",
+      "run_succeeded": true,
+      "error": null,
+      "protocol": {
+        "case_id": "CL-001",
+        "ambiguity_detected": true,
+        "rule_matched": true,
+        "prompt_present": true,
+        "pre_clarification_side_effect_free": true,
+        "child_reentered_research": true,
+        "child_answer_behavior_correct": true,
+        "provenance_valid": true,
+        "strict_pass": true
+      },
+      "parent_elapsed_ms": 9783.1,
+      "child_elapsed_ms": 43677.8,
+      "total_elapsed_ms": 53460.9,
+      "points_before": 0,
+      "points_after_parent": 0,
+      "points_after_child": 0,
+      "parent_point_delta": 0,
+      "child_point_delta": 0,
+      "child_evidence_count": 10,
+      "child_citation_count": 5,
+      "child_acquisition_rounds": 0,
+      "child_acquisition_status": null,
+      "child_acquisition_candidate_count": 0,
+      "child_acquisition_downloaded_count": 0,
+      "child_acquisition_indexed_count": 0,
+      "citation_validation_passed": true,
+      "live_strict_pass": true,
+      "parent_trace_nodes": [
+        "plan_research",
+        "screen_question",
+        "write_report",
+        "validate_citations"
+      ],
+      "child_trace_nodes": [
+        "plan_research",
+        "screen_question",
+        "retrieve_evidence",
+        "assess_evidence",
+        "write_report",
+        "validate_citations"
+      ]
+    },
+    {
+      "case_id": "CL-002",
+      "run_succeeded": true,
+      "error": null,
+      "protocol": {
+        "case_id": "CL-002",
+        "ambiguity_detected": true,
+        "rule_matched": true,
+        "prompt_present": true,
+        "pre_clarification_side_effect_free": true,
+        "child_reentered_research": true,
+        "child_answer_behavior_correct": true,
+        "provenance_valid": true,
+        "strict_pass": true
+      },
+      "parent_elapsed_ms": 27604.41,
+      "child_elapsed_ms": 51952.79,
+      "total_elapsed_ms": 79557.2,
+      "points_before": 0,
+      "points_after_parent": 0,
+      "points_after_child": 0,
+      "parent_point_delta": 0,
+      "child_point_delta": 0,
+      "child_evidence_count": 10,
+      "child_citation_count": 5,
+      "child_acquisition_rounds": 1,
+      "child_acquisition_status": "failed",
+      "child_acquisition_candidate_count": 0,
+      "child_acquisition_downloaded_count": 0,
+      "child_acquisition_indexed_count": 0,
+      "citation_validation_passed": true,
+      "live_strict_pass": true,
+      "parent_trace_nodes": [
+        "plan_research",
+        "screen_question",
+        "write_report",
+        "validate_citations"
+      ],
+      "child_trace_nodes": [
+        "plan_research",
+        "screen_question",
+        "retrieve_evidence",
+        "assess_evidence",
+        "write_report",
+        "revise_queries",
+        "retrieve_evidence",
+        "assess_evidence",
+        "write_report",
+        "acquire_evidence",
+        "retrieve_evidence",
+        "assess_evidence",
+        "write_report",
+        "validate_citations"
+      ]
+    },
+    {
+      "case_id": "CL-003",
+      "run_succeeded": true,
+      "error": null,
+      "protocol": {
+        "case_id": "CL-003",
+        "ambiguity_detected": true,
+        "rule_matched": true,
+        "prompt_present": true,
+        "pre_clarification_side_effect_free": true,
+        "child_reentered_research": true,
+        "child_answer_behavior_correct": true,
+        "provenance_valid": true,
+        "strict_pass": true
+      },
+      "parent_elapsed_ms": 17967.46,
+      "child_elapsed_ms": 56376.47,
+      "total_elapsed_ms": 74343.93,
+      "points_before": 0,
+      "points_after_parent": 0,
+      "points_after_child": 0,
+      "parent_point_delta": 0,
+      "child_point_delta": 0,
+      "child_evidence_count": 10,
+      "child_citation_count": 5,
+      "child_acquisition_rounds": 0,
+      "child_acquisition_status": null,
+      "child_acquisition_candidate_count": 0,
+      "child_acquisition_downloaded_count": 0,
+      "child_acquisition_indexed_count": 0,
+      "citation_validation_passed": true,
+      "live_strict_pass": true,
+      "parent_trace_nodes": [
+        "plan_research",
+        "screen_question",
+        "write_report",
+        "validate_citations"
+      ],
+      "child_trace_nodes": [
+        "plan_research",
+        "screen_question",
+        "retrieve_evidence",
+        "assess_evidence",
+        "write_report",
+        "validate_citations"
+      ]
+    }
+  ]
+}

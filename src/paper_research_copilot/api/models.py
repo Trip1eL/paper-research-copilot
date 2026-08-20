@@ -39,6 +39,20 @@ class ResearchRequest(BaseModel):
         return normalized
 
 
+class ClarificationResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    response: str = Field(min_length=2, max_length=2000)
+
+    @field_validator("response")
+    @classmethod
+    def normalize_response(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if len(normalized) < 2:
+            raise ValueError("Clarification response must contain at least two characters")
+        return normalized
+
+
 class ResearchTaskAccepted(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -59,6 +73,9 @@ class ResearchTaskView(BaseModel):
     started_at: datetime | None = None
     completed_at: datetime | None = None
     event_count: int = Field(ge=1)
+    parent_task_id: str | None = None
+    parent_question: str | None = None
+    clarification_response: str | None = None
     result: AgentResult | None = None
     error: str | None = None
 
@@ -86,6 +103,7 @@ class HealthResponse(BaseModel):
     qdrant_collection: str
     dynamic_qdrant_collection: str
     dynamic_acquisition_enabled: bool
+    claim_verification_enabled: bool
     task_store: Literal["memory", "sqlite"]
     checkpoint_ready: bool
     checkpoint_error: str | None = None

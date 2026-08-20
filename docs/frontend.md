@@ -82,12 +82,13 @@ Task，不提供历史任务列表。后续可在 URL 中保存 Task ID，再用
 
 ## 结果视图
 
-- Report：展示 Evidence Gate 状态、结构化回答和 Citation Sources。
+- Report：展示 Evidence Gate 状态、结构化回答、逐 Claim Verification 和 Citation Sources；Verifier
+  修订、错误与 Human Review 状态不会被隐藏。
 - Evidence：展示最终 Top-K Chunk、论文标题、页码、Section、分数和文本预览。
 - Plan：展示 single/cross-paper Route、Revision、Rationale、Queries、Goals、Assessment 和 Dynamic
   Acquisition Summary。
 
-Timeline 识别 `acquire_evidence` 节点，显示 Candidates、Selected、Downloaded 和 Indexed 数量；左侧
+Timeline 识别 `acquire_evidence` 和 `verify_claims` 节点，分别显示下载/索引与 Claim Verdict 数量；左侧
 指标显示 Query Retry 与 Acquisition Round。Health Header 在部署启用自动扩库时显示 `+ Dynamic`。
 
 Citation Source 是命令按钮：点击后切换到 Evidence Tab，并滚动、高亮对应 Citation ID。不能使用

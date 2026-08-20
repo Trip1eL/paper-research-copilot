@@ -2,6 +2,7 @@
 
 from paper_research_copilot.api.app import app, create_app
 from paper_research_copilot.api.models import (
+    ClarificationResponse,
     HealthResponse,
     ResearchRequest,
     ResearchStreamEvent,
@@ -12,11 +13,13 @@ from paper_research_copilot.api.models import (
 from paper_research_copilot.api.service import (
     AgentRuntimeProtocol,
     ResearchTaskService,
+    TaskClarificationError,
     TaskResumeError,
 )
 
 __all__ = [
     "AgentRuntimeProtocol",
+    "ClarificationResponse",
     "HealthResponse",
     "ResearchRequest",
     "ResearchStreamEvent",
@@ -24,6 +27,7 @@ __all__ = [
     "ResearchTaskService",
     "ResearchTaskStatus",
     "ResearchTaskView",
+    "TaskClarificationError",
     "TaskResumeError",
     "app",
     "create_app",

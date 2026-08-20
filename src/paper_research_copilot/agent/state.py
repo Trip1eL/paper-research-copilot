@@ -5,6 +5,7 @@ from typing import TypedDict
 from paper_research_copilot.agent.models import (
     AgentAcquisitionSummary,
     AgentEvent,
+    ClaimVerification,
     EvidenceAssessment,
     QuestionScreening,
     ResearchPlan,
@@ -26,4 +27,5 @@ class ResearchState(TypedDict, total=False):
     acquisition_rounds: int
     acquisition: AgentAcquisitionSummary | None
     answer: Answer
+    verification: ClaimVerification
     trace: tuple[AgentEvent, ...]

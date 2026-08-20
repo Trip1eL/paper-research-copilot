@@ -29,6 +29,7 @@ const NODE_ICONS: Record<string, ComponentType<{ size?: number; strokeWidth?: nu
   acquire_evidence: Download,
   write_report: FileText,
   validate_citations: FileCheck2,
+  verify_claims: ShieldCheck,
   task_succeeded: CircleCheck,
   task_failed: TriangleAlert,
 };
@@ -42,6 +43,10 @@ const DETAIL_LABELS: Record<string, string> = {
   distinct_papers: "Papers",
   retry_recommended: "Retry",
   citation_count: "Citations",
+  claim_count: "Claims",
+  supported_claims: "Supported",
+  partially_supported_claims: "Partial",
+  unsupported_claims: "Unsupported",
   planner_attempts: "Attempts",
   answer_attempts: "Attempts",
   candidates: "Candidates",

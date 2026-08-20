@@ -11,6 +11,7 @@ from paper_research_copilot.agent.guardrails import QuestionAmbiguityGate
 from paper_research_copilot.agent.models import AgentRuntimeConfig
 from paper_research_copilot.agent.planner import CachedResearchPlanner
 from paper_research_copilot.agent.runtime import ResearchAgentRuntime
+from paper_research_copilot.agent.verification import LlmClaimVerifier
 from paper_research_copilot.config import PROJECT_ROOT, Settings
 from paper_research_copilot.ingestion import CorpusCatalogLoader
 from paper_research_copilot.integrations import OpenAICompatibleChatProvider
@@ -88,6 +89,18 @@ def build_agent_runtime(
                 max_tokens=settings.answer_max_tokens,
             )
         )
+        claim_verifier = None
+        if settings.agent_claim_verification_enabled:
+            claim_verifier = LlmClaimVerifier(
+                OpenAICompatibleChatProvider(
+                    base_url=relay_url,
+                    api_key=relay_key,
+                    model=settings.gpt_model_name,
+                    max_tokens=settings.agent_claim_verifier_max_tokens,
+                ),
+                model=settings.gpt_model_name,
+                retry_attempts=2,
+            )
         if runtime_config.max_acquisition_rounds:
             if repository is None:
                 raise RuntimeError("Acquisition Repository unexpectedly missing")
@@ -113,6 +126,7 @@ def build_agent_runtime(
             answer_writer,
             acquirer=acquisition,
             question_gate=QuestionAmbiguityGate(),
+            claim_verifier=claim_verifier,
             config=runtime_config,
             checkpointer=checkpointer,
             close_callback=close_runtime_resources,

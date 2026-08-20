@@ -105,9 +105,36 @@ export interface QuestionScreening {
   reason: string;
 }
 
+export interface ClarificationRequest {
+  rule_id: string;
+  prompt: string;
+  required_information: string[];
+}
+
+export interface ClaimAssessment {
+  claim_id: string;
+  claim: string;
+  citation_ids: string[];
+  verdict: "supported" | "partially_supported" | "unsupported";
+  rationale: string;
+}
+
+export interface ClaimVerification {
+  status: "passed" | "revised" | "skipped" | "error";
+  claims: ClaimAssessment[];
+  rationale: string;
+  needs_human_review: boolean;
+  model: string | null;
+  prompt_version: string | null;
+  latency_ms: number;
+  attempts: number;
+  error: string | null;
+}
+
 export interface AgentResult {
   question: string;
   screening: QuestionScreening | null;
+  clarification: ClarificationRequest | null;
   plan: ResearchPlan;
   evidence: RetrievedChunk[];
   assessment: EvidenceAssessment;
@@ -120,6 +147,7 @@ export interface AgentResult {
   retry_count: number;
   acquisition_rounds: number;
   acquisition: AgentAcquisitionSummary | null;
+  verification: ClaimVerification | null;
   trace: AgentEvent[];
 }
 
@@ -131,6 +159,9 @@ export interface ResearchTaskView {
   started_at: string | null;
   completed_at: string | null;
   event_count: number;
+  parent_task_id: string | null;
+  parent_question: string | null;
+  clarification_response: string | null;
   result: AgentResult | null;
   error: string | null;
 }
@@ -144,6 +175,7 @@ export interface HealthResponse {
   qdrant_collection: string;
   dynamic_qdrant_collection: string;
   dynamic_acquisition_enabled: boolean;
+  claim_verification_enabled: boolean;
   task_store: "memory" | "sqlite";
   checkpoint_ready: boolean;
   checkpoint_error: string | null;

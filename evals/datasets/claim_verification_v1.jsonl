@@ -1,0 +1,4 @@
+{"case_id":"CV-001","source_case_id":"AE-001","expected_status":"passed","answer_override":null,"forbidden_text":[],"rationale":"验证有直接 ReAct 引用的历史真实回答能够通过。"}
+{"case_id":"CV-002","source_case_id":"AE-007","expected_status":"passed","answer_override":null,"forbidden_text":[],"rationale":"验证包含多个 Citation 的 MemGPT 历史真实回答能够通过。"}
+{"case_id":"CV-003","source_case_id":"AE-001","expected_status":"revised","answer_override":"ReAct 通过交错生成 Thought、Action 和 Observation，并保证在所有任务上达到 100% 成功率[C1]。","forbidden_text":["100% 成功率"],"rationale":"验证 Verifier 能删除同一 Citation 无法支持的绝对效果声明。"}
+{"case_id":"CV-004","source_case_id":"AE-001","expected_status":"revised","answer_override":"ReAct 在 1990 年提出，而且不需要与外部环境交互[C1]。","forbidden_text":["1990 年","不需要与外部环境交互"],"rationale":"验证完全违背 Evidence 的时间和机制声明会被删除或降级为证据不足。"}

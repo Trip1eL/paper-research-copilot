@@ -10,6 +10,16 @@ from paper_research_copilot.integrations import ChatTokenUsage
 QuestionType = Literal["single_paper", "cross_paper"]
 
 
+class ClarificationRequest(BaseModel):
+    """Structured information needed before research can proceed."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    rule_id: str = Field(min_length=3)
+    prompt: str = Field(min_length=5)
+    required_information: tuple[str, ...] = Field(min_length=1)
+
+
 class QuestionScreening(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -110,11 +120,50 @@ class AgentAcquisitionSummary(BaseModel):
     error: str | None = None
 
 
+class ClaimAssessment(BaseModel):
+    """Support judgment for one material claim in the generated answer."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    claim_id: str = Field(pattern=r"^CL[1-8]$")
+    claim: str = Field(min_length=1)
+    citation_ids: tuple[str, ...]
+    verdict: Literal["supported", "partially_supported", "unsupported"]
+    rationale: str = Field(min_length=1)
+
+
+class ClaimVerification(BaseModel):
+    """Bounded production verification result, independent of evaluation gold data."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    status: Literal["passed", "revised", "skipped", "error"]
+    claims: tuple[ClaimAssessment, ...] = Field(default=(), max_length=8)
+    rationale: str = Field(min_length=1)
+    needs_human_review: bool = False
+    model: str | None = None
+    prompt_version: str | None = None
+    latency_ms: float = Field(default=0, ge=0)
+    attempts: int = Field(default=0, ge=0)
+    usage: ChatTokenUsage = Field(default_factory=ChatTokenUsage)
+    response_model: str | None = None
+    error: str | None = None
+
+    @model_validator(mode="after")
+    def validate_status_contract(self) -> "ClaimVerification":
+        if self.status in {"passed", "revised"} and not self.claims:
+            raise ValueError("Completed Claim Verification requires at least one Claim")
+        if self.status == "error" and (not self.needs_human_review or not self.error):
+            raise ValueError("Claim Verification errors require an error and human review")
+        return self
+
+
 class AgentResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     question: str
     screening: QuestionScreening | None = None
+    clarification: ClarificationRequest | None = None
     plan: ResearchPlan
     evidence: tuple[RetrievedChunk, ...]
     assessment: EvidenceAssessment
@@ -122,7 +171,18 @@ class AgentResult(BaseModel):
     retry_count: int = Field(ge=0)
     acquisition_rounds: int = Field(default=0, ge=0, le=1)
     acquisition: AgentAcquisitionSummary | None = None
+    verification: ClaimVerification | None = None
     trace: tuple[AgentEvent, ...]
+
+    @model_validator(mode="after")
+    def validate_clarification(self) -> "AgentResult":
+        if self.clarification is None:
+            return self
+        if self.screening is None or self.screening.decision != "ambiguous":
+            raise ValueError("Clarification requires an ambiguous Question Screening")
+        if self.screening.rule_id != self.clarification.rule_id:
+            raise ValueError("Clarification Rule must match Question Screening Rule")
+        return self
 
 
 class AgentRuntimeConfig(BaseModel):

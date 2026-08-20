@@ -61,8 +61,9 @@ OpenAPI 位于 `http://127.0.0.1:8000/docs`。服务仅绑定本机地址，当�
 ### `GET /api/v1/research/{task_id}`
 
 返回 `queued/running/interrupted/succeeded/failed` 状态。成功后 `result` 是完整 `AgentResult`，包含 Plan、
-Evidence、Evidence Assessment、Answer、Citations、Retry Count、Acquisition Summary 和节点 Trace；失败时返回错误类型
-与信息，不返回半成品结果。
+Evidence、Evidence Assessment、Answer、Citations、Retry Count、Acquisition Summary、Clarification、
+Claim Verification 和节点 Trace；失败时返回错误类型与信息，不返回半成品结果。Clarification Child Task 还会返回
+`parent_task_id`、`parent_question` 和规范化后的 `clarification_response`。
 
 ### `GET /api/v1/research/{task_id}/events`
 
@@ -77,6 +78,7 @@ agent_node: assess_evidence
 agent_node: revise_queries（只在 Evidence 不足时出现）
 agent_node: acquire_evidence（仅在 opt-in 且本地重试后仍不足时出现，最多一次）
 agent_node: write_report
+agent_node: verify_claims（回答成功且生产 Verifier 已启用；最多一次）
 agent_node: validate_citations
 task_interrupted / task_succeeded / task_failed
 ```
@@ -90,6 +92,21 @@ task_interrupted / task_succeeded / task_failed
 只接受 `interrupted` Task，返回 HTTP 202。服务先确认 `thread_id=task_id` 的 LangGraph checkpoint
 存在，再原子写入 `task_resumed` 并进入队列；状态不匹配或无 checkpoint 返回 HTTP 409。恢复只保证
 最近已提交 node 边界，不能恢复某个节点内部的 Python 指令。
+
+### `POST /api/v1/research/{task_id}/clarify`
+
+只接受已经 `succeeded` 且 `AgentResult.clarification` 非空的 Parent Task：
+
+```json
+{
+  "response": "ReAct: Synergizing Reasoning and Acting in Language Models"
+}
+```
+
+返回 HTTP 202 和新 Child Task 的 URL/SSE URL。Child Question 同时包含原问题与用户补充，并重新
+执行完整 Agent Runtime；Parent Result 保持不变。相同 Parent Task 重复提交大小写和空白规范化后
+一致的 Response，会返回已有 Child Task，不重复排队。Parent 不存在返回 HTTP 404；状态不匹配或
+无需补充返回 HTTP 409。
 
 PowerShell 可用以下命令观察原始事件：
 

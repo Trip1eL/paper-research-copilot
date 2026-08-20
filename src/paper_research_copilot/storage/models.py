@@ -50,6 +50,32 @@ class ResearchEventRow(Base):
     task: Mapped[ResearchTaskRow] = relationship(back_populates="events")
 
 
+class ResearchTaskClarificationRow(Base):
+    __tablename__ = "research_task_clarifications"
+    __table_args__ = (
+        UniqueConstraint(
+            "parent_task_id",
+            "response_hash",
+            name="uq_research_task_clarifications_parent_response",
+        ),
+        Index("ix_research_task_clarifications_parent", "parent_task_id"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    parent_task_id: Mapped[str] = mapped_column(
+        ForeignKey("research_tasks.task_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    child_task_id: Mapped[str] = mapped_column(
+        ForeignKey("research_tasks.task_id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,
+    )
+    response: Mapped[str] = mapped_column(Text, nullable=False)
+    response_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+
 class PaperAssetRow(Base):
     __tablename__ = "paper_assets"
     __table_args__ = (

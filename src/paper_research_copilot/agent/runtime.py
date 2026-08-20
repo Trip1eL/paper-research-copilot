@@ -10,17 +10,20 @@ from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
+from paper_research_copilot.agent.guardrails import clarification_for
 from paper_research_copilot.agent.models import (
     AgentAcquisitionSummary,
     AgentEvent,
     AgentResult,
     AgentRuntimeConfig,
+    ClaimVerification,
     EvidenceAssessment,
     QuestionScreening,
     ResearchTask,
 )
 from paper_research_copilot.agent.planner import ResearchPlanner
 from paper_research_copilot.agent.state import ResearchState
+from paper_research_copilot.agent.verification import ClaimVerificationOutcome
 from paper_research_copilot.domain import AcquisitionResult, Answer, RetrievedChunk
 from paper_research_copilot.reporting import AnswerGenerationTrace
 from paper_research_copilot.retrieval import CandidateRetriever, coverage_round_robin
@@ -53,6 +56,17 @@ class QuestionGate(Protocol):
     def screen(self, question: str) -> QuestionScreening: ...
 
 
+class ClaimVerifier(Protocol):
+    model: str
+
+    def verify(
+        self,
+        question: str,
+        answer: Answer,
+        evidence: Sequence[RetrievedChunk],
+    ) -> ClaimVerificationOutcome: ...
+
+
 @runtime_checkable
 class ObservableAnswerWriter(AnswerWriter, Protocol):
     def trace_for(self, question: str) -> AnswerGenerationTrace: ...
@@ -69,6 +83,7 @@ class ResearchAgentRuntime:
         *,
         acquirer: EvidenceAcquirer | None = None,
         question_gate: QuestionGate | None = None,
+        claim_verifier: ClaimVerifier | None = None,
         config: AgentRuntimeConfig | None = None,
         checkpointer: BaseCheckpointSaver[Any] | None = None,
         close_callback: Callable[[], None] | None = None,
@@ -78,6 +93,7 @@ class ResearchAgentRuntime:
         self._answer_writer = answer_writer
         self._acquirer = acquirer
         self._question_gate = question_gate
+        self._claim_verifier = claim_verifier
         self.config = config or AgentRuntimeConfig()
         self._checkpointer = checkpointer
         self._close_callback = close_callback
@@ -141,9 +157,11 @@ class ResearchAgentRuntime:
         return self._result(question, typed_state)
 
     def _result(self, question: str, final_state: ResearchState) -> AgentResult:
+        screening = final_state.get("screening")
         return AgentResult(
             question=question,
-            screening=final_state.get("screening"),
+            screening=screening,
+            clarification=clarification_for(screening) if screening is not None else None,
             plan=final_state["plan"],
             evidence=final_state["evidence"],
             assessment=final_state["assessment"],
@@ -151,6 +169,7 @@ class ResearchAgentRuntime:
             retry_count=final_state["retry_count"],
             acquisition_rounds=final_state.get("acquisition_rounds", 0),
             acquisition=final_state.get("acquisition"),
+            verification=final_state.get("verification"),
             trace=final_state["trace"],
         )
 
@@ -171,6 +190,8 @@ class ResearchAgentRuntime:
         graph.add_node("revise_queries", self._revise_queries)
         graph.add_node("acquire_evidence", self._acquire_evidence)
         graph.add_node("write_report", self._write_report)
+        if self._claim_verifier is not None:
+            graph.add_node("verify_claims", self._verify_claims)
         graph.add_node("validate_citations", self._validate_citations)
         graph.add_edge(START, "plan_research")
         if self._question_gate is None:
@@ -203,9 +224,15 @@ class ResearchAgentRuntime:
             {
                 "revise": "revise_queries",
                 "acquire": "acquire_evidence",
-                "validate": "validate_citations",
+                "validate": (
+                    "verify_claims"
+                    if self._claim_verifier is not None
+                    else "validate_citations"
+                ),
             },
         )
+        if self._claim_verifier is not None:
+            graph.add_edge("verify_claims", "validate_citations")
         graph.add_edge("validate_citations", END)
         return graph.compile(
             checkpointer=self._checkpointer,
@@ -584,6 +611,84 @@ class ResearchAgentRuntime:
                     "citation_count": len(answer.citations),
                 },
             )
+        )
+
+    def _verify_claims(self, state: ResearchState) -> ResearchState:
+        started = time.perf_counter()
+        if self._claim_verifier is None:
+            raise RuntimeError("Claim verification node requires a Claim Verifier")
+        answer = state["answer"]
+        if answer.status == "insufficient_evidence":
+            verification = ClaimVerification(
+                status="skipped",
+                rationale="No answered result was available for Claim Verification",
+                model=self._claim_verifier.model,
+            )
+            outcome = "skipped"
+            final_answer = answer
+            assessment = state["assessment"]
+        else:
+            try:
+                result = self._claim_verifier.verify(
+                    state["question"],
+                    answer,
+                    state["evidence"],
+                )
+                verification = result.verification
+                outcome = verification.status
+                final_answer = result.answer
+                assessment = state["assessment"]
+                if final_answer.status == "insufficient_evidence":
+                    assessment = assessment.model_copy(
+                        update={
+                            "sufficient": False,
+                            "reason": (
+                                "Claim Verification removed unsupported material claims"
+                            ),
+                            "retry_recommended": False,
+                        }
+                    )
+            except Exception as exc:
+                verification = ClaimVerification(
+                    status="error",
+                    rationale="Claim Verification was unavailable; human review is required",
+                    needs_human_review=True,
+                    model=self._claim_verifier.model,
+                    latency_ms=_elapsed_ms(started),
+                    error=f"{type(exc).__name__}: {exc}",
+                )
+                outcome = "error"
+                final_answer = answer
+                assessment = state["assessment"]
+        verdict_counts = {
+            verdict: sum(item.verdict == verdict for item in verification.claims)
+            for verdict in ("supported", "partially_supported", "unsupported")
+        }
+        details: dict[str, str | int | float | bool] = {
+            "verification_status": verification.status,
+            "claim_count": len(verification.claims),
+            "supported_claims": verdict_counts["supported"],
+            "partially_supported_claims": verdict_counts["partially_supported"],
+            "unsupported_claims": verdict_counts["unsupported"],
+            "needs_human_review": verification.needs_human_review,
+            "verification_attempts": verification.attempts,
+            **_token_usage_details("verification", verification.usage),
+        }
+        if verification.model is not None:
+            details["verification_model"] = verification.model
+        if verification.error is not None:
+            details["verification_error"] = verification.error
+        return ResearchState(
+            answer=final_answer,
+            assessment=assessment,
+            verification=verification,
+            trace=_append_event(
+                state,
+                node="verify_claims",
+                outcome=outcome,
+                latency_ms=_elapsed_ms(started),
+                details=details,
+            ),
         )
 
 

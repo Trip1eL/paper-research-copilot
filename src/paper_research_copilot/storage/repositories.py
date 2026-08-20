@@ -56,6 +56,9 @@ class ResearchTaskRecord:
     current_node: str | None
     attempt: int
     event_count: int
+    parent_task_id: str | None = None
+    parent_question: str | None = None
+    clarification_response: str | None = None
 
 
 @dataclass(frozen=True)
@@ -81,6 +84,16 @@ class ResearchRepository(Protocol):
         question: str,
         created_at: datetime,
     ) -> ResearchTaskRecord: ...
+
+    def create_clarified_task(
+        self,
+        *,
+        parent_task_id: str,
+        task_id: str,
+        question: str,
+        clarification_response: str,
+        created_at: datetime,
+    ) -> tuple[ResearchTaskRecord, bool]: ...
 
     def get_task(self, task_id: str) -> ResearchTaskRecord: ...
 

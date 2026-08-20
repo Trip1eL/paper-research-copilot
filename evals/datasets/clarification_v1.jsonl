@@ -1,0 +1,3 @@
+{"case_id":"CL-001","question":"请详细解释刚才提到的那篇论文。","expected_rule_id":"unresolved_reference","clarification_response":"ReAct: Synergizing Reasoning and Acting in Language Models","expected_child_answer_status":"answered","rationale":"验证缺失论文身份时先追问，补充明确标题后重新进入研究链路。"}
+{"case_id":"CL-002","question":"目前最好的 Agent Memory 方法是什么？","expected_rule_id":"unscoped_superlative","clarification_response":"用于长周期软件开发任务，优先考察跨会话记忆准确率，其次考虑检索延迟。","expected_child_answer_status":"answered","rationale":"验证最高级问题必须补充目标场景和评价标准后才能进行比较。"}
+{"case_id":"CL-003","question":"我应该使用哪篇 Agent 论文里的方法？","expected_rule_id":"underspecified_selection","clarification_response":"用于需要外部工具调用的研究 Agent，要求方法容易实现且推理轨迹可审计。","expected_child_answer_status":"answered","rationale":"验证选型问题必须补充使用目标和工程约束后才能检索和回答。"}

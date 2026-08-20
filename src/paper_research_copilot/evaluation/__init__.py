@@ -34,6 +34,14 @@ from paper_research_copilot.evaluation.answer_datasets import (
     AnswerKeyPoint,
     load_answer_evaluation_cases,
 )
+from paper_research_copilot.evaluation.clarification import (
+    ClarificationCaseResult,
+    ClarificationEvaluationCase,
+    ClarificationEvaluationReport,
+    build_clarification_report,
+    evaluate_clarification_case,
+    load_clarification_cases,
+)
 from paper_research_copilot.evaluation.corpus_parse_shadow import (
     CorpusShadowConfig,
     CorpusShadowPaperResult,
@@ -200,6 +208,9 @@ __all__ = [
     "CachedAnswerJudge",
     "CaseStabilitySummary",
     "ClaimAssessment",
+    "ClarificationCaseResult",
+    "ClarificationEvaluationCase",
+    "ClarificationEvaluationReport",
     "CorpusShadowConfig",
     "CorpusShadowPaperResult",
     "CorpusShadowReport",
@@ -271,6 +282,7 @@ __all__ = [
     "build_answer_evaluation_report",
     "build_answer_case_result",
     "build_corpus_shadow_config",
+    "build_clarification_report",
     "build_corpus_shadow_report",
     "build_judge_evaluation_config",
     "build_judge_evaluation_report",
@@ -294,6 +306,7 @@ __all__ = [
     "build_structured_parse_report",
     "build_variant_case_result",
     "load_agent_evaluation_cases",
+    "load_clarification_cases",
     "load_answer_evaluation_cases",
     "load_open_world_cases",
     "load_retrieval_diagnostics",
@@ -304,6 +317,7 @@ __all__ = [
     "load_parse_benchmark",
     "load_structured_parse_benchmark",
     "evaluate_structured_parse_case",
+    "evaluate_clarification_case",
     "evaluate_open_world_case",
     "evaluate_table_question",
     "run_retrieval_evaluation",

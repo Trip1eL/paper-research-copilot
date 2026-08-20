@@ -13,12 +13,17 @@ from fastapi.staticfiles import StaticFiles
 
 from paper_research_copilot.agent import build_agent_runtime
 from paper_research_copilot.api.models import (
+    ClarificationResponse,
     HealthResponse,
     ResearchRequest,
     ResearchTaskAccepted,
     ResearchTaskView,
 )
-from paper_research_copilot.api.service import ResearchTaskService, TaskResumeError
+from paper_research_copilot.api.service import (
+    ResearchTaskService,
+    TaskClarificationError,
+    TaskResumeError,
+)
 from paper_research_copilot.config import PROJECT_ROOT, Settings, get_settings
 from paper_research_copilot.storage import (
     SqliteCheckpointStore,
@@ -67,7 +72,7 @@ def create_app(
 
     application = FastAPI(
         title="Paper Research Copilot API",
-        version="0.1.0",
+        version="2.0.0",
         lifespan=lifespan,
     )
     application.state.task_service = service
@@ -91,6 +96,9 @@ def create_app(
             dynamic_qdrant_collection=resolved_settings.dynamic_qdrant_collection,
             dynamic_acquisition_enabled=(
                 resolved_settings.agent_dynamic_acquisition_enabled
+            ),
+            claim_verification_enabled=(
+                resolved_settings.agent_claim_verification_enabled
             ),
             task_store=service.task_store_name,
             checkpoint_ready=checkpoint_ready,
@@ -136,6 +144,31 @@ def create_app(
         try:
             task = service.resume(task_id)
         except TaskResumeError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        task_url = f"{API_PREFIX}/research/{task.task_id}"
+        return ResearchTaskAccepted(
+            task_id=task.task_id,
+            status=task.status,
+            created_at=task.created_at,
+            task_url=task_url,
+            events_url=f"{task_url}/events",
+        )
+
+    @application.post(
+        f"{API_PREFIX}/research/{{task_id}}/clarify",
+        response_model=ResearchTaskAccepted,
+        status_code=status.HTTP_202_ACCEPTED,
+    )
+    async def clarify_research_task(
+        task_id: str,
+        payload: ClarificationResponse,
+    ) -> ResearchTaskAccepted:
+        _get_task_or_404(service, task_id)
+        try:
+            task = service.clarify(task_id, payload.response)
+        except TaskClarificationError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         except RuntimeError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc

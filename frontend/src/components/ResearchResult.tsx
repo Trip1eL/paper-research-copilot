@@ -3,8 +3,12 @@ import {
   FileSearch,
   FileText,
   ListTree,
+  MessageSquareText,
   Quote,
+  RefreshCw,
+  Send,
   ShieldAlert,
+  ShieldCheck,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -15,9 +19,18 @@ type ResultTab = "report" | "evidence" | "plan";
 interface ResearchResultProps {
   task: ResearchTaskView | null;
   active: boolean;
+  clarifying: boolean;
+  clarificationError: string | null;
+  onClarify: (response: string) => void;
 }
 
-export function ResearchResult({ task, active }: ResearchResultProps) {
+export function ResearchResult({
+  task,
+  active,
+  clarifying,
+  clarificationError,
+  onClarify,
+}: ResearchResultProps) {
   const [tab, setTab] = useState<ResultTab>("report");
   useEffect(() => setTab("report"), [task?.task_id]);
 
@@ -55,7 +68,14 @@ export function ResearchResult({ task, active }: ResearchResultProps) {
       {!task?.result ? (
         <EmptyResult active={active} failed={task?.status === "failed"} error={task?.error} />
       ) : tab === "report" ? (
-        <ReportView result={task.result} onOpenEvidence={openEvidence} />
+        <ReportView
+          result={task.result}
+          task={task}
+          clarifying={clarifying}
+          clarificationError={clarificationError}
+          onClarify={onClarify}
+          onOpenEvidence={openEvidence}
+        />
       ) : tab === "evidence" ? (
         <EvidenceView result={task.result} />
       ) : (
@@ -113,23 +133,61 @@ function EmptyResult({
 
 function ReportView({
   result,
+  task,
+  clarifying,
+  clarificationError,
+  onClarify,
   onOpenEvidence,
 }: {
   result: AgentResult;
+  task: ResearchTaskView;
+  clarifying: boolean;
+  clarificationError: string | null;
+  onClarify: (response: string) => void;
   onOpenEvidence: (citationId: string) => void;
 }) {
+  if (result.clarification) {
+    return (
+      <ClarificationView
+        result={result}
+        clarifying={clarifying}
+        error={clarificationError}
+        onSubmit={onClarify}
+      />
+    );
+  }
   const answered = result.answer.status === "answered";
   return (
     <div className="result-scroll report-view">
+      {task.parent_task_id ? (
+        <div className="clarification-provenance">
+          <MessageSquareText size={15} aria-hidden="true" />
+          <span>此结果来自补充后的研究任务</span>
+          <code>{task.parent_task_id.slice(0, 8)}</code>
+        </div>
+      ) : null}
       <div className={`answer-status ${answered ? "answered" : "insufficient"}`}>
         {answered ? <CheckCircle2 size={17} aria-hidden="true" /> : <ShieldAlert size={17} />}
         <span>{answered ? "证据充分，已生成回答" : "证据不足"}</span>
         <span>{result.assessment.distinct_paper_count} papers</span>
       </div>
       <article className="answer-copy">
-        <h3>{result.question}</h3>
+        <h3>{task.parent_question ?? result.question}</h3>
+        {task.clarification_response ? (
+          <p className="clarified-context">
+            <span>用户补充</span>
+            {task.clarification_response}
+          </p>
+        ) : null}
         <div className="answer-text">{result.answer.text}</div>
       </article>
+
+      {result.verification ? (
+        <ClaimVerificationView
+          verification={result.verification}
+          onOpenEvidence={onOpenEvidence}
+        />
+      ) : null}
 
       <section className="citation-section">
         <div className="section-title-row">
@@ -158,6 +216,132 @@ function ReportView({
           </div>
         )}
       </section>
+    </div>
+  );
+}
+
+function ClaimVerificationView({
+  verification,
+  onOpenEvidence,
+}: {
+  verification: NonNullable<AgentResult["verification"]>;
+  onOpenEvidence: (citationId: string) => void;
+}) {
+  const revised = verification.status === "revised";
+  const failed = verification.status === "error";
+  const StatusIcon = failed ? ShieldAlert : revised ? RefreshCw : ShieldCheck;
+  const statusLabel = failed
+    ? "验证不可用"
+    : revised
+      ? "已移除或降级无充分支撑的内容"
+      : verification.status === "skipped"
+        ? "无需验证"
+        : "关键陈述已通过证据核验";
+  const verdictLabels = {
+    supported: "支持",
+    partially_supported: "部分支持",
+    unsupported: "不支持",
+  } as const;
+
+  return (
+    <section className={`verification-section ${verification.status}`}>
+      <div className="section-title-row verification-title">
+        <h3>Claim Verification</h3>
+        <span>
+          <StatusIcon size={15} aria-hidden="true" />
+          {statusLabel}
+        </span>
+      </div>
+      <p className="verification-rationale">{verification.rationale}</p>
+      {verification.claims.length ? (
+        <ol className="claim-list">
+          {verification.claims.map((claim) => (
+            <li key={claim.claim_id} className={`claim-row ${claim.verdict}`}>
+              <div className="claim-heading">
+                <span>{claim.claim_id}</span>
+                <strong>{verdictLabels[claim.verdict]}</strong>
+              </div>
+              <p>{claim.claim}</p>
+              <small>{claim.rationale}</small>
+              {claim.citation_ids.length ? (
+                <div className="claim-citations">
+                  {claim.citation_ids.map((citationId) => (
+                    <button
+                      type="button"
+                      key={citationId}
+                      onClick={() => onOpenEvidence(citationId)}
+                    >
+                      {citationId}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </li>
+          ))}
+        </ol>
+      ) : null}
+      {verification.needs_human_review ? (
+        <p className="verification-review">需要人工复核</p>
+      ) : null}
+      {verification.error ? <p className="verification-error">{verification.error}</p> : null}
+    </section>
+  );
+}
+
+function ClarificationView({
+  result,
+  clarifying,
+  error,
+  onSubmit,
+}: {
+  result: AgentResult;
+  clarifying: boolean;
+  error: string | null;
+  onSubmit: (response: string) => void;
+}) {
+  const [response, setResponse] = useState("");
+  const clarification = result.clarification;
+  if (!clarification) return null;
+
+  return (
+    <div className="result-scroll clarification-view">
+      <div className="clarification-heading">
+        <MessageSquareText size={22} aria-hidden="true" />
+        <div>
+          <p>需要补充信息</p>
+          <h3>{clarification.prompt}</h3>
+        </div>
+      </div>
+      <div className="clarification-context">
+        <span>原研究问题</span>
+        <p>{result.question}</p>
+      </div>
+      <form
+        className="clarification-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (response.trim().length >= 2) onSubmit(response);
+        }}
+      >
+        <label htmlFor="clarification-response">你的补充</label>
+        <textarea
+          id="clarification-response"
+          value={response}
+          onChange={(event) => setResponse(event.target.value)}
+          placeholder={clarification.required_information.join("；")}
+          rows={5}
+          maxLength={2000}
+          disabled={clarifying}
+        />
+        <div className="clarification-actions">
+          <span>{clarification.required_information.join(" · ")}</span>
+          <button type="submit" disabled={clarifying || response.trim().length < 2}>
+            <Send size={15} aria-hidden="true" />
+            {clarifying ? "正在提交" : "继续研究"}
+          </button>
+        </div>
+        {error ? <p className="clarification-error">{error}</p> : null}
+      </form>
     </div>
   );
 }

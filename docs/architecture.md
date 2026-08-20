@@ -58,11 +58,21 @@ POST /api/v1/research
 POST /api/v1/research/{task_id}/resume
   -> interrupted -> queued -> running
   -> continue from last committed LangGraph node
+
+POST /api/v1/research/{task_id}/clarify
+  -> validate completed Parent AgentResult.clarification
+  -> persist Parent / Response / Child relation
+  -> run a new Child Task with original question + clarification
 ```
 
 API 通过回调接收 Runtime 已有的 `AgentEvent`，不读取 LangGraph 私有 State，也不重复实现节点
 逻辑。任务服务默认只运行一个 Worker，以保护本地 Qdrant Client 和 JSONL Planner Cache 的写入
 边界。FastAPI Route 不直接调用 Provider。
+
+Ambiguous 输入通过独立 Clarification Protocol 继续：父任务先以结构化追问正常结束，用户补充后
+创建持久化关联的 Child Task。Child 使用完整的“原问题 + 用户补充”重新进入 Planner、Retrieval
+和 Answer；该流程不复用 LangGraph Resume，因为 Resume 只负责恢复被进程中断的同一 Graph
+Execution。
 
 ## 固定 RAG
 
@@ -96,6 +106,9 @@ Question
        -> retrieve_evidence
        -> assess_evidence
   -> write_report
+  -> verify_claims
+       检查最多 8 个关键 Claim 与实际引用 Evidence
+       必要时在同一次输出中执行一次受控修订
   -> validate_citations
   -> END
 ```
@@ -140,8 +153,8 @@ model、Prompt version 和精确输出建立 JSONL 缓存；缓存命中不会�
 | `retrieval` | Dense、BM25、RRF、MMR、Rewrite、Reranker 与 Coverage Merge |
 | `evaluation` | Dataset、指标、实验执行、缓存与对照报告 |
 | `storage` | Repository Protocol、SQLAlchemy/Alembic 业务库与 LangGraph Checkpoint 生命周期 |
-| `api` | FastAPI 契约、持久任务生命周期、Resume 与 SSE，不承载研究逻辑 |
-| `frontend` | React 工作台、SSE 消费与 Report/Evidence/Plan 展示 |
+| `api` | FastAPI 契约、持久任务生命周期、Clarification、Resume 与 SSE，不承载研究逻辑 |
+| `frontend` | React 工作台、SSE 消费、结构化追问与 Report/Evidence/Plan 展示 |
 
 依赖规则：
 

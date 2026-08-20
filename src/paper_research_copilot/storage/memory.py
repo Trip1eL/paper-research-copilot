@@ -29,6 +29,8 @@ class _MutableTask:
     error: str | None = None
     current_node: str | None = None
     attempt: int = 0
+    parent_task_id: str | None = None
+    clarification_response: str | None = None
 
 
 class InMemoryResearchRepository:
@@ -56,6 +58,45 @@ class InMemoryResearchRepository:
             self._events[task_id] = []
             self._append_event(task, "task_queued", created_at, "Research task queued")
             return self._snapshot(task)
+
+    def create_clarified_task(
+        self,
+        *,
+        parent_task_id: str,
+        task_id: str,
+        question: str,
+        clarification_response: str,
+        created_at: datetime,
+    ) -> tuple[ResearchTaskRecord, bool]:
+        with self._lock:
+            parent = self._require_in_status(parent_task_id, "succeeded")
+            for task in self._tasks.values():
+                if (
+                    task.parent_task_id == parent.task_id
+                    and task.clarification_response is not None
+                    and task.clarification_response.casefold()
+                    == clarification_response.casefold()
+                ):
+                    return self._snapshot(task), False
+            if task_id in self._tasks:
+                raise TaskStateConflictError(f"Research task already exists: {task_id}")
+            task = _MutableTask(
+                task_id,
+                question,
+                "queued",
+                created_at,
+                parent_task_id=parent.task_id,
+                clarification_response=clarification_response,
+            )
+            self._tasks[task_id] = task
+            self._events[task_id] = []
+            self._append_event(
+                task,
+                "task_queued",
+                created_at,
+                "Clarified research task queued",
+            )
+            return self._snapshot(task), True
 
     def get_task(self, task_id: str) -> ResearchTaskRecord:
         with self._lock:
@@ -220,6 +261,13 @@ class InMemoryResearchRepository:
             current_node=task.current_node,
             attempt=task.attempt,
             event_count=len(self._events[task.task_id]),
+            parent_task_id=task.parent_task_id,
+            parent_question=(
+                self._tasks[task.parent_task_id].question
+                if task.parent_task_id is not None
+                else None
+            ),
+            clarification_response=task.clarification_response,
         )
 
     def _ensure_open(self) -> None:

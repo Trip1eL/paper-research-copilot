@@ -7,7 +7,9 @@ from fastapi.testclient import TestClient
 from paper_research_copilot.agent import (
     AgentEvent,
     AgentResult,
+    ClarificationRequest,
     EvidenceAssessment,
+    QuestionScreening,
     ResearchPlan,
     ResearchTask,
 )
@@ -22,9 +24,9 @@ from paper_research_copilot.storage import (
 QUESTION = "How does episodic memory improve later attempts?"
 
 
-def _result() -> AgentResult:
+def _result(question: str = QUESTION) -> AgentResult:
     plan = ResearchPlan(
-        question=QUESTION,
+        question=question,
         question_type="single_paper",
         rationale="Retrieve the requested mechanism",
         tasks=(
@@ -50,7 +52,7 @@ def _result() -> AgentResult:
         ),
     )
     return AgentResult(
-        question=QUESTION,
+        question=question,
         plan=plan,
         evidence=(),
         assessment=EvidenceAssessment(
@@ -63,7 +65,7 @@ def _result() -> AgentResult:
             retry_recommended=False,
         ),
         answer=Answer(
-            question=QUESTION,
+            question=question,
             text="INSUFFICIENT_EVIDENCE",
             citations=(),
             status="insufficient_evidence",
@@ -77,6 +79,7 @@ class _FakeRuntime:
     def __init__(self, *, error: Exception | None = None) -> None:
         self.error = error
         self.closed = False
+        self.run_calls: list[tuple[str, str | None]] = []
 
     def run(
         self,
@@ -85,10 +88,10 @@ class _FakeRuntime:
         event_callback: Callable[[AgentEvent], None] | None = None,
         task_id: str | None = None,
     ) -> AgentResult:
-        assert question == QUESTION
+        self.run_calls.append((question, task_id))
         if self.error is not None:
             raise self.error
-        result = _result()
+        result = _result(question)
         if event_callback is not None:
             for event in result.trace:
                 event_callback(event)
@@ -111,6 +114,36 @@ class _FakeRuntime:
 
     def close(self) -> None:
         self.closed = True
+
+
+def _clarification_result() -> AgentResult:
+    return _result().model_copy(
+        update={
+            "screening": QuestionScreening(
+                decision="ambiguous",
+                rule_id="unresolved_reference",
+                reason="问题引用了当前请求中不存在的前文对象",
+            ),
+            "clarification": ClarificationRequest(
+                rule_id="unresolved_reference",
+                prompt="你指的是哪一篇论文或哪一个方法？",
+                required_information=("论文标题、作者、arXiv ID 或明确的方法名称",),
+            ),
+        }
+    )
+
+
+def _completed_parent(repository: InMemoryResearchRepository, task_id: str) -> None:
+    created_at = datetime.now(UTC)
+    repository.create_task(task_id=task_id, question=QUESTION, created_at=created_at)
+    repository.start_task(task_id, started_at=created_at)
+    repository.complete_task(
+        task_id,
+        status="succeeded",
+        completed_at=created_at,
+        result_json=_clarification_result().model_dump_json(),
+        error=None,
+    )
 
 
 class _FakeCheckpointStore:
@@ -192,6 +225,7 @@ def test_health_probes_runtime_and_unknown_task_returns_404() -> None:
             "paper_dynamic_bge_m3_chunking_v1"
         )
         assert health.json()["dynamic_acquisition_enabled"] is False
+        assert health.json()["claim_verification_enabled"] is True
         assert missing.status_code == 404
 
 
@@ -205,6 +239,72 @@ def test_request_contract_rejects_short_or_unknown_fields() -> None:
 
         assert short.status_code == 422
         assert extra.status_code == 422
+
+
+def test_clarification_creates_linked_child_and_is_idempotent() -> None:
+    runtime = _FakeRuntime()
+    repository = InMemoryResearchRepository()
+    _completed_parent(repository, "ambiguous-parent")
+    service = ResearchTaskService(lambda: runtime, repository=repository)
+
+    with TestClient(
+        create_app(task_service=service, settings=Settings(), frontend_dir=None)
+    ) as client:
+        first = client.post(
+            "/api/v1/research/ambiguous-parent/clarify",
+            json={"response": "ReAct: Synergizing Reasoning and Acting"},
+        )
+        assert first.status_code == 202
+        child_id = first.json()["task_id"]
+        client.get(first.json()["events_url"])
+        child = client.get(first.json()["task_url"]).json()
+
+        duplicate = client.post(
+            "/api/v1/research/ambiguous-parent/clarify",
+            json={"response": "  react:   synergizing reasoning and acting  "},
+        )
+
+        assert duplicate.status_code == 202
+        assert duplicate.json()["task_id"] == child_id
+        assert child["parent_task_id"] == "ambiguous-parent"
+        assert child["parent_question"] == QUESTION
+        assert child["clarification_response"] == (
+            "ReAct: Synergizing Reasoning and Acting"
+        )
+        assert "原研究问题" in child["question"]
+        assert "用户补充" in child["question"]
+        assert len(runtime.run_calls) == 1
+
+
+def test_clarification_rejects_missing_nonterminal_and_clear_tasks() -> None:
+    runtime = _FakeRuntime()
+    repository = InMemoryResearchRepository()
+    created_at = datetime.now(UTC)
+    repository.create_task(task_id="queued-parent", question=QUESTION, created_at=created_at)
+    service = ResearchTaskService(lambda: runtime, repository=repository)
+
+    with TestClient(
+        create_app(task_service=service, settings=Settings(), frontend_dir=None)
+    ) as client:
+        missing = client.post(
+            "/api/v1/research/missing/clarify",
+            json={"response": "ReAct paper"},
+        )
+        queued = client.post(
+            "/api/v1/research/queued-parent/clarify",
+            json={"response": "ReAct paper"},
+        )
+        normal = client.post("/api/v1/research", json={"question": QUESTION}).json()
+        client.get(normal["events_url"])
+        clear = client.post(
+            f"/api/v1/research/{normal['task_id']}/clarify",
+            json={"response": "ReAct paper"},
+        )
+
+        assert missing.status_code == 404
+        assert queued.status_code == 409
+        assert clear.status_code == 409
+        assert clear.json()["detail"] == "This task does not request clarification"
 
 
 def test_interrupted_task_can_be_explicitly_resumed() -> None:

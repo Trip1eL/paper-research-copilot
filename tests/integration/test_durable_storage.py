@@ -84,3 +84,43 @@ def test_alembic_upgrade_is_idempotent(tmp_path) -> None:
     SqliteResearchRepository(path).close()
     SqliteResearchRepository(path).close()
 
+
+def test_clarified_task_relation_is_idempotent_and_survives_reopen(tmp_path) -> None:
+    path = tmp_path / "app.db"
+    repository = SqliteResearchRepository(path)
+    repository.create_task(task_id="parent", question="Which paper?", created_at=NOW)
+    repository.start_task("parent", started_at=NOW)
+    repository.complete_task(
+        "parent",
+        status="succeeded",
+        completed_at=NOW,
+        result_json='{"clarification": true}',
+        error=None,
+    )
+
+    child, created = repository.create_clarified_task(
+        parent_task_id="parent",
+        task_id="child",
+        question="Original question plus ReAct",
+        clarification_response="ReAct paper",
+        created_at=NOW,
+    )
+    duplicate, duplicate_created = repository.create_clarified_task(
+        parent_task_id="parent",
+        task_id="unused-child-id",
+        question="Original question plus ReAct",
+        clarification_response="react PAPER",
+        created_at=NOW,
+    )
+
+    assert created is True
+    assert duplicate_created is False
+    assert duplicate.task_id == child.task_id
+    repository.close()
+
+    reopened = SqliteResearchRepository(path)
+    restored = reopened.get_task("child")
+    assert restored.parent_task_id == "parent"
+    assert restored.parent_question == "Which paper?"
+    assert restored.clarification_response == "ReAct paper"
+    reopened.close()

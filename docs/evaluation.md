@@ -576,3 +576,43 @@ P95 和 Output Token 都显著高于对照，证明截断后追加自然语言 C
 `gpt-5.5 + Prompt v1`；后续只有在主链路确实需要切换 DeepSeek Planner 时，才评估结构化输出或
 Router/Task Generator 分离。正式报告为
 `evals/baselines/planner_compact_2400_ablation_v1.json|md`。
+
+### Clarification Live Evaluation v1
+
+`clarification_v1.jsonl` 冻结 3 条协议 Case，分别覆盖无上下文指代、无评价标准的最高级问题和
+缺少工程约束的选型问题。Runner 为每条 Case 创建独立 SQLite、Checkpoint、Dynamic Qdrant 和
+PDF 目录，先执行 Ambiguous Parent，关闭并重建 Service，再提交补充并执行 Child，用于同时验证
+持久化重启和父子来源关系。
+
+```powershell
+python .\scripts\run_clarification_evaluation.py --baseline-id clarification_live_v1
+```
+
+3/3 Case 通过 Live Strict Gate：Clarification Rule/Prompt、Parent Zero-write、Child Runtime
+Re-entry、Answer Status、Citation Validation 和 Provenance 均符合预期，Parent/Child Dynamic
+Point Delta 均为 0。Child 共生成 30 条 Evidence 和 15 条 Citation。`CL-002` 额外触发一次
+空 Acquisition，结果为 0 Candidate、0 Download、0 Index；它没有污染动态库，但 Child 延迟约
+52 秒，作为后续性能问题保留，不在本阶段做细小调参。
+
+这里的 Answer Status 只判断 `answered / insufficient_evidence` 是否符合金标，不判断答案语义。
+三条答案已人工审计，但没有运行独立 Semantic LLM Judge，因此不能将 `100% Live Strict Pass`
+表述为 `100% Answer Correctness`。完整逐 Case 结果与人工审计见
+`evals/baselines/clarification_live_v1.md`。
+
+### Claim Verification Live Evaluation v1
+
+生产 `verify_claims` 不读取 Reference Answer，只读取候选回答实际使用的 Citation Evidence。它把最多
+8 个关键 Claim 分为 `supported / partially_supported / unsupported`；存在非完全支持 Claim 时，在
+同一次结构化输出中执行一次修订，然后由确定性 Citation Validation 检查最终回答。
+
+```powershell
+python .\scripts\run_claim_verification_evaluation.py `
+  --baseline-id claim_verification_live_v1
+```
+
+冻结 Smoke Dataset 包含两条历史真实回答和两条人工注入错误。真实 `gpt-5.5` 结果为 `4/4 Strict
+Pass`：两个正样本直接通过，两个对抗样本被修订；绝对成功率、错误年份和错误交互机制的注入内容
+移除率为 `100%`。四次调用均首次通过 Schema，总延迟约 `76s`，单次约 `14.1–27.7s`。
+
+该结果证明生产 Prompt 能执行预设的放行/修订控制，不代表开放域 Claim Verification 的统计正确率，
+也不能消除单模型偏差。正式报告见 `evals/baselines/claim_verification_live_v1.md`。

@@ -4,8 +4,9 @@ Paper Research Copilot 是一个面向学术论文研究的 Agentic RAG 项目�
 基础 RAG，再在不改写 Retriever 和 Answer 契约的前提下加入薄 LangGraph Runtime，确保
 Agent 的每个决策和最终答案都能追溯到 PDF 页码与原始文本片段。
 
-当前稳定版本为 `v1.0.0`，使用 40 篇固定版本的 Agent 论文构建 Corpus v3，并完成
-Retrieval、Answer/Citation、LLM Judge 和 Agent-vs-Fixed-RAG 三层评测。
+当前版本为 `v2.0.0`，使用 40 篇固定版本的 Agent 论文构建 Corpus v3，
+并在 v1 的 Retrieval、Answer/Citation、LLM Judge 和 Agent-vs-Fixed-RAG 评测基础上，加入解析
+质量路由、持久化运行时、动态扩库、Clarification 和有界 Claim Verification。
 
 ## 快速导航
 
@@ -41,7 +42,9 @@ LangGraph Agent Runtime
      cross_paper: Task Hybrid RRF + Coverage Merge
   -> Evidence Gate
   -> optional Query Revision (max 1)
-  -> Answer + Citation Validation
+  -> Answer
+  -> Claim Verification + bounded revision (max 1)
+  -> Citation Validation
 
 FastAPI Task Layer
   -> POST asynchronous research task
@@ -99,6 +102,26 @@ Ambiguous。每个 Case 使用独立且初始为空的 Dynamic Qdrant、SQLite �
 触发、恢复成功、拒答、无关写入、目标 Citation、Parser provenance、延迟和成本。首轮无 Revision
 消融 Strict Pass 为 `68.75%`，主要失败来自缩写搜索歧义、不可恢复问题的无关写入和 Ambiguous
 问题缺少入口 Gate；详细结果见 `evals/baselines/open_world_v1_no_revision.md`。
+
+Clarification Protocol 已进一步支持 Ambiguous Parent 返回结构化追问，用户补充后创建持久化 Child
+Task 并重新进入完整研究链路。隔离 Live Evaluation 的 3/3 Case 通过协议、Parent Zero-write、Child
+Runtime Re-entry、Answer Status、Citation 和 Provenance Gate；这不是独立语义 Judge 结论，答案内容
+另经人工审计。运行和边界见 `evals/baselines/clarification_live_v1.md`。
+
+```powershell
+python .\scripts\run_clarification_evaluation.py --baseline-id clarification_live_v1
+```
+
+生产 Agent 已增加有界 Claim Verification：`gpt-5.5` 只读取回答实际引用的 Evidence，将关键 Claim
+判为支持、部分支持或不支持；发现问题时在同一次结构化输出中最多修订一次，不进入 Reflection Loop。
+两条历史真实回答和两条注入错误的 Live Smoke 达到 `4/4 Strict Pass`，注入内容移除率 `100%`，
+但单次增加约 `14.1–27.7s` 延迟，可通过环境变量关闭。完整报告见
+`evals/baselines/claim_verification_live_v1.md`。
+
+```powershell
+python .\scripts\run_claim_verification_evaluation.py `
+  --baseline-id claim_verification_live_v1
+```
 
 ```powershell
 paper-rag search-papers "agent memory retrieval" --limit 5
@@ -248,6 +271,9 @@ paper-research-api
 研究任务，`GET /api/v1/research/{task_id}` 查询结果，`GET .../events` 通过 SSE 推送每个
 LangGraph 节点的 outcome、latency 和 details。`GET /health` 会实际构建 Runtime，检查 Corpus v3
 和 Qdrant Collection。完整契约与 MVP 边界见 `docs/api.md`。
+
+Ambiguous 任务会返回结构化追问。`POST /api/v1/research/{task_id}/clarify` 接收用户补充并创建
+可追溯的 Child Task；重复提交相同补充会返回同一个 Child Task，不重复执行 Agent。
 
 另开终端启动 React 研究工作台：
 
@@ -595,11 +621,12 @@ Smoke Test 验证。
   通过低延迟验收的 Dense/Hybrid，不自动启用高延迟实验策略。
 - Coverage-aware Retrieval 已通过三条困难跨论文题的定向消融，但尚未接入自动 Query Router；
   固定 RAG 仍由实验脚本显式调用，Agent Runtime 则根据结构化 Plan 自动选择 Coverage。
-- Citation 契约负责引用存在性与定位；LLM Judge 已补充 Claim-Evidence entailment 评估，
-  但单 Judge 仍可能有偏差，需要人工抽查。
+- 生产 Claim Verifier 负责一次 Claim-Evidence 检查和必要修订，离线 LLM Judge 负责带金标的质量
+  评估；两者都使用单 Judge，仍可能存在相关偏差，需要人工抽查。
 - 当前提供 CLI、LangGraph Agent Runtime、SQLite 持久 FastAPI/SSE Task Layer、React Research
   Workspace、Federated Retrieval 和 opt-in Agent Dynamic Acquisition；认证、长期用户 Memory 与
-  多实例 Worker 尚未实现。自动触发质量仍需 Phase 6 Open-world Evaluation 验收。
+  多实例 Worker 尚未实现。Open-world 和 Claim Verification 已完成小规模冻结验收，但样本量不足以
+  外推为开放域统计正确率。
 
 设计文档见 [docs/architecture.md](docs/architecture.md)、
 [docs/retrieval.md](docs/retrieval.md)、[docs/evaluation.md](docs/evaluation.md) 和

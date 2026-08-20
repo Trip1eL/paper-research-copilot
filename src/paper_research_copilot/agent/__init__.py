@@ -1,12 +1,19 @@
 """Research workflow state, LangGraph nodes, routing, and stopping rules."""
 
 from paper_research_copilot.agent.factory import build_agent_runtime
-from paper_research_copilot.agent.guardrails import QuestionAmbiguityGate
+from paper_research_copilot.agent.guardrails import (
+    QuestionAmbiguityGate,
+    build_clarified_question,
+    clarification_for,
+)
 from paper_research_copilot.agent.models import (
     AgentAcquisitionSummary,
     AgentEvent,
     AgentResult,
     AgentRuntimeConfig,
+    ClaimAssessment,
+    ClaimVerification,
+    ClarificationRequest,
     EvidenceAssessment,
     PlanningResult,
     QuestionScreening,
@@ -27,16 +34,28 @@ from paper_research_copilot.agent.planner import (
 )
 from paper_research_copilot.agent.runtime import (
     AnswerWriter,
+    ClaimVerifier,
     EvidenceAcquirer,
     ResearchAgentRuntime,
 )
 from paper_research_copilot.agent.state import ResearchState
+from paper_research_copilot.agent.verification import (
+    CLAIM_VERIFIER_PROMPT_VERSION,
+    ClaimVerificationOutcome,
+    LlmClaimVerifier,
+)
 
 __all__ = [
     "AgentAcquisitionSummary",
     "AgentEvent",
     "AgentResult",
     "AgentRuntimeConfig",
+    "ClaimAssessment",
+    "ClaimVerification",
+    "ClaimVerificationOutcome",
+    "ClaimVerifier",
+    "CLAIM_VERIFIER_PROMPT_VERSION",
+    "ClarificationRequest",
     "AnswerWriter",
     "CachedResearchPlanner",
     "CORPUS_VERIFICATION_PLANNER_PROMPT_VERSION",
@@ -45,6 +64,7 @@ __all__ = [
     "PlanningResult",
     "QuestionAmbiguityGate",
     "QuestionScreening",
+    "LlmClaimVerifier",
     "PlannerAttemptOutcome",
     "PlannerAttemptTrace",
     "PlannerGenerationTrace",
@@ -58,4 +78,6 @@ __all__ = [
     "ResearchTask",
     "find_plan_alias_leaks",
     "build_agent_runtime",
+    "build_clarified_question",
+    "clarification_for",
 ]

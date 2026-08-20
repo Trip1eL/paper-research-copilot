@@ -11,7 +11,7 @@ from threading import Condition, Lock
 from typing import Literal, Protocol, cast
 from uuid import uuid4
 
-from paper_research_copilot.agent import AgentEvent, AgentResult
+from paper_research_copilot.agent import AgentEvent, AgentResult, build_clarified_question
 from paper_research_copilot.api.models import ResearchStreamEvent, ResearchTaskView
 from paper_research_copilot.storage import (
     InMemoryResearchRepository,
@@ -59,6 +59,10 @@ class TaskResumeError(RuntimeError):
     """Raised when an interrupted task cannot be resumed."""
 
 
+class TaskClarificationError(RuntimeError):
+    """Raised when a task cannot accept a clarification response."""
+
+
 class ResearchTaskService:
     """Run one local Agent task at a time with durable lifecycle state."""
 
@@ -100,6 +104,30 @@ class ResearchTaskService:
             )
             self._condition.notify_all()
             self._executor.submit(self._execute, task_id, False)
+            return _task_view(record)
+
+    def clarify(self, task_id: str, response: str) -> ResearchTaskView:
+        with self._condition:
+            self._ensure_open()
+            parent = self._repository.get_task(task_id)
+            if parent.status != "succeeded" or parent.result_json is None:
+                raise TaskClarificationError(
+                    "Only a completed task requesting clarification can be clarified"
+                )
+            result = AgentResult.model_validate_json(parent.result_json)
+            if result.clarification is None:
+                raise TaskClarificationError("This task does not request clarification")
+            child_id = uuid4().hex
+            record, created = self._repository.create_clarified_task(
+                parent_task_id=task_id,
+                task_id=child_id,
+                question=build_clarified_question(parent.question, response),
+                clarification_response=response,
+                created_at=_now(),
+            )
+            if created:
+                self._condition.notify_all()
+                self._executor.submit(self._execute, record.task_id, False)
             return _task_view(record)
 
     def resume(self, task_id: str) -> ResearchTaskView:
@@ -263,6 +291,9 @@ def _task_view(record: ResearchTaskRecord) -> ResearchTaskView:
         started_at=record.started_at,
         completed_at=record.completed_at,
         event_count=record.event_count,
+        parent_task_id=record.parent_task_id,
+        parent_question=record.parent_question,
+        clarification_response=record.clarification_response,
         result=result,
         error=record.error,
     )

@@ -59,6 +59,8 @@ class Settings(BaseSettings):
     agent_max_retries: int = Field(default=1, ge=0, le=1)
     agent_dynamic_acquisition_enabled: bool = False
     agent_min_chunks_per_task: int = Field(default=2, ge=1, le=5)
+    agent_claim_verification_enabled: bool = True
+    agent_claim_verifier_max_tokens: int = Field(default=2400, ge=512, le=4000)
 
     @model_validator(mode="after")
     def validate_chunking(self) -> "Settings":

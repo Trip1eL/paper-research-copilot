@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 
 import {
+  clarifyResearchTask,
   createResearchTask,
   getHealth,
   getResearchTask,
@@ -33,6 +34,7 @@ export default function App() {
   const [status, setStatus] = useState<TaskStatus | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [resuming, setResuming] = useState(false);
+  const [clarifying, setClarifying] = useState(false);
   const [connection, setConnection] = useState<ConnectionState>("idle");
   const [error, setError] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -173,6 +175,32 @@ export default function App() {
     }
   };
 
+  const clarify = async (response: string) => {
+    if (!task?.result?.clarification) return;
+    stopConnections();
+    setClarifying(true);
+    setError(null);
+    try {
+      const accepted = await clarifyResearchTask(
+        `/api/v1/research/${task.task_id}`,
+        response,
+      );
+      setTaskMeta(accepted);
+      setTask(null);
+      setEvents([]);
+      setStatus(accepted.status);
+      connectEvents(accepted);
+    } catch (clarificationError) {
+      setError(
+        clarificationError instanceof Error
+          ? clarificationError.message
+          : "补充信息提交失败",
+      );
+    } finally {
+      setClarifying(false);
+    }
+  };
+
   const reset = () => {
     stopConnections();
     setQuestion("");
@@ -206,7 +234,13 @@ export default function App() {
           onResume={() => void resume()}
         />
         <AgentTimeline events={events} />
-        <ResearchResult task={task} active={active} />
+        <ResearchResult
+          task={task}
+          active={active}
+          clarifying={clarifying}
+          clarificationError={task?.result?.clarification ? error : null}
+          onClarify={(response) => void clarify(response)}
+        />
       </div>
     </div>
   );

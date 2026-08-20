@@ -7,7 +7,9 @@ Paper Research Copilot 是一个面向 Agent 研究论文的 Agentic RAG 系统�
 Retrieval。对于复杂问题，`gpt-5.5` Planner 会生成结构化 Research Tasks，LangGraph 根据
 single/cross-paper Route 选择检索策略，通过 Evidence Gate 判断证据是否充分，最多修订一次
 Query，再由 DeepSeek 生成带 Citation 的回答。系统提供 FastAPI、SSE 和 React 工作台，并使用
-Retrieval、确定性 Answer/Citation 指标和独立 LLM Judge 三层 Evaluation 验证效果。
+Retrieval、确定性 Answer/Citation 指标和独立 LLM Judge 三层 Evaluation 验证效果。v2 进一步加入
+PDF Page Quality Gate、受控动态扩库、SQLite/Checkpoint 持久化、结构化 Clarification，以及一次
+Claim-Evidence Verification 和必要修订。
 
 ## 与普通聊天 Agent 的区别
 
@@ -20,6 +22,7 @@ Retrieval、确定性 Answer/Citation 指标和独立 LLM Judge 三层 Evaluatio
 4. Citation 必须映射到最终 Evidence 的 Chunk 与页码，未知或无法映射的引用会被拒绝。
 5. Evaluation 不只看最终文本，而是分别测 Retrieval Coverage、Answer/Citation 契约和语义
    Correctness/Faithfulness。
+6. 含糊输入先追问且不产生检索/下载副作用；Corpus 外问题最多执行一次受控扩库，下载与索引幂等。
 
 ## 最关键的技术决策
 
@@ -35,11 +38,12 @@ Reranker 在部分 Retrieval 和 Answer Case 上有收益，但增加约 1.4 秒
 覆盖。当前默认低延迟链路保留 Hybrid RRF；Reranker 作为高质量实验模式，而跨论文覆盖由任务分解
 解决。
 
-### Reflection 为什么是确定性 Gate
+### Reflection 为什么是有界的
 
-当前 Reflection 的目标是判断“每个 Research Task 是否有足够 Chunk、跨论文来源是否完整”，这类
-条件可以确定性计算。只有 Gate 不通过时才调用 Planner 修订 Query，最多一次。这样比开放式
-Self-Reflection 更可解释、可测试，也能限制模型调用成本。
+Evidence Coverage 使用确定性 Gate 判断每个 Research Task 的 Chunk 配额和跨论文来源；不通过时
+最多修订一次 Query。回答生成后，`gpt-5.5` Claim Verifier 只读取实际引用 Evidence，发现部分支持
+或不支持 Claim 时最多修订一次回答。两层都有明确停止条件，比开放式 Self-Reflection 更可解释、
+可测试，也能量化额外模型调用成本。
 
 ### 为什么使用 LangGraph，但不强依赖 LangChain
 
@@ -92,22 +96,24 @@ Generation 问题；多条跨论文失败只召回一个目标，则是 Retrieva
 
 ### 当前最大的工程缺口是什么？
 
-任务存储和 Planner Cache 仍是本地内存/JSONL，只支持单 Worker；没有认证、持久化 Checkpointer、
-长期用户 Memory 和生产级队列。这些是部署扩展项，不影响当前作品验证的 RAG 与 Agent 核心。
+当前是 SQLite + 本地 Qdrant 的单机单 Worker 架构，虽然 Task/Event/Result、Paper Asset 和 LangGraph
+Checkpoint 都可持久恢复，但没有认证、任务取消、生产级队列、多实例协调和长期用户 Memory。
+Claim Verifier 也只有 4 条 Live Smoke，仍存在单模型偏差。这些是明确保留的部署与评测边界。
 
 ## 简历项目描述
 
 项目名称：`Paper Research Copilot | Agentic RAG 论文研究助手`
 
 - 基于 LangGraph、FastAPI、React 和 Qdrant 构建可观测 Agentic RAG 系统，实现结构化研究规划、
-  Dense/BM25 Hybrid RRF、跨论文 Coverage Retrieval、有界 Reflection 与页码级 Citation。
+  Dense/BM25 Hybrid RRF、跨论文 Coverage Retrieval、受控动态扩库、有界 Reflection 与页码级 Citation。
 - 建立 40 篇固定 arXiv revision、2,152 Chunks 的版本化 Agent 论文库，使用 `BAAI/bge-m3`
   Embedding，并对 Corpus、PDF SHA-256、Parse、Chunk Metadata 和幂等导入执行自动校验。
 - 构建 Retrieval、Deterministic Answer/Citation、`gpt-5.5` Semantic Judge 三层 Evaluation；
   在 12 条 Agent 对照 Case 上将跨论文完整覆盖从 40% 提升到 80%，Strict Run 从 66.67%
   提升到 91.67%，并量化 7.1 秒到 18.7 秒的延迟取舍。
 - 实现 FastAPI 异步任务和 SSE 节点事件，React 工作台实时展示 Plan、Evidence Gate、Report 与
-  Citation-to-Evidence 跳转；使用 Pydantic、pytest、Ruff、mypy 和前端 TypeScript Build 保证契约。
+  Claim Verification/Citation-to-Evidence 跳转；使用 SQLite + LangGraph Checkpointer 支持重启恢复，
+  并以 Pydantic、pytest、Ruff、mypy 和前端 TypeScript Build 保证契约。
 
 简历中不要写“提升 100%”或“达到行业领先”。应保留 Dataset 规模和对照口径，避免把开发集结果
 包装成公开 Benchmark 结论。

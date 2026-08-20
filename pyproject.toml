@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "paper-research-copilot"
-version = "1.0.0"
+version = "2.0.0"
 description = "An evidence-driven Agentic RAG system for academic research."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -43,6 +43,7 @@ packages = ["src/paper_research_copilot"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-ra"
 
 [tool.ruff]

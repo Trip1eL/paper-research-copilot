@@ -2,6 +2,9 @@ from datetime import UTC, datetime
 
 from paper_research_copilot.agent import (
     AgentRuntimeConfig,
+    ClaimAssessment,
+    ClaimVerification,
+    ClaimVerificationOutcome,
     EvidenceAssessment,
     PlanningResult,
     QuestionAmbiguityGate,
@@ -228,6 +231,47 @@ class _RefuseThenGroundedWriter(_GroundedWriter):
         return super().generate(question, evidence)
 
 
+class _FakeClaimVerifier:
+    model = "fake-verifier"
+
+    def __init__(self, *, revised_text: str | None = None, error: Exception | None = None) -> None:
+        self.revised_text = revised_text
+        self.error = error
+        self.calls = 0
+
+    def verify(
+        self,
+        question: str,
+        answer: Answer,
+        evidence: tuple[RetrievedChunk, ...],
+    ) -> ClaimVerificationOutcome:
+        self.calls += 1
+        if self.error is not None:
+            raise self.error
+        revised = self.revised_text is not None
+        final_answer = (
+            answer.model_copy(update={"text": self.revised_text}) if revised else answer
+        )
+        return ClaimVerificationOutcome(
+            answer=final_answer,
+            verification=ClaimVerification(
+                status="revised" if revised else "passed",
+                claims=(
+                    ClaimAssessment(
+                        claim_id="CL1",
+                        claim="The answer states a grounded mechanism",
+                        citation_ids=("C1",),
+                        verdict="unsupported" if revised else "supported",
+                        rationale="Compared directly with the cited Evidence",
+                    ),
+                ),
+                rationale="The answer was checked against cited Evidence",
+                model=self.model,
+                attempts=1,
+            ),
+        )
+
+
 def _config(
     *,
     max_retries: int = 1,
@@ -263,6 +307,57 @@ def test_single_paper_plan_uses_one_retrieval_without_revision() -> None:
         "write_report",
         "validate_citations",
     ]
+
+
+def test_claim_verification_revises_once_before_final_citation_validation() -> None:
+    question = "How does episodic memory improve later attempts?"
+    plan = _plan(question, _task("T1", "episodic memory later attempts"))
+    verifier = _FakeClaimVerifier(revised_text="Revised grounded answer [C1].")
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(plan),
+        _FakeRetriever(
+            {"episodic memory later attempts": (_candidate(1, "paper-a"),)}
+        ),
+        _GroundedWriter(),
+        claim_verifier=verifier,
+        config=_config(),
+    )
+
+    result = runtime.run(question)
+
+    assert result.answer.text == "Revised grounded answer [C1]."
+    assert result.verification is not None
+    assert result.verification.status == "revised"
+    assert verifier.calls == 1
+    assert [event.node for event in result.trace][-2:] == [
+        "verify_claims",
+        "validate_citations",
+    ]
+
+
+def test_claim_verification_error_is_visible_without_failing_task() -> None:
+    question = "How does episodic memory improve later attempts?"
+    plan = _plan(question, _task("T1", "episodic memory later attempts"))
+    verifier = _FakeClaimVerifier(error=TimeoutError("verification timeout"))
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(plan),
+        _FakeRetriever(
+            {"episodic memory later attempts": (_candidate(1, "paper-a"),)}
+        ),
+        _GroundedWriter(),
+        claim_verifier=verifier,
+        config=_config(),
+    )
+
+    result = runtime.run(question)
+
+    assert result.answer.status == "answered"
+    assert result.verification is not None
+    assert result.verification.status == "error"
+    assert result.verification.needs_human_review
+    assert "verification timeout" in (result.verification.error or "")
+    assert result.trace[-2].node == "verify_claims"
+    assert result.trace[-2].outcome == "error"
 
 
 def test_runtime_emits_each_agent_event_to_callback_in_order() -> None:
@@ -539,6 +634,9 @@ def test_ambiguous_question_skips_retrieval_and_acquisition() -> None:
     assert result.screening is not None
     assert result.screening.decision == "ambiguous"
     assert result.screening.rule_id == "unresolved_reference"
+    assert result.clarification is not None
+    assert result.clarification.rule_id == "unresolved_reference"
+    assert result.clarification.prompt == "你指的是哪一篇论文或哪一个方法？"
     assert result.answer.status == "insufficient_evidence"
     assert result.answer.text == "INSUFFICIENT_EVIDENCE"
     assert result.acquisition_rounds == 0

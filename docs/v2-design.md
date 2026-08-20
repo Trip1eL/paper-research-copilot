@@ -548,6 +548,10 @@ Recoverable answer recovery 目标由 Phase 6 Dataset 决定。
 
 ### Phase 6：Open-world Evaluation 与 v2 验收
 
+状态：已于 2026-08-20 完成。冻结 16 条 Dataset 最终达到 `16/16 Strict Pass`；随后完成
+Clarification Protocol 与 3 条隔离 Live Evaluation。后置 Claim-level Verification 也已按 ADR-012
+实现为一次有界检查和必要修订，4 条 Live Smoke 全部通过。
+
 模块：`evaluation`、`evals`、`docs`，必要时补充 `frontend` 可观测性。
 
 - 固定 In-corpus、Recoverable、Unrecoverable/Ambiguous 三组 Dataset。
@@ -572,6 +576,5 @@ Recoverable answer recovery 目标由 Phase 6 Dataset 决定。
 | `evaluation` | Parse、Open-world、Persistence 指标和 Harness | 修改生产行为 |
 | `frontend` | Acquisition/Resume 可观察性 | 保存 Agent 私有 State |
 
-执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0-5 已完成；
-下一步进入 Phase 6，建立 Open-world Dataset 并验证触发率、答案恢复率、拒答率、幂等、Citation、
-延迟与成本。
+Phase 0-6 七阶段主线及后置 Claim-level Verification 已完成。当前进入 v2 发布收尾，不继续扩展
+多轮对话、Multi-Judge、自一致性或新的 Agent 角色。
