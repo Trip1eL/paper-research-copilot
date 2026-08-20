@@ -84,6 +84,8 @@ class HealthResponse(BaseModel):
     runtime_error: str | None = None
     corpus_version: int
     qdrant_collection: str
+    dynamic_qdrant_collection: str
+    dynamic_acquisition_enabled: bool
     task_store: Literal["memory", "sqlite"]
     checkpoint_ready: bool
     checkpoint_error: str | None = None

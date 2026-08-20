@@ -1,6 +1,6 @@
 # ADR 004: Bounded Dynamic Corpus Expansion
 
-- Status: Phase 4 foundation implemented; Agent integration pending Phase 5
+- Status: Accepted; Phase 4 foundation and Phase 5 Agent integration implemented
 - Date: 2026-08-19
 
 ## Context
@@ -46,4 +46,16 @@ Corpus v3 能提供可复现的 Agent 论文研究 Baseline，但不能覆盖用
 - 本地 embedded Qdrant 使用独立 `data/qdrant_dynamic`，避免两个 Client 锁定同一路径；远程
   Qdrant 仍使用独立 Collection `paper_dynamic_bge_m3_chunking_v1`。
 - Phase 4 通过 CLI 显式运行。Evidence Gate 自动触发、Federated RRF 和 Dynamic BM25 generation
-  属于 Phase 5，不在本阶段伪装为已完成。
+  在 Phase 5 接入。
+
+## Phase 5 implementation
+
+- Curated 与 Dynamic 各自执行 Hybrid RRF，再通过 `FederatedRrfRetriever` 做跨库 RRF 和 Chunk ID
+  去重；Dynamic 为空时退化为 Curated-only，不阻断回答。
+- Dynamic Qdrant point count 是 BM25 generation。Point 数变化才重建 Dynamic BM25 snapshot。
+- 同一 Query 的两套 Dense Retrieval 共享有界 Embedding Cache，避免重复 SiliconFlow 调用。
+- Graph 顺序固定为本地 Retrieval、最多一次 Query Revision、最多一次 Acquisition、一次 Retrieval
+  Retry，然后 Answer 或 `INSUFFICIENT_EVIDENCE`。
+- Acquisition 默认关闭，通过 CLI flag 或环境变量显式启用；联网失败被记录为 Agent Result/Trace，
+  不触发第二轮下载。
+- Acquisition 与 Retrieval 共享 Dynamic Qdrant Client，解决 embedded Qdrant 同目录双 Client 锁冲突。

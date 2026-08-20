@@ -161,8 +161,8 @@ export function ResearchSidebar({
             <strong>{result.answer.citations.length}</strong>
           </div>
           <div>
-            <span>Retries</span>
-            <strong>{result.retry_count}</strong>
+            <span>Retries / Acquire</span>
+            <strong>{result.retry_count} / {result.acquisition_rounds}</strong>
           </div>
         </div>
       ) : null}

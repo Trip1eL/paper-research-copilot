@@ -223,6 +223,16 @@ function PlanView({ result }: { result: AgentResult }) {
         <h3>Evidence Assessment</h3>
         <p>{result.assessment.reason}</p>
       </section>
+      {result.acquisition ? (
+        <section className="assessment-block">
+          <h3>Dynamic Acquisition</h3>
+          <p>
+            {result.acquisition.status} · {result.acquisition.indexed_count} indexed · {result.acquisition.query}
+          </p>
+          {result.acquisition.paper_titles.map((title) => <p key={title}>{title}</p>)}
+          {result.acquisition.error ? <p>{result.acquisition.error}</p> : null}
+        </section>
+      ) : null}
     </div>
   );
 }

@@ -41,8 +41,9 @@ OpenAPI 位于 `http://127.0.0.1:8000/docs`。服务仅绑定本机地址，当�
 ### `GET /health`
 
 第一次调用会惰性构建 Agent Runtime，并实际检查模型配置、Corpus v3、Qdrant Collection 是否
-存在且非空，同时报告 `task_store`、`checkpoint_ready` 和 checkpoint 错误。生产配置只有 Runtime
-与 Checkpoint 均就绪才返回 `status=ok`。
+存在且非空，同时报告 Curated/Dynamic Collection、`dynamic_acquisition_enabled`、`task_store`、
+`checkpoint_ready` 和 checkpoint 错误。生产配置只有 Runtime 与 Checkpoint 均就绪才返回
+`status=ok`。
 
 ### `POST /api/v1/research`
 
@@ -60,7 +61,7 @@ OpenAPI 位于 `http://127.0.0.1:8000/docs`。服务仅绑定本机地址，当�
 ### `GET /api/v1/research/{task_id}`
 
 返回 `queued/running/interrupted/succeeded/failed` 状态。成功后 `result` 是完整 `AgentResult`，包含 Plan、
-Evidence、Evidence Assessment、Answer、Citations、Retry Count 和节点 Trace；失败时返回错误类型
+Evidence、Evidence Assessment、Answer、Citations、Retry Count、Acquisition Summary 和节点 Trace；失败时返回错误类型
 与信息，不返回半成品结果。
 
 ### `GET /api/v1/research/{task_id}/events`
@@ -74,6 +75,7 @@ agent_node: plan_research
 agent_node: retrieve_evidence
 agent_node: assess_evidence
 agent_node: revise_queries（只在 Evidence 不足时出现）
+agent_node: acquire_evidence（仅在 opt-in 且本地重试后仍不足时出现，最多一次）
 agent_node: write_report
 agent_node: validate_citations
 task_interrupted / task_succeeded / task_failed

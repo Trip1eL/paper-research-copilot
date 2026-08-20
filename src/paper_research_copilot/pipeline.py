@@ -23,6 +23,7 @@ from paper_research_copilot.ingestion import (
     PreparedPaper,
 )
 from paper_research_copilot.integrations import (
+    CachedEmbeddingProvider,
     EmbeddingProvider,
     OpenAICompatibleChatProvider,
     SiliconFlowEmbeddingProvider,
@@ -35,6 +36,8 @@ from paper_research_copilot.reporting import AnswerGenerator
 from paper_research_copilot.retrieval import (
     CandidateRetriever,
     DenseRetriever,
+    FactoryBackedRetriever,
+    FederatedRrfRetriever,
     QdrantVectorStore,
     RetrievalMode,
     RetrieverFactory,
@@ -63,6 +66,22 @@ class RetrievalRuntime:
 
     def close(self) -> None:
         self.vector_store.close()
+
+
+@dataclass(frozen=True)
+class FederatedRetrievalRuntime:
+    """Curated and dynamic retrieval resources with deterministic cross-corpus fusion."""
+
+    embeddings: EmbeddingProvider
+    retriever: CandidateRetriever
+    curated_vector_store: QdrantVectorStore
+    dynamic_vector_store: QdrantVectorStore
+
+    def close(self) -> None:
+        try:
+            self.dynamic_vector_store.close()
+        finally:
+            self.curated_vector_store.close()
 
 
 class BaseRagPipeline:
@@ -226,12 +245,10 @@ def build_retrieval_runtime(
         model=settings.siliconflow_embedding_model,
         dimension=settings.embedding_dimension,
     )
-    vector_store = QdrantVectorStore(
-        collection_name=collection_name or settings.qdrant_collection,
-        dimension=settings.embedding_dimension,
-        path=None if settings.qdrant_url else settings.resolved_qdrant_path(),
-        url=settings.qdrant_url,
-        api_key=(settings.qdrant_api_key.get_secret_value() if settings.qdrant_api_key else None),
+    vector_store = _build_vector_store(
+        settings,
+        collection_name or settings.qdrant_collection,
+        local_path=settings.resolved_qdrant_path(),
     )
     dense_retriever = DenseRetriever(embeddings, vector_store)
     return RetrievalRuntime(
@@ -239,6 +256,69 @@ def build_retrieval_runtime(
         retrievers=RetrieverFactory(dense_retriever, vector_store.list_chunks),
         vector_store=vector_store,
     )
+
+
+def build_federated_retrieval_runtime(
+    settings: Settings,
+    curated_collection_name: str | None = None,
+) -> FederatedRetrievalRuntime:
+    """Build Phase 5 retrieval without opening the embedded dynamic store twice."""
+
+    embedding_url, embedding_key = settings.require_embedding_credentials()
+    embeddings = SiliconFlowEmbeddingProvider(
+        base_url=embedding_url,
+        api_key=embedding_key,
+        model=settings.siliconflow_embedding_model,
+        dimension=settings.embedding_dimension,
+    )
+    query_embeddings = CachedEmbeddingProvider(embeddings)
+    curated_store = _build_vector_store(
+        settings,
+        curated_collection_name or settings.qdrant_collection,
+        local_path=settings.resolved_qdrant_path(),
+    )
+    try:
+        dynamic_store = _build_vector_store(
+            settings,
+            settings.dynamic_qdrant_collection,
+            local_path=settings.resolved_dynamic_qdrant_path(),
+        )
+    except Exception:
+        curated_store.close()
+        raise
+    try:
+        curated_factory = RetrieverFactory(
+            DenseRetriever(query_embeddings, curated_store),
+            curated_store.list_chunks,
+        )
+        dynamic_factory = RetrieverFactory(
+            DenseRetriever(query_embeddings, dynamic_store),
+            dynamic_store.list_chunks,
+            generation_loader=dynamic_store.count,
+            allow_empty_discovery=True,
+        )
+        retriever = FederatedRrfRetriever(
+            {
+                "curated": FactoryBackedRetriever(
+                    curated_factory,
+                    RetrievalMode.DISCOVERY,
+                ),
+                "dynamic": FactoryBackedRetriever(
+                    dynamic_factory,
+                    RetrievalMode.DISCOVERY,
+                ),
+            }
+        )
+        return FederatedRetrievalRuntime(
+            embeddings=embeddings,
+            retriever=retriever,
+            curated_vector_store=curated_store,
+            dynamic_vector_store=dynamic_store,
+        )
+    except Exception:
+        dynamic_store.close()
+        curated_store.close()
+        raise
 
 
 def build_corpus_ingestion_pipeline(
@@ -263,30 +343,26 @@ def build_corpus_ingestion_pipeline(
 def build_dynamic_acquisition_service(
     settings: Settings,
     repository: AcquisitionRepository,
+    *,
+    embeddings: EmbeddingProvider | None = None,
+    vector_store: QdrantVectorStore | None = None,
 ) -> AcademicAcquisitionService:
     """Build the bounded Phase 4 pipeline without changing the curated collection."""
 
-    embedding_url, embedding_key = settings.require_embedding_credentials()
-    embeddings = SiliconFlowEmbeddingProvider(
-        base_url=embedding_url,
-        api_key=embedding_key,
-        model=settings.siliconflow_embedding_model,
-        dimension=settings.embedding_dimension,
-    )
-    vector_store = QdrantVectorStore(
-        collection_name=settings.dynamic_qdrant_collection,
-        dimension=settings.embedding_dimension,
-        path=(
-            None
-            if settings.qdrant_url
-            else settings.resolved_dynamic_qdrant_path()
-        ),
-        url=settings.qdrant_url,
-        api_key=(
-            settings.qdrant_api_key.get_secret_value()
-            if settings.qdrant_api_key
-            else None
-        ),
+    owned_embeddings = embeddings
+    if owned_embeddings is None:
+        embedding_url, embedding_key = settings.require_embedding_credentials()
+        owned_embeddings = SiliconFlowEmbeddingProvider(
+            base_url=embedding_url,
+            api_key=embedding_key,
+            model=settings.siliconflow_embedding_model,
+            dimension=settings.embedding_dimension,
+        )
+    owns_vector_store = vector_store is None
+    dynamic_store = vector_store or _build_vector_store(
+        settings,
+        settings.dynamic_qdrant_collection,
+        local_path=settings.resolved_dynamic_qdrant_path(),
     )
     search = ArxivSearchProvider(api_url=settings.arxiv_api_url)
     downloader = BoundedPaperDownloader(
@@ -302,8 +378,8 @@ def build_dynamic_acquisition_service(
             overlap=settings.chunk_overlap_chars,
             chunking_version=settings.chunking_version,
         ),
-        embeddings,
-        vector_store,
+        owned_embeddings,
+        dynamic_store,
         max_chunks=settings.acquisition_max_dynamic_chunks,
         index_version=(
             f"{settings.siliconflow_embedding_model}:{settings.chunking_version}"
@@ -319,5 +395,28 @@ def build_dynamic_acquisition_service(
             max_pdf_bytes=settings.acquisition_max_pdf_bytes,
             max_dynamic_chunks=settings.acquisition_max_dynamic_chunks,
         ),
-        close_callbacks=(search.close, downloader.close, vector_store.close),
+        close_callbacks=(
+            search.close,
+            downloader.close,
+            *((dynamic_store.close,) if owns_vector_store else ()),
+        ),
+    )
+
+
+def _build_vector_store(
+    settings: Settings,
+    collection_name: str,
+    *,
+    local_path: Path,
+) -> QdrantVectorStore:
+    return QdrantVectorStore(
+        collection_name=collection_name,
+        dimension=settings.embedding_dimension,
+        path=None if settings.qdrant_url else local_path,
+        url=settings.qdrant_url,
+        api_key=(
+            settings.qdrant_api_key.get_secret_value()
+            if settings.qdrant_api_key
+            else None
+        ),
     )

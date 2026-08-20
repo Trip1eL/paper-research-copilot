@@ -20,13 +20,16 @@ flowchart TD
     LG --> CP["SQLite checkpoints.db"]
     LG --> P["gpt-5.5 Research Planner"]
     P --> R{"Question Route"}
-    R -->|"single_paper"| H["Hybrid RRF"]
+    R -->|"single_paper"| H["Federated Hybrid RRF"]
     R -->|"cross_paper"| D["Query Decomposition"]
     D --> C["Per-task Hybrid RRF + Coverage Merge"]
     H --> G["Deterministic Evidence Gate"]
     C --> G
-    G -->|"insufficient, max 1"| Q["Query Revision"]
+    G -->|"insufficient, local retry"| Q["Query Revision"]
     Q --> H
+    G -->|"still insufficient, opt-in, max 1"| X["arXiv Acquisition"]
+    X --> DY["Dynamic Parse + Embed + Qdrant"]
+    DY --> H
     G -->|"sufficient"| A["DeepSeek Answer Generator"]
     A --> V["Citation Validation"]
     V --> O["Report + Evidence + Sources"]
@@ -36,6 +39,8 @@ flowchart TD
     EMB --> QD["Qdrant v3: 2,152 Chunks"]
     QD --> H
     QD --> C
+    DQD["Dynamic Qdrant"] --> H
+    DQD --> C
 ```
 
 ## API Task Layer
@@ -86,13 +91,20 @@ Question
        Yes -> write_report
        No  -> revise_queries -> retrieve_evidence（最多一次）
   -> validate_citations
+  -> insufficient after revision and acquisition enabled
+       -> acquire_evidence (max 1)
+       -> retrieve_evidence
+       -> assess_evidence
+  -> write_report
+  -> validate_citations
   -> END
 ```
 
 Question Analyzer 与 Planner 合并成一次结构化调用，避免为了节点数量增加一次模型延迟。
 Reflection 不是独立聊天 Agent，而是确定性 Evidence Gate：每个 Task 必须达到 Chunk 配额，
-跨论文 Plan 还必须至少覆盖两个不同论文来源。Evidence 不足时允许 Planner 修改 Query 一次；
-仍不足则确定性返回 `INSUFFICIENT_EVIDENCE`，不允许 Answer 模型依靠参数知识补全。
+跨论文 Plan 还必须至少覆盖两个不同论文来源。Evidence 不足时先允许 Planner 修改 Query 一次；若
+外部扩库显式启用，仍不足时再执行一次 Acquisition 和 Retrieval Retry。此后仍不足则确定性返回
+`INSUFFICIENT_EVIDENCE`，不允许 Answer 模型依靠参数知识补全。
 
 LangGraph 只负责编排、State、条件边和停止规则。Retriever、Coverage Merge、AnswerGenerator
 与 Citation 契约继续使用项目自己的接口，没有改写成 LangChain Retriever 或 Chain。
@@ -109,6 +121,7 @@ evidence
 task_candidate_counts / task_selected_counts
 assessment
 retry_count
+acquisition_rounds / acquisition summary
 answer
 trace
 ```
@@ -143,9 +156,9 @@ model、Prompt version 和精确输出建立 JSONL 缓存；缓存命中不会�
 模型路由见 `docs/adr/001-model-routing.md`，Corpus 与存储决策见
 `docs/adr/002-retrieval-storage.md`。
 
-v2.0 的 Parser Quality Router Shadow、MinerU Spike 与 Durable Runtime Foundation 已实现；
-Dynamic Ingestion Foundation 也已提供独立 CLI。Agent 自动触发和 Federated Retrieval 仍处于
-下一阶段。实施顺序和验收标准见 `docs/v2-design.md`，Corpus v3 Baseline 保持冻结。
+v2.0 的 Parser Quality Router Shadow、MinerU Spike、Durable Runtime、Dynamic Ingestion、Federated
+Retrieval 与 opt-in Agent Acquisition Loop 均已实现。下一阶段通过 Open-world Evaluation 验收
+触发率、答案恢复率和拒答率。实施顺序见 `docs/v2-design.md`，Corpus v3 Baseline 保持冻结。
 
 ## Dynamic Ingestion Foundation
 
@@ -159,9 +172,9 @@ search-papers / acquire-papers
   -> paper_dynamic_bge_m3_chunking_v1
 ```
 
-Dynamic Pipeline 不依赖 LangGraph，也不修改 Curated Collection。它通过 Repository 和 Vector Store
-接口执行副作用，因此 Phase 5 只需要把该服务接入 Agent 的 bounded node，不需要在 Graph 节点内
-重新实现 HTTP、SQL 或 Qdrant 写入。
+Dynamic Pipeline 不依赖 LangGraph，也不修改 Curated Collection。Agent 的 `acquire_evidence` 节点只
+调用该应用服务，不在 Graph 内重新实现 HTTP、SQL 或 Qdrant 写入。Dynamic Point 数变化会让 BM25
+generation 懒失效，下一次 Federated Retrieval 即可同时使用新 Dense 和 Lexical Evidence。
 
 ## 当前约束
 
@@ -171,5 +184,6 @@ Dynamic Pipeline 不依赖 LangGraph，也不修改 Curated Collection。它通�
 - Evidence Gate 是可解释启发式，不等价于语义 Claim-Evidence Verification。
 - 当前启用 LangGraph SQLite Checkpointer，但它只提供 node-boundary Resume，不是长期用户 Memory。
 - API 使用单机 SQLite 和单 Worker；不支持多 Uvicorn Worker 或水平扩容。
-- 动态学术搜索与扩库可显式运行，但尚未接入 Agent；当前在线问答遇到 Corpus 外问题仍会结构化拒答。
+- Agent 动态扩库默认关闭；启用后的触发质量尚未通过 Open-world Evaluation，不宣称已经解决所有
+  Corpus 外问题。
 - API 仅绑定本机且没有认证，不应直接暴露到公网。

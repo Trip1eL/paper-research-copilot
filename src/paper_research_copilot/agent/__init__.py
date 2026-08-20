@@ -2,6 +2,7 @@
 
 from paper_research_copilot.agent.factory import build_agent_runtime
 from paper_research_copilot.agent.models import (
+    AgentAcquisitionSummary,
     AgentEvent,
     AgentResult,
     AgentRuntimeConfig,
@@ -22,10 +23,15 @@ from paper_research_copilot.agent.planner import (
     ResearchPlanner,
     find_plan_alias_leaks,
 )
-from paper_research_copilot.agent.runtime import AnswerWriter, ResearchAgentRuntime
+from paper_research_copilot.agent.runtime import (
+    AnswerWriter,
+    EvidenceAcquirer,
+    ResearchAgentRuntime,
+)
 from paper_research_copilot.agent.state import ResearchState
 
 __all__ = [
+    "AgentAcquisitionSummary",
     "AgentEvent",
     "AgentResult",
     "AgentRuntimeConfig",
@@ -33,6 +39,7 @@ __all__ = [
     "CachedResearchPlanner",
     "CORPUS_VERIFICATION_PLANNER_PROMPT_VERSION",
     "EvidenceAssessment",
+    "EvidenceAcquirer",
     "PlanningResult",
     "PlannerAttemptOutcome",
     "PlannerAttemptTrace",

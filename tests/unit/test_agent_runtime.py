@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 from paper_research_copilot.agent import (
     AgentRuntimeConfig,
     EvidenceAssessment,
@@ -6,7 +8,15 @@ from paper_research_copilot.agent import (
     ResearchPlan,
     ResearchTask,
 )
-from paper_research_copilot.domain import Answer, Citation, PaperChunk, RetrievedChunk
+from paper_research_copilot.domain import (
+    AcquisitionBudget,
+    AcquisitionResult,
+    AcquisitionRun,
+    Answer,
+    Citation,
+    PaperChunk,
+    RetrievedChunk,
+)
 
 
 def _task(task_id: str, query: str) -> ResearchTask:
@@ -95,6 +105,60 @@ class _FakeRetriever:
         return self.rankings.get(question, ())[:top_k]
 
 
+class _AcquisitionAwareRetriever(_FakeRetriever):
+    def __init__(
+        self,
+        before: dict[str, tuple[RetrievedChunk, ...]],
+        after: dict[str, tuple[RetrievedChunk, ...]],
+    ) -> None:
+        super().__init__(before)
+        self.after = after
+        self.acquired = False
+
+    def retrieve(self, question: str, top_k: int = 5) -> tuple[RetrievedChunk, ...]:
+        if self.acquired:
+            self.rankings = self.after
+        return super().retrieve(question, top_k)
+
+
+class _FakeAcquirer:
+    def __init__(
+        self,
+        retriever: _AcquisitionAwareRetriever,
+        *,
+        status: str = "succeeded",
+    ) -> None:
+        self.retriever = retriever
+        self.status = status
+        self.calls: list[tuple[str, str | None, int]] = []
+
+    def acquire(
+        self,
+        query: str,
+        *,
+        task_id: str | None = None,
+        round_number: int = 1,
+    ) -> AcquisitionResult:
+        self.calls.append((query, task_id, round_number))
+        self.retriever.acquired = self.status == "succeeded"
+        now = datetime.now(UTC)
+        run = AcquisitionRun(
+            acquisition_id="acquisition-1",
+            task_id=task_id,
+            query=query,
+            status=self.status,  # type: ignore[arg-type]
+            budget=AcquisitionBudget(),
+            candidate_count=1,
+            selected_count=1,
+            downloaded_count=1 if self.status == "succeeded" else 0,
+            indexed_count=1 if self.status == "succeeded" else 0,
+            started_at=now,
+            completed_at=now,
+            error=None if self.status == "succeeded" else "search failed",
+        )
+        return AcquisitionResult(run=run, candidates=(), ingestions=())
+
+
 class _GroundedWriter:
     def __init__(self) -> None:
         self.calls = 0
@@ -125,11 +189,16 @@ class _GroundedWriter:
         )
 
 
-def _config(*, max_retries: int = 1) -> AgentRuntimeConfig:
+def _config(
+    *,
+    max_retries: int = 1,
+    max_acquisition_rounds: int = 0,
+) -> AgentRuntimeConfig:
     return AgentRuntimeConfig(
         top_k=4,
         candidate_pool_per_task=4,
         max_retries=max_retries,
+        max_acquisition_rounds=max_acquisition_rounds,
         min_chunks_per_task=1,
     )
 
@@ -292,6 +361,82 @@ def test_retry_exhaustion_returns_deterministic_insufficient_evidence() -> None:
     assert writer.calls == 0
     write_event = next(event for event in result.trace if event.node == "write_report")
     assert write_event.details["source"] == "evidence_gate"
+
+
+def test_insufficient_evidence_acquires_once_after_local_revision() -> None:
+    question = "How do two newly described mechanisms differ?"
+    initial = _plan(
+        question,
+        _task("T1", "first weak query"),
+        _task("T2", "second weak query"),
+    )
+    revised = _plan(
+        question,
+        _task("T1", "first revised query"),
+        _task("T2", "second revised query"),
+        revision=1,
+    )
+    before = {
+        "first weak query": (_candidate(1, "paper-a"),),
+        "second weak query": (_candidate(2, "paper-a"),),
+        "first revised query": (_candidate(3, "paper-a"),),
+        "second revised query": (_candidate(4, "paper-a"),),
+    }
+    after = {
+        **before,
+        "second revised query": (_candidate(5, "paper-b"),),
+    }
+    retriever = _AcquisitionAwareRetriever(before, after)
+    acquirer = _FakeAcquirer(retriever)
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(initial, revised),
+        retriever,
+        _GroundedWriter(),
+        acquirer=acquirer,
+        config=_config(max_acquisition_rounds=1),
+    )
+
+    result = runtime.run(question, task_id="task-open-world")
+
+    assert result.assessment.sufficient
+    assert result.acquisition_rounds == 1
+    assert result.acquisition is not None
+    assert result.acquisition.status == "succeeded"
+    assert acquirer.calls == [("first revised query", "task-open-world", 1)]
+    assert [event.node for event in result.trace].count("acquire_evidence") == 1
+    assert [event.node for event in result.trace].count("retrieve_evidence") == 3
+
+
+def test_failed_acquisition_still_stops_after_one_round() -> None:
+    question = "How do two unavailable mechanisms differ?"
+    plan = _plan(
+        question,
+        _task("T1", "first unavailable mechanism"),
+        _task("T2", "second unavailable mechanism"),
+    )
+    rankings = {
+        "first unavailable mechanism": (_candidate(1, "paper-a"),),
+        "second unavailable mechanism": (_candidate(2, "paper-a"),),
+    }
+    retriever = _AcquisitionAwareRetriever(rankings, rankings)
+    acquirer = _FakeAcquirer(retriever, status="failed")
+    writer = _GroundedWriter()
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(plan),
+        retriever,
+        writer,
+        acquirer=acquirer,
+        config=_config(max_retries=0, max_acquisition_rounds=1),
+    )
+
+    result = runtime.run(question, task_id="task-failed-acquisition")
+
+    assert result.answer.status == "insufficient_evidence"
+    assert result.acquisition_rounds == 1
+    assert result.acquisition is not None
+    assert result.acquisition.status == "failed"
+    assert len(acquirer.calls) == 1
+    assert writer.calls == 0
 
 
 def test_close_callback_is_idempotent() -> None:

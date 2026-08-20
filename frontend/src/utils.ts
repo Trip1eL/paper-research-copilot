@@ -9,6 +9,7 @@ const EVENT_LABELS: Record<string, string> = {
   retrieve_evidence: "检索论文证据",
   assess_evidence: "评估证据充分性",
   revise_queries: "修订检索查询",
+  acquire_evidence: "搜索并扩充动态语料",
   write_report: "生成研究报告",
   validate_citations: "验证引用",
   task_succeeded: "研究完成",

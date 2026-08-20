@@ -528,6 +528,8 @@ Embedding 或增加 Point，SHA 重复资产进入 duplicate，Qdrant 提交后�
 
 ### Phase 5：Federated Retrieval 与 Agent Acquisition Loop
 
+状态：已于 2026-08-20 完成生产接入与自动化验证；真实 Open-world 效果留到 Phase 6 验收。
+
 模块：`retrieval/federated`、`agent`、`api`、`frontend`。
 
 - Curated 与 Dynamic 各自检索并通过 RRF 融合。
@@ -537,6 +539,12 @@ Embedding 或增加 Point，SHA 重复资产进入 duplicate，Qdrant 提交后�
 
 完成条件：Agent 有明确停止条件；In-corpus 问题不会普遍触发下载；扩库后的 Citation 能追溯到动态
 论文、页码和 Parser provenance。
+
+实现结果：Curated/Dynamic 各自执行 Hybrid RRF，再做跨库 RRF；Dynamic point count 变化会懒重建
+BM25。Graph 固定为本地 Query Revision 优先，仍不足时最多一次 opt-in Acquisition 和 Retrieval
+Retry。Acquisition Result、SSE Trace、CLI 与前端展示候选/下载/索引摘要。自动化覆盖空 Dynamic、
+跨库去重、BM25 refresh、Embedding 去重、成功恢复和失败停止；是否满足 In-corpus 误触发率与
+Recoverable answer recovery 目标由 Phase 6 Dataset 决定。
 
 ### Phase 6：Open-world Evaluation 与 v2 验收
 
@@ -564,6 +572,6 @@ Embedding 或增加 Point，SHA 重复资产进入 duplicate，Qdrant 提交后�
 | `evaluation` | Parse、Open-world、Persistence 指标和 Harness | 修改生产行为 |
 | `frontend` | Acquisition/Resume 可观察性 | 保存 Agent 私有 State |
 
-执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0-3 已完成；
-下一步进入 Phase 5，实现 Curated/Dynamic Federated Retrieval、Dynamic BM25 generation 和一次性
-Agent Acquisition Loop，再用 Open-world Dataset 验证触发率与答案恢复率。
+执行上严格按 Phase 顺序推进，每个 Phase 单独提交、测试和记录开发过程。Phase 0-5 已完成；
+下一步进入 Phase 6，建立 Open-world Dataset 并验证触发率、答案恢复率、拒答率、幂等、Citation、
+延迟与成本。

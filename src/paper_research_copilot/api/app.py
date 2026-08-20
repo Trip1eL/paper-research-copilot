@@ -52,6 +52,7 @@ def create_app(
                 version=CORPUS_VERSION,
                 collection_name=DEFAULT_COLLECTION,
                 checkpointer=checkpoint_store.saver,
+                repository=repository,
             ),
             repository=repository,
             checkpoint_store=checkpoint_store,
@@ -87,6 +88,10 @@ def create_app(
             runtime_error=runtime_error,
             corpus_version=CORPUS_VERSION,
             qdrant_collection=DEFAULT_COLLECTION,
+            dynamic_qdrant_collection=resolved_settings.dynamic_qdrant_collection,
+            dynamic_acquisition_enabled=(
+                resolved_settings.agent_dynamic_acquisition_enabled
+            ),
             task_store=service.task_store_name,
             checkpoint_ready=checkpoint_ready,
             checkpoint_error=checkpoint_error,

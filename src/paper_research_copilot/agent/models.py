@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from paper_research_copilot.domain import Answer, RetrievedChunk
+from paper_research_copilot.domain import AcquisitionStatus, Answer, RetrievedChunk
 from paper_research_copilot.integrations import ChatTokenUsage
 
 QuestionType = Literal["single_paper", "cross_paper"]
@@ -84,6 +84,21 @@ class AgentEvent(BaseModel):
     details: dict[str, str | int | float | bool] = Field(default_factory=dict)
 
 
+class AgentAcquisitionSummary(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    query: str = Field(min_length=1)
+    acquisition_id: str | None = None
+    status: AcquisitionStatus
+    candidate_count: int = Field(default=0, ge=0)
+    selected_count: int = Field(default=0, ge=0)
+    downloaded_count: int = Field(default=0, ge=0)
+    indexed_count: int = Field(default=0, ge=0)
+    asset_ids: tuple[str, ...] = ()
+    paper_titles: tuple[str, ...] = ()
+    error: str | None = None
+
+
 class AgentResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -93,6 +108,8 @@ class AgentResult(BaseModel):
     assessment: EvidenceAssessment
     answer: Answer
     retry_count: int = Field(ge=0)
+    acquisition_rounds: int = Field(default=0, ge=0, le=1)
+    acquisition: AgentAcquisitionSummary | None = None
     trace: tuple[AgentEvent, ...]
 
 
@@ -102,6 +119,7 @@ class AgentRuntimeConfig(BaseModel):
     top_k: int = Field(default=10, ge=1, le=20)
     candidate_pool_per_task: int = Field(default=30, ge=1, le=100)
     max_retries: int = Field(default=1, ge=0, le=1)
+    max_acquisition_rounds: int = Field(default=0, ge=0, le=1)
     min_chunks_per_task: int = Field(default=2, ge=1, le=5)
 
     @model_validator(mode="after")

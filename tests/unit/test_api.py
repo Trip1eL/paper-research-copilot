@@ -188,6 +188,10 @@ def test_health_probes_runtime_and_unknown_task_returns_404() -> None:
         assert health.json()["status"] == "ok"
         assert health.json()["runtime_ready"] is True
         assert health.json()["qdrant_collection"] == "agent_seed_v3_bge_m3_chunking_v1"
+        assert health.json()["dynamic_qdrant_collection"] == (
+            "paper_dynamic_bge_m3_chunking_v1"
+        )
+        assert health.json()["dynamic_acquisition_enabled"] is False
         assert missing.status_code == 404
 
 

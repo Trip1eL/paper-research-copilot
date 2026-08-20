@@ -2,7 +2,7 @@
 
 ## 当前能力
 
-Phase 4 提供独立、受控、可持久化的动态扩库链路：
+Phase 4 提供独立、受控、可持久化的动态扩库链路；Phase 5 已将其作为 opt-in 能力接入 Agent：
 
 ```text
 Query
@@ -17,8 +17,9 @@ Query
   -> active Paper Asset
 ```
 
-该链路目前通过 CLI 显式调用，尚未接入 Agent Evidence Gate。Phase 5 才会在本地证据不足时触发一次
-Acquisition，并将 Curated 与 Dynamic 检索结果融合。
+Agent 默认不联网。启用后，它先完成本地 Query Revision；仍被 Evidence Gate 判定不足时，选择最弱
+Research Task 的 Query，最多执行一次 Acquisition，再使用 Federated Retriever 重新检索。第二次
+Assessment 无论充分与否都会停止，不存在开放式下载循环。
 
 ## 命令
 
@@ -33,6 +34,14 @@ paper-rag search-papers "agent memory retrieval" --limit 5
 ```powershell
 paper-rag acquire-papers "agent memory retrieval" --task-id demo-001 --round 1
 ```
+
+允许 Agent 最多执行一次动态扩库：
+
+```powershell
+paper-rag agent "MemReranker 如何改进 Agent Memory Retrieval？" --allow-acquisition --show-trace
+```
+
+FastAPI 通过 `AGENT_DYNAMIC_ACQUISITION_ENABLED=true` 启用同一能力；默认值为 `false`。
 
 相同 `task-id + round + normalized query` 生成稳定 Acquisition ID。已完成的 Run 再次执行只返回持久
 结果，不重复 Search、Download、Embedding 或 Qdrant 写入。需要明确重试时增加 `--round`。
@@ -84,3 +93,13 @@ Dynamic: paper_dynamic_bge_m3_chunking_v1
 本地 embedded Qdrant 的 Dynamic 数据位于 `data/qdrant_dynamic`，避免与当前 Curated Client 的
 文件锁冲突。使用远程 Qdrant 时，两者可以位于同一服务，但 Collection 仍然隔离。动态论文不会修改
 Corpus v3 Manifest 或现有 Evaluation Baseline。
+
+## Federated Retrieval 与 BM25 generation
+
+Curated 与 Dynamic Collection 各自构建 Dense + BM25 Hybrid RRF，再通过第二层确定性 RRF 合并；相同
+Chunk ID 只保留一个结果。两套 Dense Retriever 共享进程内查询向量缓存，因此同一个 Research Task
+Query 不会重复调用两次 Embedding API。
+
+Dynamic `RetrieverFactory` 使用 Dynamic Qdrant point count 作为 generation。Point 数变化时，下一次
+检索自动重新读取 Dynamic Chunk 并重建内存 BM25；未变化时复用已有 snapshot。Acquisition 与
+Retriever 共用同一个 Dynamic Qdrant Client，避免 embedded 模式重复打开目录导致文件锁冲突。

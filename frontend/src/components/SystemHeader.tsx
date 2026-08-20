@@ -25,7 +25,10 @@ export function SystemHeader({ health, loading, onRefresh }: SystemHeaderProps) 
       <div className="system-status">
         <div className="corpus-label">
           <Database size={15} aria-hidden="true" />
-          <span>Corpus v{health?.corpus_version ?? 3}</span>
+          <span>
+            Corpus v{health?.corpus_version ?? 3}
+            {health?.dynamic_acquisition_enabled ? " + Dynamic" : ""}
+          </span>
         </div>
         <button
           type="button"

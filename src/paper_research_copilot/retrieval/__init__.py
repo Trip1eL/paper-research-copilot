@@ -10,6 +10,10 @@ from paper_research_copilot.retrieval.coverage import (
     find_decomposition_alias_leaks,
 )
 from paper_research_copilot.retrieval.factory import RetrievalMode, RetrieverFactory
+from paper_research_copilot.retrieval.federated import (
+    FactoryBackedRetriever,
+    FederatedRrfRetriever,
+)
 from paper_research_copilot.retrieval.hybrid import (
     HybridMmrRetriever,
     RrfFusionRetriever,
@@ -42,6 +46,8 @@ __all__ = [
     "DiversifiedDenseRetriever",
     "Bm25Retriever",
     "CandidateRetriever",
+    "FactoryBackedRetriever",
+    "FederatedRrfRetriever",
     "HybridMmrRetriever",
     "MmrDenseRetriever",
     "CachedQueryRewriter",

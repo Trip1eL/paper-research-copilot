@@ -2,6 +2,7 @@ import {
   BadgeCheck,
   CircleCheck,
   Clock3,
+  Download,
   FileCheck2,
   FileText,
   LoaderCircle,
@@ -25,6 +26,7 @@ const NODE_ICONS: Record<string, ComponentType<{ size?: number; strokeWidth?: nu
   retrieve_evidence: Search,
   assess_evidence: ShieldCheck,
   revise_queries: RefreshCw,
+  acquire_evidence: Download,
   write_report: FileText,
   validate_citations: FileCheck2,
   task_succeeded: CircleCheck,
@@ -36,11 +38,16 @@ const DETAIL_LABELS: Record<string, string> = {
   task_count: "Tasks",
   strategy: "Strategy",
   evidence_count: "Evidence",
+  dynamic_evidence_count: "Dynamic",
   distinct_papers: "Papers",
   retry_recommended: "Retry",
   citation_count: "Citations",
   planner_attempts: "Attempts",
   answer_attempts: "Attempts",
+  candidates: "Candidates",
+  selected: "Selected",
+  downloaded: "Downloaded",
+  indexed: "Indexed",
 };
 
 const visibleDetails = (event: ResearchStreamEvent): [string, string | number | boolean][] => {

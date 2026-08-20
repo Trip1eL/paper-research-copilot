@@ -214,6 +214,20 @@ def build_parser() -> argparse.ArgumentParser:
     agent_parser.add_argument("--candidate-pool", type=_positive_int, default=None)
     agent_parser.add_argument("--max-retries", type=int, choices=(0, 1), default=None)
     agent_parser.add_argument("--min-chunks-per-task", type=_positive_int, default=None)
+    acquisition_group = agent_parser.add_mutually_exclusive_group()
+    acquisition_group.add_argument(
+        "--allow-acquisition",
+        dest="allow_acquisition",
+        action="store_true",
+        help="Allow at most one evidence-driven arXiv acquisition round",
+    )
+    acquisition_group.add_argument(
+        "--no-acquisition",
+        dest="allow_acquisition",
+        action="store_false",
+        help="Disable external acquisition for this run",
+    )
+    agent_parser.set_defaults(allow_acquisition=None)
     agent_parser.add_argument("--planner-cache", type=Path, default=None)
     agent_parser.add_argument("--show-trace", action="store_true")
 
@@ -760,29 +774,45 @@ def main(argv: Sequence[str] | None = None) -> int:
             runtime.close()
 
     if args.command == "agent":
+        acquisition_enabled = (
+            args.allow_acquisition
+            if args.allow_acquisition is not None
+            else settings.agent_dynamic_acquisition_enabled
+        )
         agent_config = AgentRuntimeConfig(
             top_k=args.top_k or settings.agent_top_k,
             candidate_pool_per_task=(args.candidate_pool or settings.agent_candidate_pool_per_task),
             max_retries=(
                 args.max_retries if args.max_retries is not None else settings.agent_max_retries
             ),
+            max_acquisition_rounds=1 if acquisition_enabled else 0,
             min_chunks_per_task=(args.min_chunks_per_task or settings.agent_min_chunks_per_task),
         )
-        agent_runtime = build_agent_runtime(
-            settings,
-            version=args.version,
-            collection_name=args.collection,
-            planner_cache_path=args.planner_cache,
-            config=agent_config,
+        agent_repository = (
+            SqliteResearchRepository(settings.resolved_app_database_path())
+            if acquisition_enabled
+            else None
         )
         try:
-            agent_result = agent_runtime.run(args.question)
-            _print_answer(agent_result.answer)
-            if args.show_trace:
-                _print_agent_trace(agent_result)
-            return 0
+            agent_runtime = build_agent_runtime(
+                settings,
+                version=args.version,
+                collection_name=args.collection,
+                planner_cache_path=args.planner_cache,
+                config=agent_config,
+                repository=agent_repository,
+            )
+            try:
+                agent_result = agent_runtime.run(args.question)
+                _print_answer(agent_result.answer)
+                if args.show_trace:
+                    _print_agent_trace(agent_result)
+                return 0
+            finally:
+                agent_runtime.close()
         finally:
-            agent_runtime.close()
+            if agent_repository is not None:
+                agent_repository.close()
 
     pipeline = build_pipeline(settings)
     try:
@@ -1103,6 +1133,17 @@ def _print_agent_trace(result: AgentResult) -> None:
         f"Retries: {result.retry_count}"
     )
     print(f"  Reason: {assessment.reason}")
+    if result.acquisition is not None:
+        acquisition = result.acquisition
+        print("\nDynamic Acquisition:")
+        print(
+            f"  Status: {acquisition.status} | Query: {acquisition.query} | "
+            f"Downloaded: {acquisition.downloaded_count} | Indexed: {acquisition.indexed_count}"
+        )
+        for title in acquisition.paper_titles:
+            print(f"  - {title}")
+        if acquisition.error:
+            print(f"  Error: {acquisition.error}")
     print("\nAgent Trace:")
     for event in result.trace:
         details = ", ".join(f"{key}={value}" for key, value in event.details.items())

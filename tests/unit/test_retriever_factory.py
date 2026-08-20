@@ -68,3 +68,33 @@ def test_factory_does_not_load_bm25_corpus_for_evidence_mode() -> None:
     results = factory.retrieve("How do agents reason?", 1, RetrievalMode.EVIDENCE)
 
     assert results[0].chunk.chunk_id == "chunk-1"
+
+
+def test_mutable_factory_rebuilds_bm25_when_generation_changes() -> None:
+    dense = _DenseRetriever()
+    generation = 0
+    chunks: tuple[PaperChunk, ...] = ()
+    load_count = 0
+
+    def load_chunks() -> tuple[PaperChunk, ...]:
+        nonlocal load_count
+        load_count += 1
+        return chunks
+
+    factory = RetrieverFactory(
+        dense,
+        load_chunks,
+        generation_loader=lambda: generation,
+        allow_empty_discovery=True,
+    )
+
+    empty_generation = factory.get(RetrievalMode.DISCOVERY)
+    same_generation = factory.get(RetrievalMode.DISCOVERY)
+    chunks = (_chunk(2, "Dynamic acquisition adds lexical evidence."),)
+    generation = 1
+    rebuilt_generation = factory.get(RetrievalMode.DISCOVERY)
+
+    assert empty_generation is dense
+    assert same_generation is dense
+    assert isinstance(rebuilt_generation, RrfFusionRetriever)
+    assert load_count == 2

@@ -57,6 +57,7 @@ class Settings(BaseSettings):
     agent_top_k: int = Field(default=10, ge=1, le=20)
     agent_candidate_pool_per_task: int = Field(default=30, ge=1, le=100)
     agent_max_retries: int = Field(default=1, ge=0, le=1)
+    agent_dynamic_acquisition_enabled: bool = False
     agent_min_chunks_per_task: int = Field(default=2, ge=1, le=5)
 
     @model_validator(mode="after")

@@ -1,6 +1,7 @@
 """External service adapters for models, embeddings, and academic sources."""
 
 from paper_research_copilot.integrations.embeddings import (
+    CachedEmbeddingProvider,
     EmbeddingProvider,
     SiliconFlowEmbeddingProvider,
 )
@@ -20,6 +21,7 @@ __all__ = [
     "ChatProvider",
     "ChatCompletion",
     "ChatTokenUsage",
+    "CachedEmbeddingProvider",
     "EmbeddingProvider",
     "OpenAICompatibleChatProvider",
     "ObservableChatProvider",

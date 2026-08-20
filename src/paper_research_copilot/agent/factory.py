@@ -13,9 +13,12 @@ from paper_research_copilot.agent.runtime import ResearchAgentRuntime
 from paper_research_copilot.config import PROJECT_ROOT, Settings
 from paper_research_copilot.ingestion import CorpusCatalogLoader
 from paper_research_copilot.integrations import OpenAICompatibleChatProvider
-from paper_research_copilot.pipeline import build_retrieval_runtime
+from paper_research_copilot.pipeline import (
+    build_dynamic_acquisition_service,
+    build_federated_retrieval_runtime,
+)
 from paper_research_copilot.reporting import AnswerGenerator
-from paper_research_copilot.retrieval import RetrievalMode
+from paper_research_copilot.storage import AcquisitionRepository
 
 
 def build_agent_runtime(
@@ -26,6 +29,7 @@ def build_agent_runtime(
     planner_cache_path: Path | None = None,
     config: AgentRuntimeConfig | None = None,
     checkpointer: BaseCheckpointSaver[Any] | None = None,
+    repository: AcquisitionRepository | None = None,
     close_callback: Callable[[], None] | None = None,
 ) -> ResearchAgentRuntime:
     relay_url, relay_key = settings.require_relay_credentials()
@@ -47,9 +51,21 @@ def build_agent_runtime(
         / "agent"
         / f"research_plans_v1_corpus_v{version}_{safe_model}.jsonl"
     )
-    retrieval_runtime = build_retrieval_runtime(settings, collection_name)
+    runtime_config = config or AgentRuntimeConfig(
+        top_k=settings.agent_top_k,
+        candidate_pool_per_task=settings.agent_candidate_pool_per_task,
+        max_retries=settings.agent_max_retries,
+        max_acquisition_rounds=(
+            1 if settings.agent_dynamic_acquisition_enabled else 0
+        ),
+        min_chunks_per_task=settings.agent_min_chunks_per_task,
+    )
+    if runtime_config.max_acquisition_rounds and repository is None:
+        raise ValueError("Acquisition-enabled Agent Runtime requires a Repository")
+    retrieval_runtime = build_federated_retrieval_runtime(settings, collection_name)
+    acquisition = None
     try:
-        if retrieval_runtime.vector_store.count() == 0:
+        if retrieval_runtime.curated_vector_store.count() == 0:
             raise LookupError("Qdrant collection is empty; run ingest-corpus first")
         planner = CachedResearchPlanner(
             OpenAICompatibleChatProvider(
@@ -71,25 +87,38 @@ def build_agent_runtime(
                 max_tokens=settings.answer_max_tokens,
             )
         )
+        if runtime_config.max_acquisition_rounds:
+            if repository is None:
+                raise RuntimeError("Acquisition Repository unexpectedly missing")
+            acquisition = build_dynamic_acquisition_service(
+                settings,
+                repository,
+                embeddings=retrieval_runtime.embeddings,
+                vector_store=retrieval_runtime.dynamic_vector_store,
+            )
+
         def close_runtime_resources() -> None:
-            retrieval_runtime.close()
-            if close_callback is not None:
-                close_callback()
+            try:
+                if acquisition is not None:
+                    acquisition.close()
+            finally:
+                retrieval_runtime.close()
+                if close_callback is not None:
+                    close_callback()
 
         return ResearchAgentRuntime(
             planner,
-            retrieval_runtime.retriever_for(RetrievalMode.DISCOVERY),
+            retrieval_runtime.retriever,
             answer_writer,
-            config=config
-            or AgentRuntimeConfig(
-                top_k=settings.agent_top_k,
-                candidate_pool_per_task=settings.agent_candidate_pool_per_task,
-                max_retries=settings.agent_max_retries,
-                min_chunks_per_task=settings.agent_min_chunks_per_task,
-            ),
+            acquirer=acquisition,
+            config=runtime_config,
             checkpointer=checkpointer,
             close_callback=close_runtime_resources,
         )
     except Exception:
-        retrieval_runtime.close()
+        try:
+            if acquisition is not None:
+                acquisition.close()
+        finally:
+            retrieval_runtime.close()
         raise

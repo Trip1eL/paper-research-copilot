@@ -11,14 +11,16 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
 from paper_research_copilot.agent.models import (
+    AgentAcquisitionSummary,
     AgentEvent,
     AgentResult,
     AgentRuntimeConfig,
     EvidenceAssessment,
+    ResearchTask,
 )
 from paper_research_copilot.agent.planner import ResearchPlanner
 from paper_research_copilot.agent.state import ResearchState
-from paper_research_copilot.domain import Answer, RetrievedChunk
+from paper_research_copilot.domain import AcquisitionResult, Answer, RetrievedChunk
 from paper_research_copilot.reporting import AnswerGenerationTrace
 from paper_research_copilot.retrieval import CandidateRetriever, coverage_round_robin
 
@@ -36,6 +38,16 @@ class AnswerWriter(Protocol):
     ) -> Answer: ...
 
 
+class EvidenceAcquirer(Protocol):
+    def acquire(
+        self,
+        query: str,
+        *,
+        task_id: str | None = None,
+        round_number: int = 1,
+    ) -> AcquisitionResult: ...
+
+
 @runtime_checkable
 class ObservableAnswerWriter(AnswerWriter, Protocol):
     def trace_for(self, question: str) -> AnswerGenerationTrace: ...
@@ -50,6 +62,7 @@ class ResearchAgentRuntime:
         retriever: CandidateRetriever,
         answer_writer: AnswerWriter,
         *,
+        acquirer: EvidenceAcquirer | None = None,
         config: AgentRuntimeConfig | None = None,
         checkpointer: BaseCheckpointSaver[Any] | None = None,
         close_callback: Callable[[], None] | None = None,
@@ -57,6 +70,7 @@ class ResearchAgentRuntime:
         self._planner = planner
         self._retriever = retriever
         self._answer_writer = answer_writer
+        self._acquirer = acquirer
         self.config = config or AgentRuntimeConfig()
         self._checkpointer = checkpointer
         self._close_callback = close_callback
@@ -77,7 +91,10 @@ class ResearchAgentRuntime:
             raise RuntimeError("Research Agent Runtime is closed")
         initial = ResearchState(
             question=normalized_question,
+            task_id=task_id,
             retry_count=0,
+            acquisition_rounds=0,
+            acquisition=None,
             trace=(),
             evidence=(),
             rankings_by_task={},
@@ -124,6 +141,8 @@ class ResearchAgentRuntime:
             assessment=final_state["assessment"],
             answer=final_state["answer"],
             retry_count=final_state["retry_count"],
+            acquisition_rounds=final_state.get("acquisition_rounds", 0),
+            acquisition=final_state.get("acquisition"),
             trace=final_state["trace"],
         )
 
@@ -140,6 +159,7 @@ class ResearchAgentRuntime:
         graph.add_node("retrieve_evidence", self._retrieve_evidence)
         graph.add_node("assess_evidence", self._assess_evidence)
         graph.add_node("revise_queries", self._revise_queries)
+        graph.add_node("acquire_evidence", self._acquire_evidence)
         graph.add_node("write_report", self._write_report)
         graph.add_node("validate_citations", self._validate_citations)
         graph.add_edge(START, "plan_research")
@@ -148,9 +168,14 @@ class ResearchAgentRuntime:
         graph.add_conditional_edges(
             "assess_evidence",
             self._route_after_assessment,
-            {"revise": "revise_queries", "write": "write_report"},
+            {
+                "revise": "revise_queries",
+                "acquire": "acquire_evidence",
+                "write": "write_report",
+            },
         )
         graph.add_edge("revise_queries", "retrieve_evidence")
+        graph.add_edge("acquire_evidence", "retrieve_evidence")
         graph.add_edge("write_report", "validate_citations")
         graph.add_edge("validate_citations", END)
         return graph.compile(
@@ -159,7 +184,7 @@ class ResearchAgentRuntime:
         )
 
     def _graph_config(self, task_id: str | None) -> RunnableConfig:
-        config: RunnableConfig = {"recursion_limit": 12}
+        config: RunnableConfig = {"recursion_limit": 16}
         if self._checkpointer is not None:
             if not task_id:
                 raise ValueError("task_id is required when checkpointing is enabled")
@@ -203,7 +228,7 @@ class ResearchAgentRuntime:
             first_ranking = rankings[plan.tasks[0].task_id]
             evidence = _renumber_citations(first_ranking[: self.config.top_k])
             selected_counts = {plan.tasks[0].task_id: len(evidence)}
-            strategy = "hybrid_rrf"
+            strategy = "federated_hybrid_rrf"
         else:
             ordered_rankings = tuple(rankings[task.task_id] for task in plan.tasks)
             evidence, counts = coverage_round_robin(
@@ -213,7 +238,7 @@ class ResearchAgentRuntime:
             selected_counts = {
                 task.task_id: count for task, count in zip(plan.tasks, counts, strict=True)
             }
-            strategy = "coverage_hybrid_rrf"
+            strategy = "coverage_federated_hybrid_rrf"
         candidate_counts = {task_id: len(candidates) for task_id, candidates in rankings.items()}
         latency_ms = _elapsed_ms(started)
         return ResearchState(
@@ -231,6 +256,9 @@ class ResearchAgentRuntime:
                     "candidate_counts": _format_counts(candidate_counts),
                     "selected_counts": _format_counts(selected_counts),
                     "evidence_count": len(evidence),
+                    "dynamic_evidence_count": sum(
+                        item.chunk.corpus_id == "paper-dynamic" for item in evidence
+                    ),
                 },
             ),
         )
@@ -284,8 +312,20 @@ class ResearchAgentRuntime:
             ),
         )
 
-    def _route_after_assessment(self, state: ResearchState) -> Literal["revise", "write"]:
-        return "revise" if state["assessment"].retry_recommended else "write"
+    def _route_after_assessment(
+        self,
+        state: ResearchState,
+    ) -> Literal["revise", "acquire", "write"]:
+        if state["assessment"].retry_recommended:
+            return "revise"
+        if (
+            not state["assessment"].sufficient
+            and self._acquirer is not None
+            and state.get("acquisition_rounds", 0)
+            < self.config.max_acquisition_rounds
+        ):
+            return "acquire"
+        return "write"
 
     def _revise_queries(self, state: ResearchState) -> ResearchState:
         started = time.perf_counter()
@@ -311,6 +351,64 @@ class ResearchAgentRuntime:
                     "planner_attempts": result.attempts,
                     **_token_usage_details("planner", result.usage),
                 },
+            ),
+        )
+
+    def _acquire_evidence(self, state: ResearchState) -> ResearchState:
+        started = time.perf_counter()
+        query = _select_acquisition_query(state)
+        round_number = state.get("acquisition_rounds", 0) + 1
+        if self._acquirer is None:
+            raise RuntimeError("Acquisition node requires an Evidence Acquirer")
+        try:
+            result = self._acquirer.acquire(
+                query,
+                task_id=state.get("task_id"),
+                round_number=round_number,
+            )
+            run = result.run
+            summary = AgentAcquisitionSummary(
+                query=query,
+                acquisition_id=run.acquisition_id,
+                status=run.status,
+                candidate_count=run.candidate_count,
+                selected_count=run.selected_count,
+                downloaded_count=run.downloaded_count,
+                indexed_count=run.indexed_count,
+                asset_ids=tuple(item.asset.asset_id for item in result.ingestions),
+                paper_titles=tuple(
+                    item.asset.candidate.title for item in result.ingestions
+                ),
+                error=run.error,
+            )
+        except Exception as exc:
+            summary = AgentAcquisitionSummary(
+                query=query,
+                status="failed",
+                error=f"{type(exc).__name__}: {exc}",
+            )
+        details: dict[str, str | int | float | bool] = {
+            "query": query,
+            "round": round_number,
+            "status": summary.status,
+            "candidates": summary.candidate_count,
+            "selected": summary.selected_count,
+            "downloaded": summary.downloaded_count,
+            "indexed": summary.indexed_count,
+        }
+        if summary.acquisition_id is not None:
+            details["acquisition_id"] = summary.acquisition_id
+        if summary.error is not None:
+            details["error"] = summary.error
+        return ResearchState(
+            acquisition_rounds=round_number,
+            acquisition=summary,
+            trace=_append_event(
+                state,
+                node="acquire_evidence",
+                outcome=summary.status,
+                latency_ms=_elapsed_ms(started),
+                details=details,
             ),
         )
 
@@ -383,6 +481,29 @@ def _renumber_citations(
         item.model_copy(update={"citation_id": f"C{index}"})
         for index, item in enumerate(evidence, start=1)
     )
+
+
+def _select_acquisition_query(state: ResearchState) -> str:
+    missing = set(state["assessment"].missing_task_ids)
+    tasks = tuple(
+        task for task in state["plan"].tasks if not missing or task.task_id in missing
+    )
+    if not tasks:
+        tasks = state["plan"].tasks
+
+    def weakness(task: ResearchTask) -> tuple[int, int, int, str]:
+        ranking = state["rankings_by_task"].get(task.task_id, ())
+        distinct_papers = len(
+            {item.chunk.paper_id or item.chunk.source_path for item in ranking}
+        )
+        return (
+            distinct_papers,
+            state["task_selected_counts"].get(task.task_id, 0),
+            state["task_candidate_counts"].get(task.task_id, 0),
+            task.task_id,
+        )
+
+    return min(tasks, key=weakness).query
 
 
 def _append_event(

@@ -56,11 +56,13 @@ React Research Workspace
   -> Report / Evidence / Plan views
   -> citation-to-evidence navigation
 
-Dynamic Ingestion（当前显式 CLI）
+Dynamic Acquisition（显式 CLI 或 Agent opt-in）
   -> arXiv Metadata Search + Rank/Dedup
   -> Bounded PDF Download + SHA-256 Registry
   -> Parse Quality Gate + Chunk + Embedding
   -> isolated Dynamic Qdrant Collection
+  -> Dynamic BM25 generation refresh
+  -> Curated / Dynamic Federated RRF
 ```
 
 - 使用 `pypdf` 按页提取论文文本和 PDF metadata。
@@ -85,8 +87,12 @@ Task、Event 和 Result，`data/checkpoints.db` 由 LangGraph SQLite Checkpointe
 v2 Phase 4 已完成 arXiv Metadata Search 与独立 Dynamic Ingestion：候选经过确定性排序及
 identity/DOI 去重，PDF 下载经过 allowlist、redirect、Content-Type、文件头、大小与 SHA-256 校验，
 再通过 Fast Parser Quality Gate、Chunk、Embedding 写入独立 Dynamic Qdrant。Paper Asset 与
-Acquisition Run 持久化到 SQLite；重复执行不会重复下载、Embedding 或增加 Point。当前通过 CLI
-显式调用，Agent 自动触发和 Curated/Dynamic Federated Retrieval 留到 Phase 5。
+Acquisition Run 持久化到 SQLite；重复执行不会重复下载、Embedding 或增加 Point。
+
+v2 Phase 5 已完成 Curated/Dynamic Federated RRF、Dynamic BM25 generation refresh 和一次性 Agent
+Acquisition Loop。Agent 先执行一次本地 Query Revision，仍不足时才允许一次
+`Acquire -> Retrieve -> Assess`；无论成功或失败都不会进入第二轮下载。外部扩库默认关闭，必须通过
+CLI `--allow-acquisition` 或 `AGENT_DYNAMIC_ACQUISITION_ENABLED=true` 显式启用。
 
 ```powershell
 paper-rag search-papers "agent memory retrieval" --limit 5
@@ -256,8 +262,17 @@ paper-rag agent "交错生成 Thought、Action、Observation 的提示方法，�
   --show-trace
 ```
 
-默认使用 Corpus v3、Hybrid RRF、Top-10、每 Task Top-30 Candidate Pool 和最多一次 Query
-Revision。Planner 使用 `gpt-5.5`，Answer 使用 `deepseek-v4-flash`；计划缓存在
+允许 Evidence Gate 在本地 Query Revision 后最多触发一次 arXiv 动态扩库：
+
+```powershell
+paper-rag agent "MemReranker 如何改进 Agent Memory Retrieval？" `
+  --allow-acquisition `
+  --show-trace
+```
+
+默认使用 Corpus v3 + Dynamic Corpus 的 Federated Hybrid RRF、Top-10、每 Task Top-30 Candidate
+Pool 和最多一次 Query Revision，但默认不允许外部下载。Planner 使用 `gpt-5.5`，Answer 使用
+`deepseek-v4-flash`；计划缓存在
 `data/agent/`，重复问题可复用精确 Plan。
 
 离线检查并生成整个种子语料库的 Chunk 统计，不调用模型 API：
@@ -577,8 +592,8 @@ Smoke Test 验证。
 - Citation 契约负责引用存在性与定位；LLM Judge 已补充 Claim-Evidence entailment 评估，
   但单 Judge 仍可能有偏差，需要人工抽查。
 - 当前提供 CLI、LangGraph Agent Runtime、SQLite 持久 FastAPI/SSE Task Layer、React Research
-  Workspace 和显式 Dynamic Ingestion；认证、长期用户 Memory、Agent 自动扩库与多实例 Worker
-  尚未实现。
+  Workspace、Federated Retrieval 和 opt-in Agent Dynamic Acquisition；认证、长期用户 Memory 与
+  多实例 Worker 尚未实现。自动触发质量仍需 Phase 6 Open-world Evaluation 验收。
 
 设计文档见 [docs/architecture.md](docs/architecture.md)、
 [docs/retrieval.md](docs/retrieval.md)、[docs/evaluation.md](docs/evaluation.md) 和

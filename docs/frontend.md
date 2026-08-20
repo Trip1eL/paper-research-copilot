@@ -77,14 +77,18 @@ Task 状态            outcome + latency    Answer + Citations
 4. 终态再 GET Task Snapshot，取得完整 AgentResult。
 5. SSE 异常时关闭连接并每 2 秒轮询 Task，终态后停止。
 
-当前页面刷新不会恢复旧 Task，因为后端 Task Store 本身也是进程内内存实现。后续增加持久化时，
-可以在 URL 中保存 Task ID，再用 `?after=N` 恢复事件，而不需要修改现有 Result 组件。
+后端 Task/Event/Result 已由 SQLite 持久化，并支持 interrupted Task Resume；当前页面仍只维护活动
+Task，不提供历史任务列表。后续可在 URL 中保存 Task ID，再用 `?after=N` 恢复事件。
 
 ## 结果视图
 
 - Report：展示 Evidence Gate 状态、结构化回答和 Citation Sources。
 - Evidence：展示最终 Top-K Chunk、论文标题、页码、Section、分数和文本预览。
-- Plan：展示 single/cross-paper Route、Revision、Rationale、Queries、Goals 和 Assessment。
+- Plan：展示 single/cross-paper Route、Revision、Rationale、Queries、Goals、Assessment 和 Dynamic
+  Acquisition Summary。
+
+Timeline 识别 `acquire_evidence` 节点，显示 Candidates、Selected、Downloaded 和 Indexed 数量；左侧
+指标显示 Query Retry 与 Acquisition Round。Health Header 在部署启用自动扩库时显示 `+ Dynamic`。
 
 Citation Source 是命令按钮：点击后切换到 Evidence Tab，并滚动、高亮对应 Citation ID。不能使用
 普通锚点，因为未选中的 Tab 不会渲染 Evidence DOM；这是浏览器交互验收中发现并修复的问题。

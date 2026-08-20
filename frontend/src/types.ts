@@ -86,6 +86,19 @@ export interface EvidenceAssessment {
   retry_recommended: boolean;
 }
 
+export interface AgentAcquisitionSummary {
+  query: string;
+  acquisition_id: string | null;
+  status: "running" | "succeeded" | "partial" | "failed";
+  candidate_count: number;
+  selected_count: number;
+  downloaded_count: number;
+  indexed_count: number;
+  asset_ids: string[];
+  paper_titles: string[];
+  error: string | null;
+}
+
 export interface AgentResult {
   question: string;
   plan: ResearchPlan;
@@ -98,6 +111,8 @@ export interface AgentResult {
     status: "answered" | "insufficient_evidence";
   };
   retry_count: number;
+  acquisition_rounds: number;
+  acquisition: AgentAcquisitionSummary | null;
   trace: AgentEvent[];
 }
 
@@ -120,6 +135,8 @@ export interface HealthResponse {
   runtime_error: string | null;
   corpus_version: number;
   qdrant_collection: string;
+  dynamic_qdrant_collection: string;
+  dynamic_acquisition_enabled: boolean;
   task_store: "memory" | "sqlite";
   checkpoint_ready: boolean;
   checkpoint_error: string | null;

@@ -1,6 +1,8 @@
 """Embedding provider interface and SiliconFlow implementation."""
 
+from collections import OrderedDict
 from collections.abc import Sequence
+from threading import Lock
 from typing import Protocol
 
 from paper_research_copilot.integrations.openai_compatible import OpenAICompatibleTransport
@@ -11,6 +13,47 @@ class EmbeddingProvider(Protocol):
     def dimension(self) -> int: ...
 
     def embed(self, texts: Sequence[str]) -> list[list[float]]: ...
+
+
+class CachedEmbeddingProvider:
+    """Bounded process-local cache for repeated retrieval query embeddings."""
+
+    def __init__(self, provider: EmbeddingProvider, *, max_entries: int = 256) -> None:
+        if max_entries < 1:
+            raise ValueError("Embedding cache must retain at least one entry")
+        self._provider = provider
+        self._max_entries = max_entries
+        self._cache: OrderedDict[str, tuple[float, ...]] = OrderedDict()
+        self._lock = Lock()
+
+    @property
+    def dimension(self) -> int:
+        return self._provider.dimension
+
+    def embed(self, texts: Sequence[str]) -> list[list[float]]:
+        if not texts:
+            return []
+        missing: list[str] = []
+        resolved: dict[str, tuple[float, ...]] = {}
+        with self._lock:
+            for text in dict.fromkeys(texts):
+                if text in self._cache:
+                    self._cache.move_to_end(text)
+                    resolved[text] = self._cache[text]
+                else:
+                    missing.append(text)
+        if missing:
+            vectors = self._provider.embed(missing)
+            if len(vectors) != len(missing):
+                raise ValueError("Embedding provider returned an unexpected vector count")
+            with self._lock:
+                for text, vector in zip(missing, vectors, strict=True):
+                    resolved[text] = tuple(vector)
+                    self._cache[text] = resolved[text]
+                    self._cache.move_to_end(text)
+                while len(self._cache) > self._max_entries:
+                    self._cache.popitem(last=False)
+        return [list(resolved[text]) for text in texts]
 
 
 class SiliconFlowEmbeddingProvider:
