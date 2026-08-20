@@ -103,6 +103,10 @@ class OpenWorldCaseResult(BaseModel):
     retrieved_dynamic_arxiv_ids: tuple[str, ...] = ()
     cited_arxiv_ids: tuple[str, ...] = ()
     trace_nodes: tuple[str, ...] = ()
+    revision_triggered: bool = False
+    planner_revision_attempts: int = Field(default=0, ge=0)
+    planner_repair_attempts: int = Field(default=0, ge=0)
+    planner_fallback_used: bool = False
 
 
 class OpenWorldCategorySummary(BaseModel):
@@ -143,6 +147,11 @@ class OpenWorldSummary(BaseModel):
     total_point_delta: int
     known_input_tokens: int = Field(ge=0)
     known_output_tokens: int = Field(ge=0)
+    revision_case_count: int = Field(default=0, ge=0)
+    total_planner_revision_attempts: int = Field(default=0, ge=0)
+    total_planner_repair_attempts: int = Field(default=0, ge=0)
+    planner_repair_case_rate: float | None = Field(default=None, ge=0, le=1)
+    planner_fallback_rate: float | None = Field(default=None, ge=0, le=1)
 
 
 class OpenWorldEvaluationConfig(BaseModel):
@@ -269,6 +278,8 @@ def evaluate_open_world_case(
         no_dynamic_writes=points_after == points_before,
     )
     acquisition_events = [event for event in result.trace if event.node == "acquire_evidence"]
+    revision_events = [event for event in result.trace if event.node == "revise_queries"]
+    revision_event = revision_events[-1] if revision_events else None
     input_tokens, output_tokens = _known_tokens(result)
     evidence_count = len(result.evidence)
     acquisition = result.acquisition
@@ -311,6 +322,20 @@ def evaluate_open_world_case(
             sorted({chunk.arxiv_id for chunk in cited_chunks if chunk.arxiv_id})
         ),
         trace_nodes=tuple(event.node for event in result.trace),
+        revision_triggered=revision_event is not None,
+        planner_revision_attempts=(
+            _int_detail(revision_event.details, "planner_attempts") if revision_event else 0
+        ),
+        planner_repair_attempts=(
+            _int_detail(revision_event.details, "planner_repair_attempts")
+            if revision_event
+            else 0
+        ),
+        planner_fallback_used=(
+            revision_event.details.get("planner_fallback_used") is True
+            if revision_event
+            else False
+        ),
     )
 
 
@@ -507,6 +532,7 @@ def _overall_summary(samples: Sequence[OpenWorldCaseResult]) -> OpenWorldSummary
     unrecoverable = [item for item in samples if item.category == "unrecoverable"]
     ambiguous = [item for item in samples if item.category == "ambiguous"]
     triggered = [item for item in samples if item.acquisition_triggered]
+    revised = [item for item in samples if item.revision_triggered]
     in_corpus_evidence_count = sum(item.evidence_count for item in in_corpus)
     return OpenWorldSummary(
         case_count=len(samples),
@@ -558,6 +584,15 @@ def _overall_summary(samples: Sequence[OpenWorldCaseResult]) -> OpenWorldSummary
         total_point_delta=sum(item.point_delta for item in samples),
         known_input_tokens=sum(item.known_input_tokens for item in samples),
         known_output_tokens=sum(item.known_output_tokens for item in samples),
+        revision_case_count=len(revised),
+        total_planner_revision_attempts=sum(
+            item.planner_revision_attempts for item in revised
+        ),
+        total_planner_repair_attempts=sum(item.planner_repair_attempts for item in revised),
+        planner_repair_case_rate=_mean_optional(
+            item.planner_repair_attempts > 0 for item in revised
+        ),
+        planner_fallback_rate=_mean_optional(item.planner_fallback_used for item in revised),
     )
 
 
@@ -628,6 +663,14 @@ def _markdown_report(
         f"{summary.total_downloaded} / {summary.total_indexed} | "
         f"{summary.total_point_delta} |",
         "",
+        "| Revision Cases | LLM Attempts | Repair Attempts | Repair Cases | Fallback Cases |",
+        "| ---: | ---: | ---: | ---: | ---: |",
+        f"| {summary.revision_case_count} | "
+        f"{summary.total_planner_revision_attempts} | "
+        f"{summary.total_planner_repair_attempts} | "
+        f"{_optional_rate(summary.planner_repair_case_rate)} | "
+        f"{_optional_rate(summary.planner_fallback_rate)} |",
+        "",
         "## 分类结果",
         "",
         "| Category | Cases | Strict Pass | Acquisition | Answer Behavior | P50 / P95 |",
@@ -646,8 +689,8 @@ def _markdown_report(
             "## 逐题诊断",
             "",
             "| Case | Category | Acquire | Answer | Dynamic Evidence | "
-            "Target Citation | Points | Strict |",
-            "| --- | --- | --- | --- | ---: | --- | ---: | ---: |",
+            "Target Citation | Revision | Points | Strict |",
+            "| --- | --- | --- | --- | ---: | --- | --- | ---: | ---: |",
         ]
     )
     lines.extend(
@@ -655,6 +698,7 @@ def _markdown_report(
         f"{item.acquisition_rounds}:{item.acquisition_status or '-'} | "
         f"{item.answer_status} | {item.dynamic_evidence_count}/{item.evidence_count} | "
         f"{_optional_bool(item.target_citation_hit)} | "
+        f"{_revision_display(item)} | "
         f"{item.points_before}->{item.points_after} | {item.strict_pass} |"
         for item in results
     )
@@ -671,3 +715,18 @@ def _optional_bool(value: bool | None) -> str:
     if value is None:
         return "N/A"
     return "yes" if value else "no"
+
+
+def _int_detail(details: dict[str, str | int | float | bool], key: str) -> int:
+    value = details.get(key)
+    return value if isinstance(value, int) and not isinstance(value, bool) else 0
+
+
+def _revision_display(result: OpenWorldCaseResult) -> str:
+    if not result.revision_triggered:
+        return "-"
+    fallback = "yes" if result.planner_fallback_used else "no"
+    return (
+        f"attempts={result.planner_revision_attempts},"
+        f"repair={result.planner_repair_attempts},fallback={fallback}"
+    )

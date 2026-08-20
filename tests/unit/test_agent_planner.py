@@ -203,6 +203,34 @@ def test_planner_schema_trace_identifies_the_invalid_field(tmp_path: Path) -> No
     )
 
 
+def test_planner_repair_prompt_includes_schema_error_and_invalid_response(
+    tmp_path: Path,
+) -> None:
+    invalid = '{"question_type":"single_paper","rationale":"missing tasks"}'
+    provider = _ObservableSequenceProvider(
+        _completion(invalid),
+        _completion(_single_payload()),
+    )
+    question = "How does episodic memory work?"
+    planner = CachedResearchPlanner(
+        provider,
+        model="test-model",
+        cache_path=tmp_path / "plans.jsonl",
+        retry_attempts=2,
+    )
+
+    result = planner.plan(question)
+
+    assert result.repair_attempts == 1
+    assert not result.fallback_used
+    assert "Validation error:" in provider.user_prompts[1]
+    assert "tasks: Field required" in provider.user_prompts[1]
+    assert invalid in provider.user_prompts[1]
+    trace = planner.trace_for(question)
+    assert not trace.attempts[0].repair_prompt_used
+    assert trace.attempts[1].repair_prompt_used
+
+
 def test_planner_traces_truncation_and_aggregates_retry_usage(tmp_path: Path) -> None:
     question = "How does episodic memory work?"
     planner = CachedResearchPlanner(
@@ -378,7 +406,31 @@ def test_planner_revises_queries_once_and_preserves_question_type(tmp_path: Path
         planner.revise(question, revised.plan, _assessment())
 
 
-def test_unchanged_revision_is_rejected_before_cache_write(tmp_path: Path) -> None:
+def test_revision_prompt_uses_payload_shape_without_runtime_metadata(
+    tmp_path: Path,
+) -> None:
+    provider = _ObservableSequenceProvider(
+        _completion(_cross_payload()),
+        _completion(_cross_payload("revised thought action trajectory")),
+    )
+    planner = CachedResearchPlanner(
+        provider,
+        model="test-model",
+        cache_path=tmp_path / "plans.jsonl",
+    )
+    question = "How do the two described tool-use mechanisms differ?"
+    initial = planner.plan(question)
+
+    planner.revise(question, initial.plan, _assessment())
+
+    revision_prompt = provider.user_prompts[1]
+    assert "Previous plan payload:" in revision_prompt
+    assert '"question":' not in revision_prompt
+    assert '"revision":' not in revision_prompt
+    assert "Do not include question, revision, assessment" in revision_prompt
+
+
+def test_unchanged_revision_uses_cached_deterministic_fallback(tmp_path: Path) -> None:
     cache_path = tmp_path / "plans.jsonl"
     provider = _SequenceProvider(_cross_payload(), _cross_payload())
     planner = CachedResearchPlanner(
@@ -390,10 +442,55 @@ def test_unchanged_revision_is_rejected_before_cache_write(tmp_path: Path) -> No
     question = "How do the two described tool-use mechanisms differ?"
     initial = planner.plan(question)
 
-    with pytest.raises(ValueError, match="did not change"):
-        planner.revise(question, initial.plan, _assessment())
+    revised = planner.revise(question, initial.plan, _assessment())
 
-    assert len(cache_path.read_text(encoding="utf-8").splitlines()) == 1
+    assert revised.plan.revision == 1
+    assert revised.plan.question_type == initial.plan.question_type
+    assert revised.plan.tasks[0].query != initial.plan.tasks[0].query
+    assert revised.fallback_used
+    assert "did not change" in (revised.fallback_reason or "")
+    trace = planner.trace_for(question, operation="revision")
+    assert trace.final_outcome == "deterministic_fallback"
+    assert trace.fallback_used
+    assert len(cache_path.read_text(encoding="utf-8").splitlines()) == 2
+
+    offline = CachedResearchPlanner(None, model="test-model", cache_path=cache_path)
+    cached_initial = offline.plan(question)
+    cached_revision = offline.revise(question, cached_initial.plan, _assessment())
+    assert cached_revision.cache_hit
+    assert cached_revision.fallback_used
+
+
+class _RevisionFailingProvider:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def complete(self, system_prompt: str, user_prompt: str) -> str:
+        self.calls += 1
+        if self.calls == 1:
+            return _cross_payload()
+        raise RuntimeError("revision provider unavailable")
+
+
+def test_revision_provider_failure_falls_back_without_failing_run(tmp_path: Path) -> None:
+    provider = _RevisionFailingProvider()
+    planner = CachedResearchPlanner(
+        provider,
+        model="test-model",
+        cache_path=tmp_path / "plans.jsonl",
+        retry_attempts=2,
+    )
+    question = "How do the two described tool-use mechanisms differ?"
+    initial = planner.plan(question)
+
+    revised = planner.revise(question, initial.plan, _assessment())
+
+    assert provider.calls == 3
+    assert revised.fallback_used
+    assert revised.attempts == 2
+    assert revised.repair_attempts == 0
+    assert "revision provider unavailable" in (revised.fallback_reason or "")
+    assert len((tmp_path / "plans.jsonl").read_text(encoding="utf-8").splitlines()) == 1
 
 
 def test_prompt_versions_use_separate_cache_keys_and_preserve_old_records(

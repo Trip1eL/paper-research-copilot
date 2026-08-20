@@ -224,6 +224,19 @@ class ResearchAgentRuntime:
         started = time.perf_counter()
         result = self._planner.plan(state["question"])
         latency_ms = _elapsed_ms(started)
+        details: dict[str, str | int | float | bool] = {
+            "question_type": result.plan.question_type,
+            "task_count": len(result.plan.tasks),
+            "planner_model": result.model,
+            "cache_hit": result.cache_hit,
+            "generation_latency_ms": result.generation_latency_ms,
+            "planner_attempts": result.attempts,
+            "planner_repair_attempts": result.repair_attempts,
+            "planner_fallback_used": result.fallback_used,
+            **_token_usage_details("planner", result.usage),
+        }
+        if result.fallback_reason is not None:
+            details["planner_fallback_reason"] = result.fallback_reason
         return ResearchState(
             plan=result.plan,
             trace=_append_event(
@@ -231,15 +244,7 @@ class ResearchAgentRuntime:
                 node="plan_research",
                 outcome="planned",
                 latency_ms=latency_ms,
-                details={
-                    "question_type": result.plan.question_type,
-                    "task_count": len(result.plan.tasks),
-                    "planner_model": result.model,
-                    "cache_hit": result.cache_hit,
-                    "generation_latency_ms": result.generation_latency_ms,
-                    "planner_attempts": result.attempts,
-                    **_token_usage_details("planner", result.usage),
-                },
+                details=details,
             ),
         )
 
@@ -406,6 +411,20 @@ class ResearchAgentRuntime:
             state["assessment"],
         )
         retry_count = state["retry_count"] + 1
+        details: dict[str, str | int | float | bool] = {
+            "retry_count": retry_count,
+            "planner_model": result.model,
+            "cache_hit": result.cache_hit,
+            "generation_latency_ms": result.generation_latency_ms,
+            "planner_attempts": result.attempts,
+            "planner_repair_attempts": result.repair_attempts,
+            "planner_fallback_used": result.fallback_used,
+            "previous_queries": _format_plan_queries(state["plan"].tasks),
+            "revised_queries": _format_plan_queries(result.plan.tasks),
+            **_token_usage_details("planner", result.usage),
+        }
+        if result.fallback_reason is not None:
+            details["planner_fallback_reason"] = result.fallback_reason
         return ResearchState(
             plan=result.plan,
             retry_count=retry_count,
@@ -414,14 +433,7 @@ class ResearchAgentRuntime:
                 node="revise_queries",
                 outcome="revised",
                 latency_ms=_elapsed_ms(started),
-                details={
-                    "retry_count": retry_count,
-                    "planner_model": result.model,
-                    "cache_hit": result.cache_hit,
-                    "generation_latency_ms": result.generation_latency_ms,
-                    "planner_attempts": result.attempts,
-                    **_token_usage_details("planner", result.usage),
-                },
+                details=details,
             ),
         )
 
@@ -631,6 +643,10 @@ def _append_event(
 
 def _format_counts(counts: dict[str, int]) -> str:
     return ",".join(f"{task_id}={count}" for task_id, count in counts.items())
+
+
+def _format_plan_queries(tasks: Sequence[ResearchTask]) -> str:
+    return " | ".join(f"{task.task_id}={task.query}" for task in tasks)
 
 
 def _elapsed_ms(started: float) -> float:

@@ -78,6 +78,23 @@ The previous response reached the output token limit. Retry with compact JSON on
 - do not include analysis, Markdown, comments, or extra fields.
 """
 
+_REVISION_RECOVERY_VERSION = "schema_repair_fallback_v1"
+_SCHEMA_REPAIR_INSTRUCTION = """
+
+The previous response failed validation. Correct that response instead of repeating it.
+Keep the original question type and task count. Preserve consecutive task IDs and change at least
+one retrieval query. Return JSON only with question_type, rationale, and tasks; each task must have
+only task_id, query, and goal.
+
+Validation error:
+{error}
+
+Previous invalid response:
+<previous_response>
+{raw_response}
+</previous_response>
+"""
+
 
 class ResearchPlanner(Protocol):
     def plan(self, question: str) -> PlanningResult: ...
@@ -137,6 +154,7 @@ PlannerAttemptOutcome = Literal[
     "invalid_plan",
     "unchanged_revision",
     "title_leakage",
+    "deterministic_fallback",
 ]
 
 
@@ -153,6 +171,7 @@ class PlannerAttemptTrace(BaseModel):
     error_type: str | None = None
     error: str | None = None
     raw_response: str = ""
+    repair_prompt_used: bool = False
 
 
 class PlannerGenerationTrace(BaseModel):
@@ -167,6 +186,9 @@ class PlannerGenerationTrace(BaseModel):
     attempts: tuple[PlannerAttemptTrace, ...]
     retry_triggered: bool
     retry_recovered: bool
+    repair_attempts: int = Field(default=0, ge=0)
+    fallback_used: bool = False
+    fallback_reason: str | None = None
     final_outcome: PlannerAttemptOutcome
 
 
@@ -181,6 +203,9 @@ class PlannerCacheRecord(BaseModel):
     retry_mode: PlannerRetryMode = "same_prompt"
     generation_latency_ms: float
     attempts: int = Field(default=1, ge=1)
+    repair_attempts: int = Field(default=0, ge=0)
+    fallback_used: bool = False
+    fallback_reason: str | None = None
     usage: ChatTokenUsage = Field(default_factory=ChatTokenUsage)
     response_model: str | None = None
     raw_response: str
@@ -246,6 +271,7 @@ class CachedResearchPlanner:
             revision=previous_plan.revision + 1,
             expected_question_type=previous_plan.question_type,
             previous_plan=previous_plan,
+            assessment=assessment,
         )
         return result
 
@@ -258,6 +284,7 @@ class CachedResearchPlanner:
         revision: int,
         expected_question_type: QuestionType | None = None,
         previous_plan: ResearchPlan | None = None,
+        assessment: EvidenceAssessment | None = None,
     ) -> PlanningResult:
         input_sha256 = _input_hash(
             operation,
@@ -281,6 +308,9 @@ class CachedResearchPlanner:
                 latency_ms=round((time.perf_counter() - lookup_started) * 1000, 2),
                 generation_latency_ms=cached.generation_latency_ms,
                 attempts=cached.attempts,
+                repair_attempts=cached.repair_attempts,
+                fallback_used=cached.fallback_used,
+                fallback_reason=cached.fallback_reason,
                 usage=cached.usage,
                 response_model=cached.response_model,
             )
@@ -292,11 +322,10 @@ class CachedResearchPlanner:
         last_error: Exception | None = None
         for attempt in range(1, self.retry_attempts + 1):
             attempt_started = time.perf_counter()
-            attempt_user_prompt = (
-                user_prompt + _COMPACT_JSON_RETRY_INSTRUCTION
-                if self.retry_mode == "compact_json"
-                and any(item.outcome == "truncated" for item in attempt_traces)
-                else user_prompt
+            attempt_user_prompt, repair_prompt_used = _planner_attempt_prompt(
+                user_prompt,
+                attempt_traces,
+                retry_mode=self.retry_mode,
             )
             try:
                 completion = self._complete_with_metadata(
@@ -311,11 +340,12 @@ class CachedResearchPlanner:
                         outcome="provider_error",
                         finish_reason="provider_error",
                         error=exc,
+                        repair_prompt_used=repair_prompt_used,
                     )
                 )
                 self._store_trace(operation, question, input_sha256, attempt_traces)
                 last_error = exc
-                if isinstance(exc, ValueError):
+                if previous_plan is not None or isinstance(exc, ValueError):
                     if attempt < self.retry_attempts:
                         time.sleep(0.5 * (2 ** (attempt - 1)))
                         continue
@@ -338,6 +368,7 @@ class CachedResearchPlanner:
                         outcome="truncated",
                         completion=completion,
                         error=truncated_error,
+                        repair_prompt_used=repair_prompt_used,
                     )
                 )
                 last_error = truncated_error
@@ -352,6 +383,7 @@ class CachedResearchPlanner:
                         outcome="empty",
                         completion=completion,
                         error=empty_error,
+                        repair_prompt_used=repair_prompt_used,
                     )
                 )
                 last_error = empty_error
@@ -397,6 +429,7 @@ class CachedResearchPlanner:
                             outcome=outcome,
                             completion=completion,
                             error=exc,
+                            repair_prompt_used=repair_prompt_used,
                         )
                     )
                     last_error = exc
@@ -407,6 +440,7 @@ class CachedResearchPlanner:
                             attempt_latency_ms,
                             outcome="accepted",
                             completion=completion,
+                            repair_prompt_used=repair_prompt_used,
                         )
                     )
                     trace = self._store_trace(
@@ -426,6 +460,7 @@ class CachedResearchPlanner:
                         retry_mode=self.retry_mode,
                         generation_latency_ms=latency_ms,
                         attempts=attempt,
+                        repair_attempts=trace.repair_attempts,
                         usage=usage,
                         response_model=completion.response_model,
                         raw_response=raw_response,
@@ -443,6 +478,7 @@ class CachedResearchPlanner:
                         latency_ms=latency_ms,
                         generation_latency_ms=latency_ms,
                         attempts=attempt,
+                        repair_attempts=trace.repair_attempts,
                         usage=usage,
                         response_model=completion.response_model,
                     )
@@ -452,6 +488,68 @@ class CachedResearchPlanner:
                 time.sleep(0.5 * (2 ** (attempt - 1)))
                 continue
             break
+        if previous_plan is not None and last_error is not None:
+            latency_ms = round((time.perf_counter() - generation_started) * 1000, 2)
+            plan = _deterministic_revision_plan(previous_plan, assessment)
+            fallback_reason = f"{type(last_error).__name__}: {last_error}"
+            trace = self._store_trace(
+                operation,
+                question,
+                input_sha256,
+                attempt_traces,
+                final_outcome="deterministic_fallback",
+                fallback_reason=fallback_reason,
+            )
+            usage = _aggregate_attempt_usage(attempt_traces)
+            last_completion = next(
+                (item for item in reversed(attempt_traces) if item.raw_response),
+                None,
+            )
+            record = PlannerCacheRecord(
+                cache_key=input_sha256,
+                operation=operation,
+                input_sha256=input_sha256,
+                model=self.model,
+                prompt_version=self.prompt_version,
+                retry_mode=self.retry_mode,
+                generation_latency_ms=latency_ms,
+                attempts=len(attempt_traces),
+                repair_attempts=trace.repair_attempts,
+                fallback_used=True,
+                fallback_reason=fallback_reason,
+                usage=usage,
+                response_model=(
+                    next(
+                        (
+                            item.response_model
+                            for item in reversed(attempt_traces)
+                            if item.response_model is not None
+                        ),
+                        None,
+                    )
+                ),
+                raw_response=last_completion.raw_response if last_completion else "",
+                plan=plan,
+                generation_trace=trace,
+            )
+            if attempt_traces[-1].outcome != "provider_error":
+                self._records[input_sha256] = record
+                self._write_cache()
+            return PlanningResult(
+                plan=plan,
+                operation=operation,
+                model=self.model,
+                prompt_version=self.prompt_version,
+                cache_hit=False,
+                latency_ms=latency_ms,
+                generation_latency_ms=latency_ms,
+                attempts=len(attempt_traces),
+                repair_attempts=trace.repair_attempts,
+                fallback_used=True,
+                fallback_reason=fallback_reason,
+                usage=usage,
+                response_model=record.response_model,
+            )
         raise ValueError(
             f"Research Planner failed after {self.retry_attempts} attempts: {last_error}"
         ) from last_error
@@ -476,6 +574,7 @@ class CachedResearchPlanner:
         finish_reason: str = "unknown",
         completion: ChatCompletion | None = None,
         error: Exception | None = None,
+        repair_prompt_used: bool = False,
     ) -> PlannerAttemptTrace:
         return PlannerAttemptTrace(
             attempt=attempt,
@@ -488,6 +587,7 @@ class CachedResearchPlanner:
             error_type=type(error).__name__ if error else None,
             error=str(error) if error else None,
             raw_response=completion.content if completion else "",
+            repair_prompt_used=repair_prompt_used,
         )
 
     def _store_trace(
@@ -496,8 +596,11 @@ class CachedResearchPlanner:
         question: str,
         input_sha256: str,
         attempts: Sequence[PlannerAttemptTrace],
+        *,
+        final_outcome: PlannerAttemptOutcome | None = None,
+        fallback_reason: str | None = None,
     ) -> PlannerGenerationTrace:
-        final_outcome = attempts[-1].outcome
+        resolved_outcome = final_outcome or attempts[-1].outcome
         trace = PlannerGenerationTrace(
             operation=operation,
             question=question,
@@ -507,8 +610,11 @@ class CachedResearchPlanner:
             input_sha256=input_sha256,
             attempts=tuple(attempts),
             retry_triggered=len(attempts) > 1,
-            retry_recovered=len(attempts) > 1 and final_outcome == "accepted",
-            final_outcome=final_outcome,
+            retry_recovered=len(attempts) > 1 and resolved_outcome == "accepted",
+            repair_attempts=sum(item.repair_prompt_used for item in attempts),
+            fallback_used=resolved_outcome == "deterministic_fallback",
+            fallback_reason=fallback_reason,
+            final_outcome=resolved_outcome,
         )
         self._traces[(operation, question)] = trace
         return trace
@@ -571,14 +677,20 @@ def _revision_prompt(
     previous_plan: ResearchPlan,
     assessment: EvidenceAssessment,
 ) -> str:
+    previous_payload = _PlanPayload(
+        question_type=previous_plan.question_type,
+        rationale=previous_plan.rationale,
+        tasks=previous_plan.tasks,
+    )
     return (
         "Revise the retrieval queries once because the deterministic evidence check failed. "
         "Preserve the question type and number of tasks. Change at least one query. Do not add "
         "paper or method names that are absent from the original question.\n\n"
         f"Question:\n{question}\n\n"
-        f"Previous plan:\n{previous_plan.model_dump_json()}\n\n"
+        f"Previous plan payload:\n{previous_payload.model_dump_json()}\n\n"
         f"Evidence assessment:\n{assessment.model_dump_json()}\n\n"
-        "Return the same JSON shape as the initial plan without revision metadata."
+        "Return exactly the same JSON fields as the previous plan payload. Do not include "
+        "question, revision, assessment, or any other fields."
     )
 
 
@@ -618,6 +730,11 @@ def _input_hash(
             "prompt_version": prompt_version,
             "system_prompt": system_prompt,
             "user_prompt": user_prompt,
+            **(
+                {"revision_recovery": _REVISION_RECOVERY_VERSION}
+                if operation == "revision"
+                else {}
+            ),
             **({"retry_mode": retry_mode} if retry_mode != "same_prompt" else {}),
         },
         ensure_ascii=False,
@@ -628,6 +745,56 @@ def _input_hash(
 
 def _queries(plan: ResearchPlan) -> tuple[str, ...]:
     return tuple(" ".join(task.query.casefold().split()) for task in plan.tasks)
+
+
+def _planner_attempt_prompt(
+    user_prompt: str,
+    attempts: Sequence[PlannerAttemptTrace],
+    *,
+    retry_mode: PlannerRetryMode,
+) -> tuple[str, bool]:
+    if not attempts:
+        return user_prompt, False
+    previous = attempts[-1]
+    if previous.outcome == "provider_error":
+        return user_prompt, False
+    if previous.outcome == "truncated":
+        if retry_mode == "compact_json":
+            return user_prompt + _COMPACT_JSON_RETRY_INSTRUCTION, False
+        return user_prompt, False
+    raw_response = previous.raw_response[-4000:] or "<empty>"
+    error = (previous.error or previous.outcome)[-1200:]
+    return (
+        user_prompt
+        + _SCHEMA_REPAIR_INSTRUCTION.format(
+            error=error,
+            raw_response=raw_response,
+        ),
+        True,
+    )
+
+
+def _deterministic_revision_plan(
+    previous_plan: ResearchPlan,
+    assessment: EvidenceAssessment | None,
+) -> ResearchPlan:
+    if assessment is not None and assessment.missing_task_ids:
+        suffix = "primary source implementation mechanism evidence"
+    elif assessment is not None and assessment.distinct_paper_count < 2:
+        suffix = "independent paper comparative evidence"
+    else:
+        suffix = "implementation mechanism evaluation primary evidence"
+    tasks = tuple(
+        task.model_copy(update={"query": f"{task.query} {suffix}"})
+        for task in previous_plan.tasks
+    )
+    return ResearchPlan(
+        question=previous_plan.question,
+        question_type=previous_plan.question_type,
+        rationale="Deterministic query expansion after Planner validation failure",
+        tasks=tasks,
+        revision=previous_plan.revision + 1,
+    )
 
 
 def _planner_error_outcome(exc: Exception) -> PlannerAttemptOutcome:

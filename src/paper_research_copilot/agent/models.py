@@ -66,6 +66,9 @@ class PlanningResult(BaseModel):
     latency_ms: float = Field(ge=0)
     generation_latency_ms: float = Field(ge=0)
     attempts: int = Field(default=1, ge=1)
+    repair_attempts: int = Field(default=0, ge=0)
+    fallback_used: bool = False
+    fallback_reason: str | None = None
     usage: ChatTokenUsage = Field(default_factory=ChatTokenUsage)
     response_model: str | None = None
 

@@ -300,3 +300,38 @@ def test_unrecoverable_case_rejects_but_fails_when_irrelevant_paper_is_indexed()
     assert evaluated.answer_behavior_correct
     assert evaluated.answer_status == "insufficient_evidence"
     assert not evaluated.strict_pass
+
+
+def test_open_world_evaluation_reports_revision_repair_and_fallback() -> None:
+    case = _case("unrecoverable")
+    result = _result(case, evidence=None, acquisition=True)
+    revision = AgentEvent(
+        sequence=2,
+        node="revise_queries",
+        outcome="revised",
+        latency_ms=20,
+        details={
+            "planner_attempts": 3,
+            "planner_repair_attempts": 2,
+            "planner_fallback_used": True,
+        },
+    )
+    result = result.model_copy(
+        update={
+            "retry_count": 1,
+            "trace": (result.trace[0], revision, *result.trace[1:]),
+        }
+    )
+
+    evaluated = evaluate_open_world_case(
+        case,
+        result,
+        elapsed_ms=10,
+        points_before=0,
+        points_after=0,
+    )
+
+    assert evaluated.revision_triggered
+    assert evaluated.planner_revision_attempts == 3
+    assert evaluated.planner_repair_attempts == 2
+    assert evaluated.planner_fallback_used

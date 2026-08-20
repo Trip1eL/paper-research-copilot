@@ -72,9 +72,16 @@ def _candidate(number: int, paper_id: str) -> RetrievedChunk:
 
 
 class _FakePlanner:
-    def __init__(self, initial: ResearchPlan, revised: ResearchPlan | None = None) -> None:
+    def __init__(
+        self,
+        initial: ResearchPlan,
+        revised: ResearchPlan | None = None,
+        *,
+        revision_fallback: bool = False,
+    ) -> None:
         self.initial = initial
         self.revised = revised
+        self.revision_fallback = revision_fallback
         self.plan_calls = 0
         self.revise_calls = 0
 
@@ -93,7 +100,16 @@ class _FakePlanner:
         assert not assessment.sufficient
         assert previous_plan == self.initial
         assert self.revised is not None
-        return _planning_result(self.revised, "revision")
+        result = _planning_result(self.revised, "revision")
+        if self.revision_fallback:
+            return result.model_copy(
+                update={
+                    "repair_attempts": 1,
+                    "fallback_used": True,
+                    "fallback_reason": "schema retries exhausted",
+                }
+            )
+        return result
 
 
 class _FakeRetriever:
@@ -339,6 +355,47 @@ def test_insufficient_cross_paper_evidence_revises_once_then_succeeds() -> None:
     assert planner.revise_calls == 1
     assert [event.node for event in result.trace].count("assess_evidence") == 2
     assert [event.node for event in result.trace].count("retrieve_evidence") == 2
+
+
+def test_revision_trace_exposes_repair_fallback_and_query_change() -> None:
+    question = "How do two described mechanisms differ?"
+    initial = _plan(
+        question,
+        _task("T1", "first weak query"),
+        _task("T2", "second weak query"),
+    )
+    revised = _plan(
+        question,
+        _task("T1", "first fallback query"),
+        _task("T2", "second fallback query"),
+        revision=1,
+    )
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(initial, revised, revision_fallback=True),
+        _FakeRetriever(
+            {
+                "first weak query": (_candidate(1, "paper-a"),),
+                "second weak query": (_candidate(2, "paper-a"),),
+                "first fallback query": (_candidate(3, "paper-a"),),
+                "second fallback query": (_candidate(4, "paper-b"),),
+            }
+        ),
+        _GroundedWriter(),
+        config=_config(),
+    )
+
+    result = runtime.run(question)
+
+    event = next(item for item in result.trace if item.node == "revise_queries")
+    assert event.details["planner_repair_attempts"] == 1
+    assert event.details["planner_fallback_used"] is True
+    assert event.details["planner_fallback_reason"] == "schema retries exhausted"
+    assert event.details["previous_queries"] == (
+        "T1=first weak query | T2=second weak query"
+    )
+    assert event.details["revised_queries"] == (
+        "T1=first fallback query | T2=second fallback query"
+    )
 
 
 def test_retry_exhaustion_returns_deterministic_insufficient_evidence() -> None:
