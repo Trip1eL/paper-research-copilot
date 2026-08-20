@@ -4,6 +4,35 @@
 - `baselines/` will contain reproducible retrieval and agent configurations.
 - `results/` contains generated experiment artifacts and is ignored by Git.
 
+## Open-world Evaluation v1
+
+`datasets/open_world_v1.jsonl` 包含 16 条人工复核 Case：5 条 In-corpus、5 条 Recoverable、3 条
+Unrecoverable 和 3 条 Ambiguous。Runner 为每个 Case 创建独立空 Dynamic Qdrant、SQLite 与 PDF
+目录，防止前一条动态论文污染后一条；成功和失败的完整 `AgentResult` 都写入 Git ignored Cache，
+正式 Baseline 只保存确定性指标与必要 provenance。
+
+运行四类生产策略 Smoke：
+
+```powershell
+conda run --no-capture-output -n paper-research-copilot `
+  python -u scripts/run_open_world_evaluation.py `
+  --baseline-id open_world_v1_smoke
+```
+
+运行完整 Acquisition 消融，跳过已单独评估过的 Query Revision：
+
+```powershell
+conda run --no-capture-output -n paper-research-copilot `
+  python -u scripts/run_open_world_evaluation.py `
+  --all-cases --max-retries 0 `
+  --baseline-id open_world_v1_no_revision
+```
+
+核心指标包括 Acquisition Trigger Precision/Recall、In-corpus False Trigger、Recoverable Success、
+Unrecoverable Abstention/No-index、Ambiguous Abstention、Dynamic Evidence/Target Citation Hit、Parser
+Provenance、Bounded Acquisition、P50/P95、下载/索引计数和 Point Delta。确定性行为指标不替代 Answer
+Semantic LLM Judge。
+
 当前 `datasets/retrieval_diagnostic_v1.jsonl` 包含 25 条 Retrieval 诊断问题，记录问题类型、
 相关论文、相关页码和证据提示。它用于下一阶段建立 Recall@K Baseline，目前不包含模型输出、
 检索结果或评分，因此不是完整的 Golden Dataset。

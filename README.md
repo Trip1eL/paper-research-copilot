@@ -94,6 +94,12 @@ Acquisition Loop。Agent 先执行一次本地 Query Revision，仍不足时才�
 `Acquire -> Retrieve -> Assess`；无论成功或失败都不会进入第二轮下载。外部扩库默认关闭，必须通过
 CLI `--allow-acquisition` 或 `AGENT_DYNAMIC_ACQUISITION_ENABLED=true` 显式启用。
 
+v2 Phase 6 已建立 16 条 Open-world Evaluation v1，覆盖 In-corpus、Recoverable、Unrecoverable 和
+Ambiguous。每个 Case 使用独立且初始为空的 Dynamic Qdrant、SQLite 与 PDF 目录，确定性测量扩库
+触发、恢复成功、拒答、无关写入、目标 Citation、Parser provenance、延迟和成本。首轮无 Revision
+消融 Strict Pass 为 `68.75%`，主要失败来自缩写搜索歧义、不可恢复问题的无关写入和 Ambiguous
+问题缺少入口 Gate；详细结果见 `evals/baselines/open_world_v1_no_revision.md`。
+
 ```powershell
 paper-rag search-papers "agent memory retrieval" --limit 5
 paper-rag acquire-papers "agent memory retrieval" --task-id demo-001 --round 1

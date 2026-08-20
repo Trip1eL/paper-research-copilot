@@ -182,6 +182,27 @@ def test_planner_distinguishes_schema_and_task_shape_failures(
     assert planner.trace_for(question).attempts[0].outcome == expected_outcome
 
 
+def test_planner_schema_trace_identifies_the_invalid_field(tmp_path: Path) -> None:
+    question = "How does episodic memory work?"
+    planner = CachedResearchPlanner(
+        _SequenceProvider(
+            '{"question_type":"single_paper","rationale":"missing tasks"}',
+        ),
+        model="test-model",
+        cache_path=tmp_path / "plans.jsonl",
+        retry_attempts=1,
+    )
+
+    with pytest.raises(ValueError, match="payload Schema: tasks: Field required"):
+        planner.plan(question)
+
+    attempt = planner.trace_for(question).attempts[0]
+    assert attempt.error == (
+        "Research Planner response does not match the payload Schema: "
+        "tasks: Field required"
+    )
+
+
 def test_planner_traces_truncation_and_aggregates_retry_usage(tmp_path: Path) -> None:
     question = "How does episodic memory work?"
     planner = CachedResearchPlanner(

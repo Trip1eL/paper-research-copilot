@@ -594,8 +594,12 @@ def _parse_plan_payload(response: str) -> _PlanPayload:
     try:
         return _PlanPayload.model_validate(payload)
     except ValidationError as exc:
+        details = "; ".join(
+            f"{'.'.join(str(part) for part in error['loc'])}: {error['msg']}"
+            for error in exc.errors(include_url=False)
+        )
         raise _PlannerPayloadSchemaError(
-            "Research Planner response does not match the payload Schema"
+            f"Research Planner response does not match the payload Schema: {details}"
         ) from exc
 
 
