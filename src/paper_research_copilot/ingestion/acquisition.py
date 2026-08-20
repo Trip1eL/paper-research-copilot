@@ -17,6 +17,7 @@ from paper_research_copilot.domain import (
 from paper_research_copilot.integrations.scholarly import (
     AcademicSearchProvider,
     rank_and_deduplicate_candidates,
+    select_relevant_candidates,
 )
 from paper_research_copilot.storage import (
     AcquisitionNotFoundError,
@@ -101,7 +102,11 @@ class AcademicAcquisitionService:
             )
             return AcquisitionResult(run=failed, candidates=(), ingestions=())
 
-        selected = candidates[: self.budget.max_downloads]
+        selected = select_relevant_candidates(
+            normalized,
+            candidates,
+            limit=self.budget.max_downloads,
+        )
         ingestions: list[DynamicIngestionResult] = []
         errors: list[str] = []
         for candidate in selected:
@@ -121,7 +126,7 @@ class AcademicAcquisitionService:
             item.outcome in {"indexed", "already_active", "duplicate"}
             for item in ingestions
         )
-        if successful == len(selected) and not errors:
+        if selected and successful == len(selected) and not errors:
             status: AcquisitionStatus = "succeeded"
         elif successful:
             status = "partial"
@@ -136,7 +141,13 @@ class AcademicAcquisitionService:
                     if item.outcome == "failed"
                 ),
             ]
-        ) or ("Academic search returned no candidates" if not selected else None)
+        ) or (
+            "No candidates passed relevance validation"
+            if candidates and not selected
+            else "Academic search returned no candidates"
+            if not selected
+            else None
+        )
         completed = self._repository.complete_acquisition(
             acquisition_id,
             status=status,

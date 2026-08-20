@@ -1,6 +1,7 @@
 """Research workflow state, LangGraph nodes, routing, and stopping rules."""
 
 from paper_research_copilot.agent.factory import build_agent_runtime
+from paper_research_copilot.agent.guardrails import QuestionAmbiguityGate
 from paper_research_copilot.agent.models import (
     AgentAcquisitionSummary,
     AgentEvent,
@@ -8,6 +9,7 @@ from paper_research_copilot.agent.models import (
     AgentRuntimeConfig,
     EvidenceAssessment,
     PlanningResult,
+    QuestionScreening,
     ResearchPlan,
     ResearchTask,
 )
@@ -41,6 +43,8 @@ __all__ = [
     "EvidenceAssessment",
     "EvidenceAcquirer",
     "PlanningResult",
+    "QuestionAmbiguityGate",
+    "QuestionScreening",
     "PlannerAttemptOutcome",
     "PlannerAttemptTrace",
     "PlannerGenerationTrace",

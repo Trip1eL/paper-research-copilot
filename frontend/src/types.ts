@@ -99,8 +99,15 @@ export interface AgentAcquisitionSummary {
   error: string | null;
 }
 
+export interface QuestionScreening {
+  decision: "clear" | "ambiguous";
+  rule_id: string | null;
+  reason: string;
+}
+
 export interface AgentResult {
   question: string;
+  screening: QuestionScreening | null;
   plan: ResearchPlan;
   evidence: RetrievedChunk[];
   assessment: EvidenceAssessment;

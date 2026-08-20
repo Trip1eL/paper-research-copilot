@@ -202,6 +202,37 @@ def test_bounded_acquisition_is_persistent_and_idempotent(tmp_path: Path) -> Non
     reopened.close()
 
 
+def test_irrelevant_candidates_never_reach_download_or_embedding(tmp_path: Path) -> None:
+    repository = SqliteResearchRepository(tmp_path / "app.db")
+    store = QdrantVectorStore("dynamic", 3, path=tmp_path / "qdrant")
+    downloader = _Downloader(tmp_path / "papers")
+    embeddings = _Embeddings()
+    search = _Search((_candidate("2401.00007"),))
+    ingestion = _service(repository, downloader, embeddings, store)
+    acquisition = AcademicAcquisitionService(
+        search,
+        ingestion,
+        repository,
+        budget=AcquisitionBudget(candidates_per_query=5, max_downloads=1),
+    )
+
+    result = acquisition.acquire(
+        "QuantumMemoryAgentX 如何实现长期记忆？",
+        task_id="task-irrelevant",
+    )
+
+    assert result.run.status == "failed"
+    assert result.run.candidate_count == 1
+    assert result.run.selected_count == 0
+    assert result.run.error == "No candidates passed relevance validation"
+    assert result.ingestions == ()
+    assert downloader.calls == 0
+    assert embeddings.calls == 0
+    assert store.count() == 0
+    store.close()
+    repository.close()
+
+
 def test_sha256_dedup_prevents_second_embedding_and_point_write(tmp_path: Path) -> None:
     repository = SqliteResearchRepository(tmp_path / "app.db")
     store = QdrantVectorStore("dynamic", 3, path=tmp_path / "qdrant")

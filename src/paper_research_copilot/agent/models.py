@@ -10,6 +10,14 @@ from paper_research_copilot.integrations import ChatTokenUsage
 QuestionType = Literal["single_paper", "cross_paper"]
 
 
+class QuestionScreening(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    decision: Literal["clear", "ambiguous"]
+    rule_id: str | None = None
+    reason: str = Field(min_length=5)
+
+
 class ResearchTask(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -103,6 +111,7 @@ class AgentResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     question: str
+    screening: QuestionScreening | None = None
     plan: ResearchPlan
     evidence: tuple[RetrievedChunk, ...]
     assessment: EvidenceAssessment

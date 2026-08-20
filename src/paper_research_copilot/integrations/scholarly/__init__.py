@@ -7,7 +7,11 @@ from paper_research_copilot.integrations.scholarly.arxiv import (
 )
 from paper_research_copilot.integrations.scholarly.base import (
     AcademicSearchProvider,
+    CandidateRelevanceDecision,
+    evaluate_candidate_relevance,
+    extract_explicit_entities,
     rank_and_deduplicate_candidates,
+    select_relevant_candidates,
 )
 from paper_research_copilot.integrations.scholarly.downloader import (
     ARXIV_HOSTS,
@@ -22,6 +26,10 @@ __all__ = [
     "ArxivSearchError",
     "ArxivSearchProvider",
     "BoundedPaperDownloader",
+    "CandidateRelevanceDecision",
     "DownloadValidationError",
+    "evaluate_candidate_relevance",
+    "extract_explicit_entities",
     "rank_and_deduplicate_candidates",
+    "select_relevant_candidates",
 ]

@@ -12,6 +12,7 @@ import httpx
 
 from paper_research_copilot.domain import PaperCandidate
 from paper_research_copilot.integrations.scholarly.base import (
+    extract_explicit_entities,
     rank_and_deduplicate_candidates,
 )
 
@@ -82,10 +83,10 @@ class ArxivSearchProvider:
             raise ValueError("Academic search query must not be empty")
         if not 1 <= limit <= 10:
             raise ValueError("arXiv search limit must be between 1 and 10")
-        search_query = _compact_academic_query(normalized)
+        search_query = _build_arxiv_search_expression(normalized)
         response = self._request(
             {
-                "search_query": f'all:"{_escape_query(search_query)}"',
+                "search_query": search_query,
                 "start": "0",
                 "max_results": str(limit),
                 "sortBy": "relevance",
@@ -229,3 +230,24 @@ def _compact_academic_query(query: str, *, max_terms: int = 4) -> str:
     ]
     selected = distinctive[:max_terms] or terms[:max_terms]
     return " ".join(selected)
+
+
+def _build_arxiv_search_expression(query: str) -> str:
+    entities = extract_explicit_entities(query)
+    if not entities:
+        compact = _compact_academic_query(query)
+        return f'all:"{_escape_query(compact)}"'
+
+    primary = entities[0]
+    expression = f'all:"{_escape_query(primary)}"'
+    if primary.isalpha() and primary.isupper() and len(primary) <= 5:
+        primary_tokens = {item.casefold() for item in _QUERY_WORD.findall(primary)}
+        context = [
+            term
+            for term in _QUERY_WORD.findall(query)
+            if term.casefold() not in _QUERY_STOPWORDS
+            and term.casefold() not in primary_tokens
+        ][:3]
+        if context:
+            expression += f' AND all:"{_escape_query(" ".join(context))}"'
+    return expression

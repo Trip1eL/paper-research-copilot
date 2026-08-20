@@ -5,7 +5,10 @@ import httpx
 from paper_research_copilot.domain import PaperCandidate
 from paper_research_copilot.integrations.scholarly import (
     ArxivSearchProvider,
+    evaluate_candidate_relevance,
+    extract_explicit_entities,
     rank_and_deduplicate_candidates,
+    select_relevant_candidates,
 )
 
 ATOM_FEED = b"""<?xml version="1.0" encoding="UTF-8"?>
@@ -107,6 +110,47 @@ def test_arxiv_provider_compacts_long_generic_query_to_four_content_terms() -> N
     client.close()
 
 
+def test_arxiv_provider_combines_short_acronym_with_research_context() -> None:
+    observed_request: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal observed_request
+        observed_request = request
+        return httpx.Response(200, content=ATOM_FEED, request=request)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    ArxivSearchProvider(client).search(
+        "SAGE 如何评测并改进 Deep Research Agents 的 retrieval 能力？",
+        5,
+    )
+
+    assert observed_request is not None
+    assert observed_request.url.params["search_query"] == (
+        'all:"SAGE" AND all:"Deep Research Agents"'
+    )
+    client.close()
+
+
+def test_arxiv_provider_preserves_hyphenated_model_identity() -> None:
+    observed_request: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal observed_request
+        observed_request = request
+        return httpx.Response(200, content=ATOM_FEED, request=request)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    ArxivSearchProvider(client).search(
+        "GPT-7 Agent 在 SWE-bench Verified 上的官方解决率是多少？",
+        5,
+    )
+
+    assert extract_explicit_entities("GPT-7 Agent") == ("GPT-7",)
+    assert observed_request is not None
+    assert observed_request.url.params["search_query"] == 'all:"GPT-7"'
+    client.close()
+
+
 def test_arxiv_provider_preserves_legacy_identifier_category_prefix() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, content=OLD_ID_FEED, request=request)
@@ -157,3 +201,86 @@ def test_candidate_ranking_is_stable_and_deduplicates_identity_and_doi() -> None
 
     assert [item.external_id for item in ranked] == ["2401.00002", "2401.00001"]
     assert ranked[0].search_score > ranked[1].search_score
+
+
+def test_candidate_relevance_requires_exact_named_entity() -> None:
+    candidate = _candidate("2601.00001", "GPT Agents for Software Engineering")
+
+    decision = evaluate_candidate_relevance(
+        "GPT-7 Agent 在 SWE-bench Verified 上的官方解决率是多少？",
+        candidate,
+    )
+
+    assert not decision.accepted
+    assert decision.required_entities == ("GPT-7",)
+    assert decision.reason == "Missing explicit entity: GPT-7"
+
+
+def test_candidate_relevance_requires_context_for_short_acronym() -> None:
+    wrong = _candidate("2601.00002", "SAGE for Spatial Scene Generation")
+    target = PaperCandidate(
+        **_candidate("2602.05975", "SAGE: Evaluating Deep Research Agents").model_dump(
+            exclude={"title", "abstract"}
+        ),
+        title="SAGE: Evaluating Deep Research Agents",
+        abstract="A benchmark for retrieval and evidence synthesis in research agents.",
+    )
+    query = "SAGE 如何评测并改进 Deep Research Agents 的 retrieval 能力？"
+
+    wrong_decision = evaluate_candidate_relevance(query, wrong)
+    target_decision = evaluate_candidate_relevance(query, target)
+
+    assert not wrong_decision.accepted
+    assert target_decision.accepted
+    assert set(target_decision.matched_context_terms) >= {"deep", "research", "agents"}
+
+
+def test_candidate_relevance_rejects_same_name_from_another_domain() -> None:
+    wrong = _candidate(
+        "2607.21125",
+        "Causal-AgentIR: Self-Evolving Causal Memory for Image Restoration Agents",
+    )
+    target = PaperCandidate(
+        **_candidate("2603.04384", "AgentIR: Reasoning-Aware Retrieval").model_dump(
+            exclude={"title", "abstract"}
+        ),
+        title="AgentIR: Reasoning-Aware Retrieval for Deep Research Agents",
+        abstract="A retrieval model that embeds an agent reasoning trace with its query.",
+    )
+    query = "AgentIR 如何为 Deep Research Agents 实现 reasoning-aware retrieval？"
+
+    assert not evaluate_candidate_relevance(query, wrong).accepted
+    assert evaluate_candidate_relevance(query, target).accepted
+
+
+def test_candidate_relevance_allows_exact_entity_only_query() -> None:
+    target = _candidate("2603.04384", "AgentIR: Reasoning-Aware Retrieval")
+
+    decision = evaluate_candidate_relevance("AgentIR", target)
+
+    assert decision.accepted
+
+
+def test_named_entity_selection_downloads_only_top_ranked_candidate() -> None:
+    target = PaperCandidate(
+        **_candidate("2603.04384", "AgentIR: Reasoning-Aware Retrieval").model_dump(
+            exclude={"title", "abstract"}
+        ),
+        title="AgentIR: Reasoning-Aware Retrieval for Deep Research Agents",
+        abstract="The retriever embeds reasoning traces with queries from research agents.",
+    )
+    related = PaperCandidate(
+        **_candidate("2607.21126", "AgentIR: Adaptive Retrieval").model_dump(
+            exclude={"title", "abstract"}
+        ),
+        title="AgentIR: Adaptive Retrieval for Conversational Agents",
+        abstract="A reasoning-aware retrieval substrate for long-term research tasks.",
+    )
+
+    selected = select_relevant_candidates(
+        "AgentIR reasoning-aware retrieval for research agents",
+        (target, related),
+        limit=2,
+    )
+
+    assert selected == (target,)

@@ -4,6 +4,7 @@ from paper_research_copilot.agent import (
     AgentRuntimeConfig,
     EvidenceAssessment,
     PlanningResult,
+    QuestionAmbiguityGate,
     ResearchAgentRuntime,
     ResearchPlan,
     ResearchTask,
@@ -459,6 +460,40 @@ def test_failed_acquisition_still_stops_after_one_round() -> None:
     assert result.acquisition.status == "failed"
     assert len(acquirer.calls) == 1
     assert writer.calls == 0
+
+
+def test_ambiguous_question_skips_retrieval_and_acquisition() -> None:
+    question = "请详细解释刚才提到的那篇论文。"
+    plan = _plan(question, _task("T1", "referenced paper details"))
+    retriever = _AcquisitionAwareRetriever({}, {})
+    acquirer = _FakeAcquirer(retriever)
+    writer = _GroundedWriter()
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(plan),
+        retriever,
+        writer,
+        acquirer=acquirer,
+        question_gate=QuestionAmbiguityGate(),
+        config=_config(max_retries=0, max_acquisition_rounds=1),
+    )
+
+    result = runtime.run(question, task_id="task-ambiguous")
+
+    assert result.screening is not None
+    assert result.screening.decision == "ambiguous"
+    assert result.screening.rule_id == "unresolved_reference"
+    assert result.answer.status == "insufficient_evidence"
+    assert result.answer.text == "INSUFFICIENT_EVIDENCE"
+    assert result.acquisition_rounds == 0
+    assert retriever.calls == []
+    assert acquirer.calls == []
+    assert writer.calls == 0
+    assert [event.node for event in result.trace] == [
+        "plan_research",
+        "screen_question",
+        "write_report",
+        "validate_citations",
+    ]
 
 
 def test_answer_model_rejection_routes_to_local_query_revision() -> None:

@@ -6,6 +6,7 @@ from paper_research_copilot.agent.models import (
     AgentAcquisitionSummary,
     AgentEvent,
     EvidenceAssessment,
+    QuestionScreening,
     ResearchPlan,
 )
 from paper_research_copilot.domain import Answer, RetrievedChunk
@@ -14,6 +15,7 @@ from paper_research_copilot.domain import Answer, RetrievedChunk
 class ResearchState(TypedDict, total=False):
     question: str
     task_id: str | None
+    screening: QuestionScreening
     plan: ResearchPlan
     rankings_by_task: dict[str, tuple[RetrievedChunk, ...]]
     evidence: tuple[RetrievedChunk, ...]

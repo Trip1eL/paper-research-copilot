@@ -16,6 +16,7 @@ from paper_research_copilot.agent.models import (
     AgentResult,
     AgentRuntimeConfig,
     EvidenceAssessment,
+    QuestionScreening,
     ResearchTask,
 )
 from paper_research_copilot.agent.planner import ResearchPlanner
@@ -48,6 +49,10 @@ class EvidenceAcquirer(Protocol):
     ) -> AcquisitionResult: ...
 
 
+class QuestionGate(Protocol):
+    def screen(self, question: str) -> QuestionScreening: ...
+
+
 @runtime_checkable
 class ObservableAnswerWriter(AnswerWriter, Protocol):
     def trace_for(self, question: str) -> AnswerGenerationTrace: ...
@@ -63,6 +68,7 @@ class ResearchAgentRuntime:
         answer_writer: AnswerWriter,
         *,
         acquirer: EvidenceAcquirer | None = None,
+        question_gate: QuestionGate | None = None,
         config: AgentRuntimeConfig | None = None,
         checkpointer: BaseCheckpointSaver[Any] | None = None,
         close_callback: Callable[[], None] | None = None,
@@ -71,6 +77,7 @@ class ResearchAgentRuntime:
         self._retriever = retriever
         self._answer_writer = answer_writer
         self._acquirer = acquirer
+        self._question_gate = question_gate
         self.config = config or AgentRuntimeConfig()
         self._checkpointer = checkpointer
         self._close_callback = close_callback
@@ -136,6 +143,7 @@ class ResearchAgentRuntime:
     def _result(self, question: str, final_state: ResearchState) -> AgentResult:
         return AgentResult(
             question=question,
+            screening=final_state.get("screening"),
             plan=final_state["plan"],
             evidence=final_state["evidence"],
             assessment=final_state["assessment"],
@@ -156,6 +164,8 @@ class ResearchAgentRuntime:
     ) -> CompiledStateGraph[ResearchState, None, ResearchState, ResearchState]:
         graph = StateGraph(ResearchState)
         graph.add_node("plan_research", self._plan_research)
+        if self._question_gate is not None:
+            graph.add_node("screen_question", self._screen_question)
         graph.add_node("retrieve_evidence", self._retrieve_evidence)
         graph.add_node("assess_evidence", self._assess_evidence)
         graph.add_node("revise_queries", self._revise_queries)
@@ -163,7 +173,18 @@ class ResearchAgentRuntime:
         graph.add_node("write_report", self._write_report)
         graph.add_node("validate_citations", self._validate_citations)
         graph.add_edge(START, "plan_research")
-        graph.add_edge("plan_research", "retrieve_evidence")
+        if self._question_gate is None:
+            graph.add_edge("plan_research", "retrieve_evidence")
+        else:
+            graph.add_edge("plan_research", "screen_question")
+            graph.add_conditional_edges(
+                "screen_question",
+                self._route_after_screening,
+                {
+                    "retrieve": "retrieve_evidence",
+                    "write": "write_report",
+                },
+            )
         graph.add_edge("retrieve_evidence", "assess_evidence")
         graph.add_conditional_edges(
             "assess_evidence",
@@ -271,6 +292,48 @@ class ResearchAgentRuntime:
             ),
         )
 
+    def _screen_question(self, state: ResearchState) -> ResearchState:
+        started = time.perf_counter()
+        if self._question_gate is None:
+            raise RuntimeError("Question screening node requires a Question Gate")
+        screening = self._question_gate.screen(state["question"])
+        details: dict[str, str | int | float | bool] = {
+            "reason": screening.reason,
+        }
+        if screening.rule_id is not None:
+            details["rule_id"] = screening.rule_id
+        trace = _append_event(
+            state,
+            node="screen_question",
+            outcome=screening.decision,
+            latency_ms=_elapsed_ms(started),
+            details=details,
+        )
+        if screening.decision == "ambiguous":
+            return ResearchState(
+                screening=screening,
+                trace=trace,
+                evidence=(),
+                rankings_by_task={},
+                task_candidate_counts={},
+                task_selected_counts={},
+                assessment=EvidenceAssessment(
+                    sufficient=False,
+                    reason=screening.reason,
+                    task_candidate_counts={},
+                    task_selected_counts={},
+                    distinct_paper_count=0,
+                    retry_recommended=False,
+                ),
+            )
+        return ResearchState(screening=screening, trace=trace)
+
+    def _route_after_screening(
+        self,
+        state: ResearchState,
+    ) -> Literal["retrieve", "write"]:
+        return "write" if state["screening"].decision == "ambiguous" else "retrieve"
+
     def _assess_evidence(self, state: ResearchState) -> ResearchState:
         started = time.perf_counter()
         plan = state["plan"]
@@ -366,6 +429,8 @@ class ResearchAgentRuntime:
         self,
         state: ResearchState,
     ) -> Literal["revise", "acquire", "validate"]:
+        if state.get("screening") is not None and state["screening"].decision == "ambiguous":
+            return "validate"
         if state["answer"].status != "insufficient_evidence":
             return "validate"
         if state["assessment"].retry_recommended:

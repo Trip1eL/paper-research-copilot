@@ -1,0 +1,102 @@
+{
+  "config": {
+    "baseline_id": "open_world_v1_guardrails_relevance_final",
+    "evaluated_on": "2026-08-20",
+    "dataset_path": "evals/datasets/open_world_v1.jsonl",
+    "dataset_sha256": "db96adace56bf2cb2c354f63a0052c5e5d0dff5f716a76c85c616cf02648ee8a",
+    "case_ids": [
+      "OW-IC-001",
+      "OW-IC-002",
+      "OW-IC-003",
+      "OW-IC-004",
+      "OW-IC-005",
+      "OW-RC-001",
+      "OW-RC-002",
+      "OW-RC-003",
+      "OW-RC-004",
+      "OW-RC-005",
+      "OW-UR-001",
+      "OW-UR-002",
+      "OW-UR-003",
+      "OW-AM-001",
+      "OW-AM-002",
+      "OW-AM-003"
+    ],
+    "corpus_version": 3,
+    "curated_collection": "agent_seed_v3_bge_m3_chunking_v1",
+    "dynamic_state_policy": "isolated_empty_per_case",
+    "planner_model": "gpt-5.5",
+    "answer_model": "deepseek-v4-flash",
+    "max_retries": 0,
+    "max_acquisition_rounds": 1,
+    "notes": [
+      "指标为确定性行为评估，不替代 Answer Semantic LLM Judge。",
+      "Trigger Precision 将 Recoverable 视为唯一必须扩库类别；Unrecoverable 的一次有界搜索仍计入触发分母。",
+      "运行缓存包含完整 AgentResult，位于 Git ignored 的 data/evaluation 目录。",
+      "Run Cache：D:/AI开发/Paper Research Copilot/data/evaluation/open_world/open_world_v1_guardrails_relevance_final/runs.jsonl"
+    ]
+  },
+  "summary": {
+    "case_count": 16,
+    "run_success_rate": 1.0,
+    "strict_pass_rate": 1.0,
+    "acquisition_trigger_precision": 0.625,
+    "acquisition_trigger_recall": 1.0,
+    "in_corpus_false_trigger_rate": 0.0,
+    "recoverable_success_rate": 1.0,
+    "unrecoverable_abstention_rate": 1.0,
+    "unrecoverable_no_index_rate": 1.0,
+    "ambiguous_abstention_rate": 1.0,
+    "dynamic_evidence_hit_rate": 1.0,
+    "target_citation_hit_rate": 1.0,
+    "dynamic_parser_provenance_rate": 1.0,
+    "bounded_acquisition_rate": 1.0,
+    "answer_behavior_accuracy": 1.0,
+    "in_corpus_dynamic_evidence_rate": 0.0,
+    "p50_elapsed_ms": 10060.74,
+    "p95_elapsed_ms": 50628.56,
+    "total_downloaded": 5,
+    "total_indexed": 5,
+    "total_point_delta": 116,
+    "known_input_tokens": 148988,
+    "known_output_tokens": 15947
+  },
+  "categories": [
+    {
+      "category": "in_corpus",
+      "case_count": 5,
+      "strict_pass_rate": 1.0,
+      "acquisition_rate": 0.0,
+      "answer_behavior_accuracy": 1.0,
+      "p50_elapsed_ms": 10106.24,
+      "p95_elapsed_ms": 18911.96
+    },
+    {
+      "category": "recoverable",
+      "case_count": 5,
+      "strict_pass_rate": 1.0,
+      "acquisition_rate": 1.0,
+      "answer_behavior_accuracy": 1.0,
+      "p50_elapsed_ms": 20067.3,
+      "p95_elapsed_ms": 106901.87
+    },
+    {
+      "category": "unrecoverable",
+      "case_count": 3,
+      "strict_pass_rate": 1.0,
+      "acquisition_rate": 1.0,
+      "answer_behavior_accuracy": 1.0,
+      "p50_elapsed_ms": 7067.54,
+      "p95_elapsed_ms": 7383.35
+    },
+    {
+      "category": "ambiguous",
+      "case_count": 3,
+      "strict_pass_rate": 1.0,
+      "acquisition_rate": 0.0,
+      "answer_behavior_accuracy": 1.0,
+      "p50_elapsed_ms": 829.84,
+      "p95_elapsed_ms": 964.2
+    }
+  ]
+}

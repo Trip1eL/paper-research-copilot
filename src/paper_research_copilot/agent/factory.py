@@ -7,6 +7,7 @@ from typing import Any
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
 
+from paper_research_copilot.agent.guardrails import QuestionAmbiguityGate
 from paper_research_copilot.agent.models import AgentRuntimeConfig
 from paper_research_copilot.agent.planner import CachedResearchPlanner
 from paper_research_copilot.agent.runtime import ResearchAgentRuntime
@@ -111,6 +112,7 @@ def build_agent_runtime(
             retrieval_runtime.retriever,
             answer_writer,
             acquirer=acquisition,
+            question_gate=QuestionAmbiguityGate(),
             config=runtime_config,
             checkpointer=checkpointer,
             close_callback=close_runtime_resources,
