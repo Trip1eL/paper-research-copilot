@@ -22,6 +22,33 @@ _ARXIV_ID = re.compile(
     r"^(?P<id>(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7}))v(?P<revision>\d+)$",
     re.IGNORECASE,
 )
+_CAMEL_CASE_TERM = re.compile(
+    r"(?<![A-Za-z0-9])([A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)+)(?![A-Za-z0-9])"
+)
+_QUERY_WORD = re.compile(r"[A-Za-z][A-Za-z0-9-]*")
+_QUERY_STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "by",
+    "does",
+    "for",
+    "from",
+    "how",
+    "in",
+    "into",
+    "of",
+    "on",
+    "the",
+    "through",
+    "to",
+    "use",
+    "uses",
+    "using",
+    "what",
+    "with",
+}
 
 
 class ArxivSearchError(RuntimeError):
@@ -55,9 +82,10 @@ class ArxivSearchProvider:
             raise ValueError("Academic search query must not be empty")
         if not 1 <= limit <= 10:
             raise ValueError("arXiv search limit must be between 1 and 10")
+        search_query = _compact_academic_query(normalized)
         response = self._request(
             {
-                "search_query": f'all:"{_escape_query(normalized)}"',
+                "search_query": f'all:"{_escape_query(search_query)}"',
                 "start": "0",
                 "max_results": str(limit),
                 "sortBy": "relevance",
@@ -181,3 +209,23 @@ def _https_url(value: str) -> str:
 
 def _escape_query(value: str) -> str:
     return value.replace("\\", " ").replace('"', " ")
+
+
+def _compact_academic_query(query: str, *, max_terms: int = 4) -> str:
+    """Keep arXiv phrase searches short enough to recover method-specific papers."""
+    normalized = " ".join(query.split())
+    terms = _QUERY_WORD.findall(normalized)
+    if len(terms) <= max_terms:
+        return normalized
+
+    method_names: list[str] = _CAMEL_CASE_TERM.findall(normalized)
+    if method_names:
+        return method_names[0]
+
+    distinctive = [
+        term
+        for term in terms
+        if term.casefold() not in _QUERY_STOPWORDS
+    ]
+    selected = distinctive[:max_terms] or terms[:max_terms]
+    return " ".join(selected)

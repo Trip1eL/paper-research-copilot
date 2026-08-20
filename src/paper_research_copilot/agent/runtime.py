@@ -176,7 +176,15 @@ class ResearchAgentRuntime:
         )
         graph.add_edge("revise_queries", "retrieve_evidence")
         graph.add_edge("acquire_evidence", "retrieve_evidence")
-        graph.add_edge("write_report", "validate_citations")
+        graph.add_conditional_edges(
+            "write_report",
+            self._route_after_writing,
+            {
+                "revise": "revise_queries",
+                "acquire": "acquire_evidence",
+                "validate": "validate_citations",
+            },
+        )
         graph.add_edge("validate_citations", END)
         return graph.compile(
             checkpointer=self._checkpointer,
@@ -354,6 +362,22 @@ class ResearchAgentRuntime:
             ),
         )
 
+    def _route_after_writing(
+        self,
+        state: ResearchState,
+    ) -> Literal["revise", "acquire", "validate"]:
+        if state["answer"].status != "insufficient_evidence":
+            return "validate"
+        if state["assessment"].retry_recommended:
+            return "revise"
+        if (
+            self._acquirer is not None
+            and state.get("acquisition_rounds", 0)
+            < self.config.max_acquisition_rounds
+        ):
+            return "acquire"
+        return "validate"
+
     def _acquire_evidence(self, state: ResearchState) -> ResearchState:
         started = time.perf_counter()
         query = _select_acquisition_query(state)
@@ -414,11 +438,22 @@ class ResearchAgentRuntime:
 
     def _write_report(self, state: ResearchState) -> ResearchState:
         started = time.perf_counter()
+        assessment = state["assessment"]
         if state["assessment"].sufficient:
             answer = self._answer_writer.generate(state["question"], state["evidence"])
             outcome = answer.status
             source = "answer_model"
             generation_details = _answer_generation_details(self._answer_writer, state["question"])
+            if answer.status == "insufficient_evidence":
+                assessment = state["assessment"].model_copy(
+                    update={
+                        "sufficient": False,
+                        "reason": "Answer model found the supplied evidence insufficient",
+                        "retry_recommended": (
+                            state["retry_count"] < self.config.max_retries
+                        ),
+                    }
+                )
         else:
             answer = Answer(
                 question=state["question"],
@@ -431,6 +466,7 @@ class ResearchAgentRuntime:
             generation_details = {}
         return ResearchState(
             answer=answer,
+            assessment=assessment,
             trace=_append_event(
                 state,
                 node="write_report",

@@ -189,6 +189,28 @@ class _GroundedWriter:
         )
 
 
+class _RefuseThenGroundedWriter(_GroundedWriter):
+    def __init__(self, *, always_refuse: bool = False) -> None:
+        super().__init__()
+        self.always_refuse = always_refuse
+
+    def generate(
+        self,
+        question: str,
+        evidence: tuple[RetrievedChunk, ...],
+    ) -> Answer:
+        self.calls += 1
+        if self.always_refuse or self.calls == 1:
+            return Answer(
+                question=question,
+                text="INSUFFICIENT_EVIDENCE",
+                citations=(),
+                status="insufficient_evidence",
+            )
+        self.calls -= 1
+        return super().generate(question, evidence)
+
+
 def _config(
     *,
     max_retries: int = 1,
@@ -437,6 +459,96 @@ def test_failed_acquisition_still_stops_after_one_round() -> None:
     assert result.acquisition.status == "failed"
     assert len(acquirer.calls) == 1
     assert writer.calls == 0
+
+
+def test_answer_model_rejection_routes_to_local_query_revision() -> None:
+    question = "How does an unavailable method improve retrieval?"
+    initial = _plan(question, _task("T1", "unavailable method retrieval"))
+    revised = _plan(
+        question,
+        _task("T1", "improved unavailable method query"),
+        revision=1,
+    )
+    retriever = _FakeRetriever(
+        {
+            "unavailable method retrieval": (_candidate(1, "paper-a"),),
+            "improved unavailable method query": (_candidate(2, "paper-b"),),
+        }
+    )
+    writer = _RefuseThenGroundedWriter()
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(initial, revised),
+        retriever,
+        writer,
+        config=_config(max_retries=1),
+    )
+
+    result = runtime.run(question)
+
+    assert result.answer.status == "answered"
+    assert result.assessment.sufficient
+    assert result.retry_count == 1
+    assert writer.calls == 2
+    assert [event.node for event in result.trace].count("write_report") == 2
+    first_write = next(event for event in result.trace if event.node == "write_report")
+    assert first_write.outcome == "insufficient_evidence"
+    assert first_write.details["source"] == "answer_model"
+
+
+def test_answer_model_rejection_acquires_once_when_revision_is_disabled() -> None:
+    question = "How does a newly published method improve retrieval?"
+    plan = _plan(question, _task("T1", "NewMethod agent memory retrieval details"))
+    rankings = {
+        "NewMethod agent memory retrieval details": (_candidate(1, "paper-a"),),
+    }
+    retriever = _AcquisitionAwareRetriever(rankings, rankings)
+    acquirer = _FakeAcquirer(retriever)
+    writer = _RefuseThenGroundedWriter()
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(plan),
+        retriever,
+        writer,
+        acquirer=acquirer,
+        config=_config(max_retries=0, max_acquisition_rounds=1),
+    )
+
+    result = runtime.run(question, task_id="task-semantic-acquisition")
+
+    assert result.answer.status == "answered"
+    assert result.assessment.sufficient
+    assert result.acquisition_rounds == 1
+    assert len(acquirer.calls) == 1
+    assert [event.node for event in result.trace].count("acquire_evidence") == 1
+    assert [event.node for event in result.trace].count("retrieve_evidence") == 2
+
+
+def test_answer_model_rejection_stops_after_failed_acquisition() -> None:
+    question = "How does a missing method improve retrieval?"
+    plan = _plan(question, _task("T1", "MissingMethod retrieval details"))
+    rankings = {"MissingMethod retrieval details": (_candidate(1, "paper-a"),)}
+    retriever = _AcquisitionAwareRetriever(rankings, rankings)
+    acquirer = _FakeAcquirer(retriever, status="failed")
+    writer = _RefuseThenGroundedWriter(always_refuse=True)
+    runtime = ResearchAgentRuntime(
+        _FakePlanner(plan),
+        retriever,
+        writer,
+        acquirer=acquirer,
+        config=_config(max_retries=0, max_acquisition_rounds=1),
+    )
+
+    result = runtime.run(question, task_id="task-semantic-acquisition-failed")
+
+    assert result.answer.status == "insufficient_evidence"
+    assert not result.assessment.sufficient
+    assert result.assessment.reason == (
+        "Answer model found the supplied evidence insufficient"
+    )
+    assert result.acquisition_rounds == 1
+    assert len(acquirer.calls) == 1
+    assert writer.calls == 2
+    assert [event.node for event in result.trace].count("acquire_evidence") == 1
+    assert [event.node for event in result.trace].count("validate_citations") == 1
 
 
 def test_close_callback_is_idempotent() -> None:

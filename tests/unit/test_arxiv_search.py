@@ -63,6 +63,47 @@ def test_arxiv_provider_parses_versioned_atom_metadata() -> None:
     assert observed_request is not None
     assert observed_request.url.params["max_results"] == "5"
     assert observed_request.url.params["sortBy"] == "relevance"
+    assert observed_request.url.params["search_query"] == 'all:"agent memory retrieval"'
+    client.close()
+
+
+def test_arxiv_provider_compacts_long_query_to_distinctive_method_name() -> None:
+    observed_request: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal observed_request
+        observed_request = request
+        return httpx.Response(200, content=ATOM_FEED, request=request)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    ArxivSearchProvider(client).search(
+        "How does MemReranker improve reasoning-aware agent memory retrieval?",
+        3,
+    )
+
+    assert observed_request is not None
+    assert observed_request.url.params["search_query"] == 'all:"MemReranker"'
+    client.close()
+
+
+def test_arxiv_provider_compacts_long_generic_query_to_four_content_terms() -> None:
+    observed_request: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal observed_request
+        observed_request = request
+        return httpx.Response(200, content=ATOM_FEED, request=request)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    ArxivSearchProvider(client).search(
+        "How does reasoning aware reranking improve retrieval for agent memory?",
+        3,
+    )
+
+    assert observed_request is not None
+    assert observed_request.url.params["search_query"] == (
+        'all:"reasoning aware reranking improve"'
+    )
     client.close()
 
 
